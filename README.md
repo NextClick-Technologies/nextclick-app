@@ -31,7 +31,7 @@ A modern, full-stack Enterprise Resource Planning (ERP) application built with N
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - Supabase account
 - Resend account (for email)
@@ -39,27 +39,32 @@ A modern, full-stack Enterprise Resource Planning (ERP) application built with N
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd nextclick-app
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables:
+
 ```bash
 cp .env.example .env.local
 ```
 
 Edit `.env.local` and add your credentials:
+
 - Supabase URL and keys
 - NextAuth secret
 - Resend API key
 
 4. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -82,12 +87,15 @@ src/
 ## Development Guidelines
 
 ### Component Naming
+
 - Use PascalCase: `ThisComponent.tsx`
 
 ### File Naming
+
 - Use camelCase: `dateFormatter.ts`, `usePayment.ts`
 
 ### Component Rules
+
 - Maximum 50 lines per component
 - Split into smaller components if needed
 - Place new files close to related code (colocation)
@@ -105,11 +113,13 @@ src/
 ## Modules (Planned)
 
 ### Phase 1 (Current)
+
 - Dashboard
 - Client Management
 - Authentication
 
 ### Phase 2 (Future)
+
 - HR Management
 - Document Center
 - Project Management
