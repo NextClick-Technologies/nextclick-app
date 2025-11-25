@@ -63,7 +63,9 @@ export function ClientTable({ clients }: ClientTableProps) {
               </td>
               <td className="py-4">
                 <Badge
-                  variant={client.gender === Gender.MALE ? "default" : "secondary"}
+                  variant={
+                    client.gender === Gender.MALE ? "default" : "secondary"
+                  }
                 >
                   {client.gender}
                 </Badge>
