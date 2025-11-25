@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Plus, Search, Loader2 } from "lucide-react";
 import { useProjects } from "@/hooks/useProject";
-import { AddProjectDialog } from "./components/AddProjectDialog";
+import { AddProjectDialog } from "./components/add-project-dialog";
 import { ProjectTable } from "./components/ProjectTable";
 
 export default function ProjectsPage() {
