@@ -44,7 +44,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-background to-accent/5 p-4">
       <Card className="w-full max-w-md p-8">
         <div className="space-y-6">
           <div className="space-y-2 text-center">
