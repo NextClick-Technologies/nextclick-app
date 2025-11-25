@@ -31,10 +31,10 @@ export function CollapsibleNavItem({
       <button
         onClick={onToggle}
         className={cn(
-          "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+          "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors cursor-pointer",
           hasActiveChild
-            ? "bg-accent text-accent-foreground"
-            : "text-muted-foreground hover:bg-accent/30 hover:text-accent-foreground"
+            ? "bg-accent text-accent-foreground "
+            : "hover:bg-accent/30 hover:text-accent-foreground"
         )}
       >
         <div className="flex items-center gap-3">
@@ -58,8 +58,8 @@ export function CollapsibleNavItem({
                 className={cn(
                   "block rounded-lg px-3 py-2 text-sm transition-colors",
                   isActive
-                    ? "nav-item-active font-medium"
-                    : "text-muted-foreground nav-item-hover"
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : "hover:bg-secondary hover:text-secondary-foreground"
                 )}
               >
                 {subItem.name}

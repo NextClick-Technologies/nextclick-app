@@ -15,7 +15,9 @@ export function NavItem({ name, href, icon: Icon, isActive }: NavItemProps) {
       href={href}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors",
-        isActive ? "nav-item-active" : "text-muted-foreground nav-item-hover"
+        isActive
+          ? "bg-primary text-primary-foreground"
+          : "hover:bg-secondary hover:text-secondary-foreground"
       )}
     >
       <Icon className="h-4 w-4" />
