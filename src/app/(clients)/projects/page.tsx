@@ -10,6 +10,7 @@ import { Plus, Search, Loader2 } from "lucide-react";
 import { useProjects } from "@/hooks/useProject";
 import { AddProjectDialog } from "./components/add-project-dialog";
 import { ProjectTable } from "./components/ProjectTable";
+import { ProjectStatus } from "@/const";
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,9 +30,11 @@ export default function ProjectsPage() {
       project.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const activeProjects = projects.filter((p) => p.status === "ACTIVE").length;
+  const activeProjects = projects.filter(
+    (p) => p.status === ProjectStatus.ACTIVE
+  ).length;
   const completedProjects = projects.filter(
-    (p) => p.status === "COMPLETED"
+    (p) => p.status === ProjectStatus.COMPLETED
   ).length;
   const totalBudget = projects.reduce(
     (sum, p) => sum + Number(p.budget || 0),

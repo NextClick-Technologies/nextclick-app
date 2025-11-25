@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Plus, Search, Loader2 } from "lucide-react";
-import { AddClientDialog } from "./components/AddClientDialog";
+import { AddClientDialog } from "./components/add-client-dialog";
 import { ClientTable } from "./components/ClientTable";
 import { useClients } from "@/hooks/useClient";
+import { Gender } from "@/const";
 
 export default function ClientsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,18 +57,20 @@ export default function ClientsPage() {
           />
           <MetricCard
             label="Male Clients"
-            value={clients.filter((c) => c.gender === "MALE").length}
+            value={clients.filter((c) => c.gender === Gender.MALE).length}
             badge={
-              <Badge>{clients.filter((c) => c.gender === "MALE").length}</Badge>
+              <Badge>
+                {clients.filter((c) => c.gender === Gender.MALE).length}
+              </Badge>
             }
             isLoading={isLoading}
           />
           <MetricCard
             label="Female Clients"
-            value={clients.filter((c) => c.gender === "FEMALE").length}
+            value={clients.filter((c) => c.gender === Gender.FEMALE).length}
             badge={
               <Badge variant="secondary">
-                {clients.filter((c) => c.gender === "FEMALE").length}
+                {clients.filter((c) => c.gender === Gender.FEMALE).length}
               </Badge>
             }
             isLoading={isLoading}

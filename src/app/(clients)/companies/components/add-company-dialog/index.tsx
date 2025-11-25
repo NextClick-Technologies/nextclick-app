@@ -8,10 +8,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useCreateCompany } from "@/hooks/useCompany";
 import { Loader2 } from "lucide-react";
+import { FormField } from "./FormField";
+import { getInitialCompanyFormData, type CompanyFormData } from "./types";
 
 interface AddCompanyDialogProps {
   open: boolean;
@@ -22,12 +22,9 @@ export function AddCompanyDialog({
   open,
   onOpenChange,
 }: AddCompanyDialogProps) {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phoneNumber: "",
-    address: "",
-  });
+  const [formData, setFormData] = useState<CompanyFormData>(
+    getInitialCompanyFormData()
+  );
 
   const createCompany = useCreateCompany();
 
@@ -37,17 +34,12 @@ export function AddCompanyDialog({
     try {
       await createCompany.mutateAsync({
         name: formData.name,
-        email: formData.email || undefined,
-        phoneNumber: formData.phoneNumber || undefined,
-        address: formData.address || undefined,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        address: formData.address,
       });
 
-      setFormData({
-        name: "",
-        email: "",
-        phoneNumber: "",
-        address: "",
-      });
+      setFormData(getInitialCompanyFormData());
 
       onOpenChange(false);
     } catch (error) {
@@ -122,37 +114,5 @@ export function AddCompanyDialog({
         </form>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function FormField({
-  label,
-  id,
-  type = "text",
-  placeholder,
-  value,
-  onChange,
-  required = false,
-}: {
-  label: string;
-  id: string;
-  type?: string;
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
-  required?: boolean;
-}) {
-  return (
-    <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
-      <Input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required={required}
-      />
-    </div>
   );
 }

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Plus, Search, Loader2 } from "lucide-react";
 import { useCompanies } from "@/hooks/useCompany";
-import { AddCompanyDialog } from "./components/AddCompanyDialog";
+import { AddCompanyDialog } from "./components/add-company-dialog";
 import { CompanyTable } from "./components/CompanyTable";
 
 export default function CompaniesPage() {

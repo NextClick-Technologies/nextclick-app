@@ -8,17 +8,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useCreateClient } from "@/hooks/useClient";
 import { Loader2 } from "lucide-react";
+import { FormField } from "./FormField";
+import { ClientSelectFields } from "./ClientSelectFields";
+import { getInitialClientFormData, type ClientFormData } from "./types";
 
 interface AddClientDialogProps {
   open: boolean;
@@ -26,14 +20,9 @@ interface AddClientDialogProps {
 }
 
 export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
-  const [formData, setFormData] = useState({
-    title: "MR",
-    name: "",
-    familyName: "",
-    gender: "MALE",
-    phoneNumber: "",
-    email: "",
-  });
+  const [formData, setFormData] = useState<ClientFormData>(
+    getInitialClientFormData()
+  );
 
   const createClient = useCreateClient();
 
@@ -42,23 +31,15 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
 
     try {
       await createClient.mutateAsync({
-        title: formData.title as "MR" | "MRS" | "MS" | "DR" | "PROF",
+        title: formData.title,
         name: formData.name,
         familyName: formData.familyName,
-        gender: formData.gender as "MALE" | "FEMALE" | "OTHER",
+        gender: formData.gender,
         phoneNumber: formData.phoneNumber,
-        email: formData.email || undefined,
+        email: formData.email,
       });
 
-      // Reset form
-      setFormData({
-        title: "MR",
-        name: "",
-        familyName: "",
-        gender: "MALE",
-        phoneNumber: "",
-        email: "",
-      });
+      setFormData(getInitialClientFormData());
 
       onOpenChange(false);
     } catch (error) {
@@ -73,26 +54,16 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
           <DialogTitle>Add New Client</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <Select
-              value={formData.title}
-              onValueChange={(value) =>
-                setFormData({ ...formData, title: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="MR">Mr</SelectItem>
-                <SelectItem value="MRS">Mrs</SelectItem>
-                <SelectItem value="MS">Ms</SelectItem>
-                <SelectItem value="DR">Dr</SelectItem>
-                <SelectItem value="PROF">Prof</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <ClientSelectFields
+            title={formData.title}
+            gender={formData.gender}
+            onTitleChange={(value) =>
+              setFormData({ ...formData, title: value })
+            }
+            onGenderChange={(value) =>
+              setFormData({ ...formData, gender: value })
+            }
+          />
 
           <FormField
             label="First Name"
@@ -114,25 +85,6 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
             required
           />
 
-          <div className="space-y-2">
-            <Label htmlFor="gender">Gender</Label>
-            <Select
-              value={formData.gender}
-              onValueChange={(value) =>
-                setFormData({ ...formData, gender: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="MALE">Male</SelectItem>
-                <SelectItem value="FEMALE">Female</SelectItem>
-                <SelectItem value="OTHER">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           <FormField
             label="Phone Number"
             id="phoneNumber"
@@ -153,7 +105,7 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
             onChange={(value) => setFormData({ ...formData, email: value })}
           />
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-2">
             <Button
               type="button"
               variant="outline"
@@ -177,37 +129,5 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
         </form>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function FormField({
-  label,
-  id,
-  type = "text",
-  placeholder,
-  value,
-  onChange,
-  required = false,
-}: {
-  label: string;
-  id: string;
-  type?: string;
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
-  required?: boolean;
-}) {
-  return (
-    <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
-      <Input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required={required}
-      />
-    </div>
   );
 }
