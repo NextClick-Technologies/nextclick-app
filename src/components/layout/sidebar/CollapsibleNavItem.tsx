@@ -31,7 +31,7 @@ export function CollapsibleNavItem({
       <button
         onClick={onToggle}
         className={cn(
-          "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors cursor-pointer",
+          "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors cursor-pointer",
           hasActiveChild
             ? "bg-accent text-accent-foreground "
             : "hover:bg-accent/30 hover:text-accent-foreground"
@@ -48,7 +48,7 @@ export function CollapsibleNavItem({
         )}
       </button>
       {isOpen && (
-        <div className="ml-6 mt-1 space-y-1">
+        <div className="ml-6 mt-1 space-y-1 border-l-2 border-muted/50 pl-2">
           {submenu.map((subItem) => {
             const isActive = pathname === subItem.href;
             return (

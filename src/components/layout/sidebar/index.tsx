@@ -27,7 +27,15 @@ const navigation = [
       { name: "Projects", href: "/projects" },
     ],
   },
-  { name: "HR Management", href: "/hr", icon: UserCog },
+  {
+    name: "HR Management",
+    icon: UserCog,
+    submenu: [
+      { name: "Employees", href: "/employees" },
+      { name: "Payroll", href: "/payroll" },
+      { name: "Performance", href: "/performance" },
+    ],
+  },
   { name: "Document Center", href: "/documents", icon: FileText },
   { name: "Research Hub", href: "/research", icon: Search },
   { name: "Service Catalog", href: "/services", icon: Package },
