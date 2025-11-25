@@ -10,7 +10,7 @@ interface CompanyTableProps {
 
 export function CompanyTable({ companies }: CompanyTableProps) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto max-h-[calc(100vh-32rem)] overflow-y-auto">
       <table className="w-full">
         <thead>
           <tr className="border-b">

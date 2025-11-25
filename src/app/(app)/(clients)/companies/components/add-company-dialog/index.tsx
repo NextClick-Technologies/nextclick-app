@@ -49,7 +49,7 @@ export function AddCompanyDialog({
         <DialogHeader>
           <DialogTitle>Add New Company</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-2">
           <FormField
             label="Company Name"
             id="name"
