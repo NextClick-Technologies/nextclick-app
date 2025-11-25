@@ -17,6 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useCreateClient } from "@/hooks/useApi"
+import { Loader2 } from "lucide-react"
 
 interface AddClientDialogProps {
   open: boolean
@@ -25,19 +27,43 @@ interface AddClientDialogProps {
 
 export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
   const [formData, setFormData] = useState({
-    contactName: "",
-    companyName: "",
+    title: "MR",
+    name: "",
+    familyName: "",
+    gender: "MALE",
+    phoneNumber: "",
     email: "",
-    phone: "",
-    industry: "",
-    contractValue: "",
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const createClient = useCreateClient()
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission (will integrate with backend later)
-    console.log("Form submitted:", formData)
-    onOpenChange(false)
+    
+    try {
+      await createClient.mutateAsync({
+        title: formData.title as "MR" | "MRS" | "MS" | "DR" | "PROF",
+        name: formData.name,
+        familyName: formData.familyName,
+        gender: formData.gender as "MALE" | "FEMALE" | "OTHER",
+        phoneNumber: formData.phoneNumber,
+        email: formData.email || undefined,
+      })
+      
+      // Reset form
+      setFormData({
+        title: "MR",
+        name: "",
+        familyName: "",
+        gender: "MALE",
+        phoneNumber: "",
+        email: "",
+      })
+      
+      onOpenChange(false)
+    } catch (error) {
+      console.error("Failed to create client:", error)
+    }
   }
 
   return (
@@ -47,83 +73,102 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
           <DialogTitle>Add New Client</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="title">Title</Label>
+            <Select
+              value={formData.title}
+              onValueChange={(value) => 
+                setFormData({ ...formData, title: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="MR">Mr</SelectItem>
+                <SelectItem value="MRS">Mrs</SelectItem>
+                <SelectItem value="MS">Ms</SelectItem>
+                <SelectItem value="DR">Dr</SelectItem>
+                <SelectItem value="PROF">Prof</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
           <FormField
-            label="Contact Name"
-            id="contactName"
-            placeholder="Enter contact name"
-            value={formData.contactName}
+            label="First Name"
+            id="name"
+            placeholder="Enter first name"
+            value={formData.name}
             onChange={(value) => 
-              setFormData({ ...formData, contactName: value })
+              setFormData({ ...formData, name: value })
             }
+            required
           />
+          
           <FormField
-            label="Company Name"
-            id="companyName"
-            placeholder="Enter company name"
-            value={formData.companyName}
+            label="Family Name"
+            id="familyName"
+            placeholder="Enter family name"
+            value={formData.familyName}
             onChange={(value) => 
-              setFormData({ ...formData, companyName: value })
+              setFormData({ ...formData, familyName: value })
             }
+            required
           />
+          
+          <div className="space-y-2">
+            <Label htmlFor="gender">Gender</Label>
+            <Select
+              value={formData.gender}
+              onValueChange={(value) => 
+                setFormData({ ...formData, gender: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="MALE">Male</SelectItem>
+                <SelectItem value="FEMALE">Female</SelectItem>
+                <SelectItem value="OTHER">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
           <FormField
-            label="Email"
+            label="Phone Number"
+            id="phoneNumber"
+            placeholder="+1234567890"
+            value={formData.phoneNumber}
+            onChange={(value) => 
+              setFormData({ ...formData, phoneNumber: value })
+            }
+            required
+          />
+          
+          <FormField
+            label="Email (Optional)"
             id="email"
             type="email"
-            placeholder="Enter email address"
+            placeholder="email@example.com"
             value={formData.email}
             onChange={(value) => 
               setFormData({ ...formData, email: value })
             }
           />
-          <FormField
-            label="Phone"
-            id="phone"
-            placeholder="Enter phone number"
-            value={formData.phone}
-            onChange={(value) => 
-              setFormData({ ...formData, phone: value })
-            }
-          />
-          <div className="space-y-2">
-            <Label htmlFor="industry">Industry</Label>
-            <Select
-              value={formData.industry}
-              onValueChange={(value) => 
-                setFormData({ ...formData, industry: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select industry" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="technology">Technology</SelectItem>
-                <SelectItem value="healthcare">Healthcare</SelectItem>
-                <SelectItem value="finance">Finance</SelectItem>
-                <SelectItem value="retail">Retail</SelectItem>
-                <SelectItem value="manufacturing">Manufacturing</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <FormField
-            label="Contract Value ($)"
-            id="contractValue"
-            type="number"
-            placeholder="0"
-            value={formData.contractValue}
-            onChange={(value) => 
-              setFormData({ ...formData, contractValue: value })
-            }
-          />
+          
           <div className="flex gap-3 pt-4">
             <Button
               type="button"
               variant="outline"
               className="flex-1"
               onClick={() => onOpenChange(false)}
+              disabled={createClient.isPending}
             >
               Cancel
             </Button>
-            <Button type="submit" className="flex-1">
+            <Button type="submit" className="flex-1" disabled={createClient.isPending}>
+              {createClient.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Add Client
             </Button>
           </div>
@@ -140,6 +185,7 @@ function FormField({
   placeholder,
   value,
   onChange,
+  required = false,
 }: {
   label: string
   id: string
@@ -147,6 +193,7 @@ function FormField({
   placeholder: string
   value: string
   onChange: (value: string) => void
+  required?: boolean
 }) {
   return (
     <div className="space-y-2">
@@ -157,6 +204,7 @@ function FormField({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        required={required}
       />
     </div>
   )

@@ -1,24 +1,21 @@
 "use client"
 
-import { Client } from "@/types/database"
-import { Badge } from "@/components/ui/badge"
+import { Company } from "@/types/database"
 import { Avatar } from "@/components/ui/avatar"
+import { Building2 } from "lucide-react"
 
-interface ClientTableProps {
-  clients: Client[]
+interface CompanyTableProps {
+  companies: Company[]
 }
 
-export function ClientTable({ clients }: ClientTableProps) {
+export function CompanyTable({ companies }: CompanyTableProps) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
           <tr className="border-b">
             <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
-              Client
-            </th>
-            <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
-              Title
+              Company
             </th>
             <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
               Email
@@ -27,40 +24,33 @@ export function ClientTable({ clients }: ClientTableProps) {
               Phone
             </th>
             <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
-              Gender
+              Address
             </th>
           </tr>
         </thead>
         <tbody className="divide-y">
-          {clients.map((client) => (
-            <tr key={client.id} className="group hover:bg-muted/50">
+          {companies.map((company) => (
+            <tr key={company.id} className="group hover:bg-muted/50">
               <td className="py-4">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10 bg-primary/10 flex items-center justify-center">
-                    <span className="text-sm font-medium">
-                      {client.name[0]}{client.familyName[0]}
-                    </span>
+                    <Building2 className="h-5 w-5 text-primary" />
                   </Avatar>
                   <div>
-                    <p className="font-medium">{client.name} {client.familyName}</p>
+                    <p className="font-medium">{company.name}</p>
                   </div>
                 </div>
               </td>
               <td className="py-4">
-                <Badge variant="outline">{client.title}</Badge>
+                <p className="text-sm text-muted-foreground">{company.email || "-"}</p>
               </td>
               <td className="py-4">
-                <p className="text-sm text-muted-foreground">{client.email || "-"}</p>
+                <p className="text-sm">{company.phoneNumber || "-"}</p>
               </td>
               <td className="py-4">
-                <p className="text-sm">{client.phoneNumber}</p>
-              </td>
-              <td className="py-4">
-                <Badge
-                  variant={client.gender === "MALE" ? "default" : "secondary"}
-                >
-                  {client.gender}
-                </Badge>
+                <p className="text-sm text-muted-foreground max-w-xs truncate">
+                  {company.address || "-"}
+                </p>
               </td>
             </tr>
           ))}

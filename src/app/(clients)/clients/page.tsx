@@ -6,27 +6,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Plus, Search } from "lucide-react";
-import { mockClients } from "@/lib/mockData";
+import { Plus, Search, Loader2 } from "lucide-react";
 import { AddClientDialog } from "./components/AddClientDialog";
 import { ClientTable } from "./components/ClientTable";
+import { useClients } from "@/hooks/useApi";
 
 export default function ClientsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
 
-  const filteredClients = mockClients.filter(
+  const { data, isLoading, error } = useClients({ page, pageSize });
+
+  const clients = data?.data || [];
+  const totalClients = data?.pagination.total || 0;
+
+  // Filter clients based on search query
+  const filteredClients = clients.filter(
     (client) =>
       client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      client.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      client.email.toLowerCase().includes(searchQuery.toLowerCase())
+      client.familyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      client.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const activeClients = mockClients.filter((c) => c.status === "active").length;
-  const pendingClients = mockClients.filter(
-    (c) => c.status === "pending"
-  ).length;
-  const totalValue = mockClients.reduce((sum, c) => sum + c.value, 0);
 
   return (
     <AppLayout>
@@ -47,16 +49,18 @@ export default function ClientsPage() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <MetricCard label="Total Clients" value={mockClients.length} />
+          <MetricCard label="Total Clients" value={totalClients} isLoading={isLoading} />
           <MetricCard
-            label="Active Clients"
-            value={activeClients}
-            badge={<Badge>{activeClients}</Badge>}
+            label="Male Clients"
+            value={clients.filter((c) => c.gender === "MALE").length}
+            badge={<Badge>{clients.filter((c) => c.gender === "MALE").length}</Badge>}
+            isLoading={isLoading}
           />
           <MetricCard
-            label="Total Value"
-            value={`$${(totalValue / 1000).toFixed(0)}K`}
-            badge={<Badge variant="secondary">{pendingClients} pending</Badge>}
+            label="Female Clients"
+            value={clients.filter((c) => c.gender === "FEMALE").length}
+            badge={<Badge variant="secondary">{clients.filter((c) => c.gender === "FEMALE").length}</Badge>}
+            isLoading={isLoading}
           />
         </div>
 
@@ -76,7 +80,26 @@ export default function ClientsPage() {
                 </div>
               </div>
             </div>
-            <ClientTable clients={filteredClients} />
+            
+            {error && (
+              <div className="text-center py-8 text-destructive">
+                Error loading clients: {error.message}
+              </div>
+            )}
+            
+            {isLoading && (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            )}
+            
+            {!isLoading && !error && <ClientTable clients={filteredClients} />}
+            
+            {!isLoading && !error && filteredClients.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                No clients found
+              </div>
+            )}
           </div>
         </Card>
       </div>
@@ -93,10 +116,12 @@ function MetricCard({
   label,
   value,
   badge,
+  isLoading,
 }: {
   label: string;
   value: string | number;
   badge?: React.ReactNode;
+  isLoading?: boolean;
 }) {
   return (
     <Card className="p-6">
@@ -105,7 +130,11 @@ function MetricCard({
           <p className="text-sm font-medium text-muted-foreground">{label}</p>
           {badge}
         </div>
-        <p className="text-2xl font-bold">{value}</p>
+        {isLoading ? (
+          <div className="h-8 w-20 bg-muted animate-pulse rounded" />
+        ) : (
+          <p className="text-2xl font-bold">{value}</p>
+        )}
       </div>
     </Card>
   );
