@@ -9,7 +9,7 @@ import {
   buildPaginatedResponse,
 } from "@/lib/api/api-utils";
 import { clientSchema } from "@/schemas/client.schema";
-import type { ClientInsert } from "@/types/database";
+import type { ClientInsert } from "@/types/database.type";
 
 // GET /api/client - Get all clients with pagination
 export async function GET(request: NextRequest) {

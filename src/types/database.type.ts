@@ -1,3 +1,15 @@
+import type {
+  Title,
+  Gender,
+  PaymentTerms,
+  ProjectStatus,
+  ProjectPriority,
+  MilestoneStatus,
+  PaymentStatus,
+  PaymentMethod,
+  CommunicationChannel,
+} from "@/const";
+
 export type Json =
   | string
   | number
@@ -13,9 +25,9 @@ export interface Database {
         Row: {
           id: string;
           name: string;
-          title: "mr" | "mrs" | "ms" | "dr" | "prof" | "sr" | null;
+          title: Title | null;
           familyName: string;
-          gender: "male" | "female" | "other";
+          gender: Gender;
           phoneNumber: string;
           email: string;
           createdAt: string;
@@ -24,9 +36,9 @@ export interface Database {
         Insert: {
           id?: string;
           name: string;
-          title?: "mr" | "mrs" | "ms" | "dr" | "prof" | "sr" | null;
+          title?: Title | null;
           familyName: string;
-          gender: "male" | "female" | "other";
+          gender: Gender;
           phoneNumber: string;
           email: string;
           createdAt?: string;
@@ -35,9 +47,9 @@ export interface Database {
         Update: {
           id?: string;
           name?: string;
-          title?: "mr" | "mrs" | "ms" | "dr" | "prof" | "sr" | null;
+          title?: Title | null;
           familyName?: string;
-          gender?: "male" | "female" | "other";
+          gender?: Gender;
           phoneNumber?: string;
           email?: string;
           createdAt?: string;
@@ -81,9 +93,9 @@ export interface Database {
           startDate: string;
           finishDate: string;
           budget: string;
-          paymentTerms: "net_30d" | "net_60d" | "net_90d" | "immediate";
-          status: "active" | "completed" | "on_hold" | "cancelled";
-          priority: "low" | "medium" | "high" | "urgent";
+          paymentTerms: PaymentTerms;
+          status: ProjectStatus;
+          priority: ProjectPriority;
           description: string;
           completionDate: string | null;
           clientId: string;
@@ -97,9 +109,9 @@ export interface Database {
           startDate: string;
           finishDate: string;
           budget: string;
-          paymentTerms: "net_30d" | "net_60d" | "net_90d" | "immediate";
-          status: "active" | "completed" | "on_hold" | "cancelled";
-          priority: "low" | "medium" | "high" | "urgent";
+          paymentTerms: PaymentTerms;
+          status: ProjectStatus;
+          priority: ProjectPriority;
           description: string;
           completionDate?: string | null;
           clientId: string;
@@ -113,9 +125,9 @@ export interface Database {
           startDate?: string;
           finishDate?: string;
           budget?: string;
-          paymentTerms?: "net_30d" | "net_60d" | "net_90d" | "immediate";
-          status?: "active" | "completed" | "on_hold" | "cancelled";
-          priority?: "low" | "medium" | "high" | "urgent";
+          paymentTerms?: PaymentTerms;
+          status?: ProjectStatus;
+          priority?: ProjectPriority;
           description?: string;
           completionDate?: string | null;
           clientId?: string;
@@ -131,7 +143,7 @@ export interface Database {
           startDate: string;
           finishDate: string;
           completionDate: string | null;
-          status: "pending" | "in_progress" | "completed" | "cancelled";
+          status: MilestoneStatus;
           remarks: string | null;
           projectId: string;
           createdAt: string;
@@ -144,7 +156,7 @@ export interface Database {
           startDate: string;
           finishDate: string;
           completionDate?: string | null;
-          status: "pending" | "in_progress" | "completed" | "cancelled";
+          status: MilestoneStatus;
           remarks?: string | null;
           projectId: string;
           createdAt?: string;
@@ -157,7 +169,7 @@ export interface Database {
           startDate?: string;
           finishDate?: string;
           completionDate?: string | null;
-          status?: "pending" | "in_progress" | "completed" | "cancelled";
+          status?: MilestoneStatus;
           remarks?: string | null;
           projectId?: string;
           createdAt?: string;
@@ -169,9 +181,9 @@ export interface Database {
           id: string;
           description: string;
           amount: string;
-          status: "pending" | "completed" | "failed";
+          status: PaymentStatus;
           date: string;
-          method: "cash" | "bank_transfer" | "credit_card" | "cheque";
+          method: PaymentMethod;
           projectId: string;
           createdAt: string;
           updatedAt: string;
@@ -180,9 +192,9 @@ export interface Database {
           id?: string;
           description: string;
           amount: string;
-          status: "pending" | "completed" | "failed";
+          status: PaymentStatus;
           date: string;
-          method: "cash" | "bank_transfer" | "credit_card" | "cheque";
+          method: PaymentMethod;
           projectId: string;
           createdAt?: string;
           updatedAt?: string;
@@ -191,9 +203,9 @@ export interface Database {
           id?: string;
           description?: string;
           amount?: string;
-          status?: "pending" | "completed" | "failed";
+          status?: PaymentStatus;
           date?: string;
-          method?: "cash" | "bank_transfer" | "credit_card" | "cheque";
+          method?: PaymentMethod;
           projectId?: string;
           createdAt?: string;
           updatedAt?: string;
@@ -202,11 +214,11 @@ export interface Database {
       employees: {
         Row: {
           id: string;
-          title: "mr" | "mrs" | "ms" | "dr" | "prof" | "sr" | null;
+          title: Title | null;
           name: string;
           familyName: string;
           preferredName: string | null;
-          gender: "male" | "female" | "other";
+          gender: Gender;
           phoneNumber: string;
           email: string;
           photo: string | null;
@@ -216,11 +228,11 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          title?: "mr" | "mrs" | "ms" | "dr" | "prof" | "sr" | null;
+          title?: Title | null;
           name: string;
           familyName: string;
           preferredName?: string | null;
-          gender: "male" | "female" | "other";
+          gender: Gender;
           phoneNumber: string;
           email: string;
           photo?: string | null;
@@ -230,11 +242,11 @@ export interface Database {
         };
         Update: {
           id?: string;
-          title?: "mr" | "mrs" | "ms" | "dr" | "prof" | "sr" | null;
+          title?: Title | null;
           name?: string;
           familyName?: string;
           preferredName?: string | null;
-          gender?: "male" | "female" | "other";
+          gender?: Gender;
           phoneNumber?: string;
           email?: string;
           photo?: string | null;
@@ -247,7 +259,7 @@ export interface Database {
         Row: {
           id: string;
           date: string;
-          channel: "email" | "phone" | "chat" | "meeting" | "video_call";
+          channel: CommunicationChannel;
           summary: string;
           followUpRequired: boolean;
           followUpDate: string | null;
@@ -259,7 +271,7 @@ export interface Database {
         Insert: {
           id?: string;
           date: string;
-          channel: "email" | "phone" | "chat" | "meeting" | "video_call";
+          channel: CommunicationChannel;
           summary: string;
           followUpRequired: boolean;
           followUpDate?: string | null;
@@ -271,7 +283,7 @@ export interface Database {
         Update: {
           id?: string;
           date?: string;
-          channel?: "email" | "phone" | "chat" | "meeting" | "video_call";
+          channel?: CommunicationChannel;
           summary?: string;
           followUpRequired?: boolean;
           followUpDate?: string | null;

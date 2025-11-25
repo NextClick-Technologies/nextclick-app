@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
 import { updateCommunicationLogSchema } from "@/schemas/communication-log.schema";
-import type { CommunicationLogUpdate } from "@/types/database";
+import type { CommunicationLogUpdate } from "@/types/database.type";
 
 export async function GET(
   request: NextRequest,

@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
 import { updateClientSchema } from "@/schemas/client.schema";
-import type { ClientUpdate } from "@/types/database";
+import type { ClientUpdate } from "@/types/database.type";
 
 // GET /api/client/[id] - Get a single client
 export async function GET(

@@ -9,7 +9,7 @@ import {
   buildPaginatedResponse,
 } from "@/lib/api/api-utils";
 import { communicationLogSchema } from "@/schemas/communication-log.schema";
-import type { CommunicationLogInsert } from "@/types/database";
+import type { CommunicationLogInsert } from "@/types/database.type";
 
 export async function GET(request: NextRequest) {
   try {
