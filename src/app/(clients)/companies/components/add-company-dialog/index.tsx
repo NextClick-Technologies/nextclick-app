@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCreateCompany } from "@/hooks/useCompany";
 import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { FormField } from "./FormField";
 import { getInitialCompanyFormData, type CompanyFormData } from "./types";
 
@@ -22,25 +22,21 @@ export function AddCompanyDialog({
   open,
   onOpenChange,
 }: AddCompanyDialogProps) {
-  const [formData, setFormData] = useState<CompanyFormData>(
-    getInitialCompanyFormData()
-  );
-
   const createCompany = useCreateCompany();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<CompanyFormData>({
+    defaultValues: getInitialCompanyFormData(),
+  });
 
+  const onSubmit = async (data: CompanyFormData) => {
     try {
-      await createCompany.mutateAsync({
-        name: formData.name,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        address: formData.address,
-      });
-
-      setFormData(getInitialCompanyFormData());
-
+      await createCompany.mutateAsync(data);
+      reset();
       onOpenChange(false);
     } catch (error) {
       console.error("Failed to create company:", error);
@@ -53,14 +49,20 @@ export function AddCompanyDialog({
         <DialogHeader>
           <DialogTitle>Add New Company</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             label="Company Name"
             id="name"
             placeholder="Enter company name"
-            value={formData.name}
-            onChange={(value) => setFormData({ ...formData, name: value })}
-            required
+            register={register}
+            error={errors.name}
+            validation={{
+              required: "Company name is required",
+              minLength: {
+                value: 2,
+                message: "Company name must be at least 2 characters",
+              },
+            }}
           />
 
           <FormField
@@ -68,26 +70,21 @@ export function AddCompanyDialog({
             id="email"
             type="email"
             placeholder="company@example.com"
-            value={formData.email}
-            onChange={(value) => setFormData({ ...formData, email: value })}
+            register={register}
           />
 
           <FormField
             label="Phone Number (Optional)"
             id="phoneNumber"
             placeholder="+1234567890"
-            value={formData.phoneNumber}
-            onChange={(value) =>
-              setFormData({ ...formData, phoneNumber: value })
-            }
+            register={register}
           />
 
           <FormField
             label="Address (Optional)"
             id="address"
             placeholder="Enter company address"
-            value={formData.address}
-            onChange={(value) => setFormData({ ...formData, address: value })}
+            register={register}
           />
 
           <div className="flex gap-3 pt-4">
@@ -96,16 +93,16 @@ export function AddCompanyDialog({
               variant="outline"
               className="flex-1"
               onClick={() => onOpenChange(false)}
-              disabled={createCompany.isPending}
+              disabled={isSubmitting || createCompany.isPending}
             >
               Cancel
             </Button>
             <Button
               type="submit"
               className="flex-1"
-              disabled={createCompany.isPending}
+              disabled={isSubmitting || createCompany.isPending}
             >
-              {createCompany.isPending && (
+              {(isSubmitting || createCompany.isPending) && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
               Add Company

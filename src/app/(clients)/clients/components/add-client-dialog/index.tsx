@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCreateClient } from "@/hooks/useClient";
 import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { FormField } from "./FormField";
 import { ClientSelectFields } from "./ClientSelectFields";
 import { getInitialClientFormData, type ClientFormData } from "./types";
@@ -20,27 +20,22 @@ interface AddClientDialogProps {
 }
 
 export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
-  const [formData, setFormData] = useState<ClientFormData>(
-    getInitialClientFormData()
-  );
-
   const createClient = useCreateClient();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ClientFormData>({
+    defaultValues: getInitialClientFormData(),
+  });
 
+  const onSubmit = async (data: ClientFormData) => {
     try {
-      await createClient.mutateAsync({
-        title: formData.title,
-        name: formData.name,
-        familyName: formData.familyName,
-        gender: formData.gender,
-        phoneNumber: formData.phoneNumber,
-        email: formData.email,
-      });
-
-      setFormData(getInitialClientFormData());
-
+      await createClient.mutateAsync(data);
+      reset();
       onOpenChange(false);
     } catch (error) {
       console.error("Failed to create client:", error);
@@ -53,47 +48,46 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
         <DialogHeader>
           <DialogTitle>Add New Client</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <ClientSelectFields
-            title={formData.title}
-            gender={formData.gender}
-            onTitleChange={(value) =>
-              setFormData({ ...formData, title: value })
-            }
-            onGenderChange={(value) =>
-              setFormData({ ...formData, gender: value })
-            }
-          />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <ClientSelectFields control={control} />
 
           <FormField
             label="First Name"
             id="name"
             placeholder="Enter first name"
-            value={formData.name}
-            onChange={(value) => setFormData({ ...formData, name: value })}
-            required
+            register={register}
+            error={errors.name}
+            validation={{
+              required: "First name is required",
+              minLength: {
+                value: 2,
+                message: "First name must be at least 2 characters",
+              },
+            }}
           />
 
           <FormField
             label="Family Name"
             id="familyName"
             placeholder="Enter family name"
-            value={formData.familyName}
-            onChange={(value) =>
-              setFormData({ ...formData, familyName: value })
-            }
-            required
+            register={register}
+            error={errors.familyName}
+            validation={{
+              required: "Family name is required",
+              minLength: {
+                value: 2,
+                message: "Family name must be at least 2 characters",
+              },
+            }}
           />
 
           <FormField
             label="Phone Number"
             id="phoneNumber"
             placeholder="+1234567890"
-            value={formData.phoneNumber}
-            onChange={(value) =>
-              setFormData({ ...formData, phoneNumber: value })
-            }
-            required
+            register={register}
+            error={errors.phoneNumber}
+            validation={{ required: "Phone number is required" }}
           />
 
           <FormField
@@ -101,8 +95,7 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
             id="email"
             type="email"
             placeholder="email@example.com"
-            value={formData.email}
-            onChange={(value) => setFormData({ ...formData, email: value })}
+            register={register}
           />
 
           <div className="flex gap-2">
@@ -111,16 +104,16 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
               variant="outline"
               className="flex-1"
               onClick={() => onOpenChange(false)}
-              disabled={createClient.isPending}
+              disabled={isSubmitting || createClient.isPending}
             >
               Cancel
             </Button>
             <Button
               type="submit"
               className="flex-1"
-              disabled={createClient.isPending}
+              disabled={isSubmitting || createClient.isPending}
             >
-              {createClient.isPending && (
+              {(isSubmitting || createClient.isPending) && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
               Add Client

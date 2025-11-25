@@ -1,13 +1,16 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { UseFormRegister, FieldError, RegisterOptions } from "react-hook-form";
 
 interface FormFieldProps {
   label: string;
   id: string;
   type?: string;
   placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  register: UseFormRegister<any>;
+  validation?: RegisterOptions;
+  error?: FieldError;
   required?: boolean;
 }
 
@@ -16,21 +19,24 @@ export function FormField({
   id,
   type = "text",
   placeholder,
-  value,
-  onChange,
+  register,
+  validation,
+  error,
   required = false,
 }: FormFieldProps) {
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
+      <Label htmlFor={id}>
+        {label}
+        {required && <span className="text-destructive ml-1">*</span>}
+      </Label>
       <Input
         id={id}
         type={type}
         placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required={required}
+        {...register(id, validation)}
       />
+      {error && <p className="text-sm text-destructive">{error.message}</p>}
     </div>
   );
 }

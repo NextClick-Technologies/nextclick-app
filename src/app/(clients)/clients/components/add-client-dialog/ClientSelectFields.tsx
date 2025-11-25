@@ -7,62 +7,58 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Title, Gender } from "@/const";
+import { Control, Controller } from "react-hook-form";
 
 interface ClientSelectFieldsProps {
-  title: (typeof Title)[keyof typeof Title];
-  gender: (typeof Gender)[keyof typeof Gender];
-  onTitleChange: (value: (typeof Title)[keyof typeof Title]) => void;
-  onGenderChange: (value: (typeof Gender)[keyof typeof Gender]) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any>;
 }
 
-export function ClientSelectFields({
-  title,
-  gender,
-  onTitleChange,
-  onGenderChange,
-}: ClientSelectFieldsProps) {
+export function ClientSelectFields({ control }: ClientSelectFieldsProps) {
   return (
     <>
-      <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
-        <Select
-          value={title}
-          onValueChange={(value) =>
-            onTitleChange(value as (typeof Title)[keyof typeof Title])
-          }
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={Title.MR}>Mr</SelectItem>
-            <SelectItem value={Title.MRS}>Mrs</SelectItem>
-            <SelectItem value={Title.MS}>Ms</SelectItem>
-            <SelectItem value={Title.DR}>Dr</SelectItem>
-            <SelectItem value={Title.PROF}>Prof</SelectItem>
-            <SelectItem value={Title.SR}>Sr</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <Controller
+        name="title"
+        control={control}
+        render={({ field }) => (
+          <div className="space-y-2">
+            <Label htmlFor="title">Title</Label>
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={Title.MR}>Mr</SelectItem>
+                <SelectItem value={Title.MRS}>Mrs</SelectItem>
+                <SelectItem value={Title.MS}>Ms</SelectItem>
+                <SelectItem value={Title.DR}>Dr</SelectItem>
+                <SelectItem value={Title.PROF}>Prof</SelectItem>
+                <SelectItem value={Title.SR}>Sr</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor="gender">Gender</Label>
-        <Select
-          value={gender}
-          onValueChange={(value) =>
-            onGenderChange(value as (typeof Gender)[keyof typeof Gender])
-          }
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={Gender.MALE}>Male</SelectItem>
-            <SelectItem value={Gender.FEMALE}>Female</SelectItem>
-            <SelectItem value={Gender.OTHER}>Other</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <Controller
+        name="gender"
+        control={control}
+        render={({ field }) => (
+          <div className="space-y-2">
+            <Label htmlFor="gender">Gender</Label>
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={Gender.MALE}>Male</SelectItem>
+                <SelectItem value={Gender.FEMALE}>Female</SelectItem>
+                <SelectItem value={Gender.OTHER}>Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      />
     </>
   );
 }
