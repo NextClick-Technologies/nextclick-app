@@ -9,7 +9,6 @@ import {
   buildPaginatedResponse,
 } from "@/lib/api/api-utils";
 import { employeeSchema } from "@/schemas/employee.schema";
-import type { EmployeeInsert } from "@/types/database.type";
 
 export async function GET(request: NextRequest) {
   try {

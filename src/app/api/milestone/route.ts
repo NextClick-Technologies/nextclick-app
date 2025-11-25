@@ -9,7 +9,6 @@ import {
   buildPaginatedResponse,
 } from "@/lib/api/api-utils";
 import { milestoneSchema } from "@/schemas/milestone.schema";
-import type { MilestoneInsert } from "@/types/database.type";
 
 export async function GET(request: NextRequest) {
   try {

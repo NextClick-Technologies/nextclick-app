@@ -2,15 +2,14 @@ import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
 import { updateClientSchema } from "@/schemas/client.schema";
-import type { ClientUpdate } from "@/types/database.type";
 
 // GET /api/client/[id] - Get a single client
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const { data, error } = await supabaseAdmin
       .from("clients")
@@ -31,10 +30,10 @@ export async function GET(
 // PATCH /api/client/[id] - Update a client
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const validatedData = updateClientSchema.parse(body);
 
@@ -59,10 +58,10 @@ export async function PATCH(
 // DELETE /api/client/[id] - Delete a client
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const { error } = await supabaseAdmin.from("clients").delete().eq("id", id);
 

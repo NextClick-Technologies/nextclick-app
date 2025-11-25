@@ -3,6 +3,7 @@
 import { Client } from "@/types/database.type";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
+import { Gender } from "@/const";
 
 interface ClientTableProps {
   clients: Client[];
@@ -62,7 +63,7 @@ export function ClientTable({ clients }: ClientTableProps) {
               </td>
               <td className="py-4">
                 <Badge
-                  variant={client.gender === "MALE" ? "default" : "secondary"}
+                  variant={client.gender === Gender.MALE ? "default" : "secondary"}
                 >
                   {client.gender}
                 </Badge>
