@@ -1,31 +1,34 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { useCreateProject, useClients } from "@/hooks/useApi"
-import { Loader2 } from "lucide-react"
+} from "@/components/ui/select";
+import { useCreateProject, useClients } from "@/hooks/useApi";
+import { Loader2 } from "lucide-react";
 
 interface AddProjectDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) {
+export function AddProjectDialog({
+  open,
+  onOpenChange,
+}: AddProjectDialogProps) {
   const [formData, setFormData] = useState({
     name: "",
     type: "",
@@ -37,29 +40,36 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
     priority: "MEDIUM",
     description: "",
     clientId: "",
-  })
+  });
 
-  const createProject = useCreateProject()
-  const { data: clientsData } = useClients({ pageSize: 100 })
-  const clients = clientsData?.data || []
+  const createProject = useCreateProject();
+  const { data: clientsData } = useClients({ pageSize: 100 });
+  const clients = clientsData?.data || [];
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     try {
       await createProject.mutateAsync({
         name: formData.name,
         type: formData.type || undefined,
-        startDate: formData.startDate ? new Date(formData.startDate).toISOString() : undefined,
-        finishDate: formData.finishDate ? new Date(formData.finishDate).toISOString() : undefined,
+        startDate: formData.startDate
+          ? new Date(formData.startDate).toISOString()
+          : undefined,
+        finishDate: formData.finishDate
+          ? new Date(formData.finishDate).toISOString()
+          : undefined,
         budget: formData.budget || undefined,
-        paymentTerms: formData.paymentTerms as "NET_30D" | "NET_60D" | "UPFRONT",
+        paymentTerms: formData.paymentTerms as
+          | "NET_30D"
+          | "NET_60D"
+          | "UPFRONT",
         status: formData.status as "ACTIVE" | "COMPLETED" | "ON_HOLD",
         priority: formData.priority as "HIGH" | "MEDIUM" | "LOW" | undefined,
         description: formData.description || undefined,
         clientId: formData.clientId,
-      })
-      
+      });
+
       setFormData({
         name: "",
         type: "",
@@ -71,13 +81,13 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
         priority: "MEDIUM",
         description: "",
         clientId: "",
-      })
-      
-      onOpenChange(false)
+      });
+
+      onOpenChange(false);
     } catch (error) {
-      console.error("Failed to create project:", error)
+      console.error("Failed to create project:", error);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -91,17 +101,15 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
             id="name"
             placeholder="Enter project name"
             value={formData.name}
-            onChange={(value) => 
-              setFormData({ ...formData, name: value })
-            }
+            onChange={(value) => setFormData({ ...formData, name: value })}
             required
           />
-          
+
           <div className="space-y-2">
             <Label htmlFor="clientId">Client</Label>
             <Select
               value={formData.clientId}
-              onValueChange={(value) => 
+              onValueChange={(value) =>
                 setFormData({ ...formData, clientId: value })
               }
               required
@@ -118,17 +126,15 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
               </SelectContent>
             </Select>
           </div>
-          
+
           <FormField
             label="Type (Optional)"
             id="type"
             placeholder="e.g., web-development, mobile-app"
             value={formData.type}
-            onChange={(value) => 
-              setFormData({ ...formData, type: value })
-            }
+            onChange={(value) => setFormData({ ...formData, type: value })}
           />
-          
+
           <div className="grid grid-cols-2 gap-4">
             <FormField
               label="Start Date (Optional)"
@@ -136,40 +142,38 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
               type="date"
               placeholder=""
               value={formData.startDate}
-              onChange={(value) => 
+              onChange={(value) =>
                 setFormData({ ...formData, startDate: value })
               }
             />
-            
+
             <FormField
               label="Finish Date (Optional)"
               id="finishDate"
               type="date"
               placeholder=""
               value={formData.finishDate}
-              onChange={(value) => 
+              onChange={(value) =>
                 setFormData({ ...formData, finishDate: value })
               }
             />
           </div>
-          
+
           <FormField
             label="Budget (Optional)"
             id="budget"
             type="number"
             placeholder="0"
             value={formData.budget}
-            onChange={(value) => 
-              setFormData({ ...formData, budget: value })
-            }
+            onChange={(value) => setFormData({ ...formData, budget: value })}
           />
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="paymentTerms">Payment Terms</Label>
               <Select
                 value={formData.paymentTerms}
-                onValueChange={(value) => 
+                onValueChange={(value) =>
                   setFormData({ ...formData, paymentTerms: value })
                 }
               >
@@ -183,12 +187,12 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
               <Select
                 value={formData.status}
-                onValueChange={(value) => 
+                onValueChange={(value) =>
                   setFormData({ ...formData, status: value })
                 }
               >
@@ -203,12 +207,12 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
               </Select>
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="priority">Priority</Label>
             <Select
               value={formData.priority}
-              onValueChange={(value) => 
+              onValueChange={(value) =>
                 setFormData({ ...formData, priority: value })
               }
             >
@@ -222,7 +226,7 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="description">Description (Optional)</Label>
             <textarea
@@ -230,12 +234,12 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
               className="flex min-h-20 w-full rounded-md border border-input bg-white dark:bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="Enter project description"
               value={formData.description}
-              onChange={(e) => 
+              onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
             />
           </div>
-          
+
           <div className="flex gap-3 pt-4">
             <Button
               type="button"
@@ -246,15 +250,21 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
             >
               Cancel
             </Button>
-            <Button type="submit" className="flex-1" disabled={createProject.isPending}>
-              {createProject.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button
+              type="submit"
+              className="flex-1"
+              disabled={createProject.isPending}
+            >
+              {createProject.isPending && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
               Add Project
             </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 function FormField({
@@ -266,13 +276,13 @@ function FormField({
   onChange,
   required = false,
 }: {
-  label: string
-  id: string
-  type?: string
-  placeholder: string
-  value: string
-  onChange: (value: string) => void
-  required?: boolean
+  label: string;
+  id: string;
+  type?: string;
+  placeholder: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
 }) {
   return (
     <div className="space-y-2">
@@ -286,5 +296,5 @@ function FormField({
         required={required}
       />
     </div>
-  )
+  );
 }

@@ -59,7 +59,10 @@ export async function DELETE(
   try {
     const { id } = params;
 
-    const { error } = await supabaseAdmin.from("companies").delete().eq("id", id);
+    const { error } = await supabaseAdmin
+      .from("companies")
+      .delete()
+      .eq("id", id);
 
     if (error) {
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);

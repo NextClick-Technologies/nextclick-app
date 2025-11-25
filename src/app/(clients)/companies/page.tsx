@@ -48,7 +48,11 @@ export default function CompaniesPage() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <MetricCard label="Total Companies" value={totalCompanies} isLoading={isLoading} />
+          <MetricCard
+            label="Total Companies"
+            value={totalCompanies}
+            isLoading={isLoading}
+          />
           <MetricCard
             label="With Email"
             value={companies.filter((c) => c.email).length}
@@ -58,7 +62,11 @@ export default function CompaniesPage() {
           <MetricCard
             label="With Address"
             value={companies.filter((c) => c.address).length}
-            badge={<Badge variant="secondary">{companies.filter((c) => c.address).length}</Badge>}
+            badge={
+              <Badge variant="secondary">
+                {companies.filter((c) => c.address).length}
+              </Badge>
+            }
             isLoading={isLoading}
           />
         </div>
@@ -79,21 +87,23 @@ export default function CompaniesPage() {
                 </div>
               </div>
             </div>
-            
+
             {error && (
               <div className="text-center py-8 text-destructive">
                 Error loading companies: {error.message}
               </div>
             )}
-            
+
             {isLoading && (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             )}
-            
-            {!isLoading && !error && <CompanyTable companies={filteredCompanies} />}
-            
+
+            {!isLoading && !error && (
+              <CompanyTable companies={filteredCompanies} />
+            )}
+
             {!isLoading && !error && filteredCompanies.length === 0 && (
               <div className="text-center py-8 text-muted-foreground">
                 No companies found

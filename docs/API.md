@@ -32,22 +32,26 @@ Content-Type: application/json
 ### Clients
 
 #### Get All Clients
+
 ```
 GET /api/client?page=1&pageSize=10&orderBy=name:asc&gender=MALE
 ```
 
 Query Parameters:
+
 - `page` (optional): Page number (default: 1)
 - `pageSize` (optional): Items per page (default: 10, max: 100)
 - `orderBy` (optional): Sorting (format: `column:asc` or `column:desc`, comma-separated)
 - `gender` (optional): Filter by gender (MALE, FEMALE, OTHER)
 
 #### Get Client by ID
+
 ```
 GET /api/client/{id}
 ```
 
 #### Create Client
+
 ```
 POST /api/client
 Content-Type: application/json
@@ -63,6 +67,7 @@ Content-Type: application/json
 ```
 
 #### Update Client
+
 ```
 PATCH /api/client/{id}
 Content-Type: application/json
@@ -74,6 +79,7 @@ Content-Type: application/json
 ```
 
 #### Delete Client
+
 ```
 DELETE /api/client/{id}
 ```
@@ -81,16 +87,19 @@ DELETE /api/client/{id}
 ### Companies
 
 #### Get All Companies
+
 ```
 GET /api/company?page=1&pageSize=10&orderBy=createdAt:desc
 ```
 
 #### Get Company by ID
+
 ```
 GET /api/company/{id}
 ```
 
 #### Create Company
+
 ```
 POST /api/company
 Content-Type: application/json
@@ -104,6 +113,7 @@ Content-Type: application/json
 ```
 
 #### Update Company
+
 ```
 PATCH /api/company/{id}
 Content-Type: application/json
@@ -114,6 +124,7 @@ Content-Type: application/json
 ```
 
 #### Delete Company
+
 ```
 DELETE /api/company/{id}
 ```
@@ -121,16 +132,19 @@ DELETE /api/company/{id}
 ### Projects
 
 #### Get All Projects
+
 ```
 GET /api/project?page=1&pageSize=10&orderBy=createdAt:desc
 ```
 
 #### Get Project by ID
+
 ```
 GET /api/project/{id}
 ```
 
 #### Create Project
+
 ```
 POST /api/project
 Content-Type: application/json
@@ -150,6 +164,7 @@ Content-Type: application/json
 ```
 
 #### Update Project
+
 ```
 PATCH /api/project/{id}
 Content-Type: application/json
@@ -161,6 +176,7 @@ Content-Type: application/json
 ```
 
 #### Delete Project
+
 ```
 DELETE /api/project/{id}
 ```
@@ -168,19 +184,23 @@ DELETE /api/project/{id}
 ### Milestones
 
 #### Get All Milestones
+
 ```
 GET /api/milestone?page=1&pageSize=10&projectId=uuid-here
 ```
 
 Query Parameters:
+
 - `projectId` (optional): Filter by project ID
 
 #### Get Milestone by ID
+
 ```
 GET /api/milestone/{id}
 ```
 
 #### Create Milestone
+
 ```
 POST /api/milestone
 Content-Type: application/json
@@ -196,11 +216,13 @@ Content-Type: application/json
 ```
 
 #### Update Milestone
+
 ```
 PATCH /api/milestone/{id}
 ```
 
 #### Delete Milestone
+
 ```
 DELETE /api/milestone/{id}
 ```
@@ -208,16 +230,19 @@ DELETE /api/milestone/{id}
 ### Payments
 
 #### Get All Payments
+
 ```
 GET /api/payment?page=1&pageSize=10&amount=1000
 ```
 
 #### Get Payment by ID
+
 ```
 GET /api/payment/{id}
 ```
 
 #### Create Payment
+
 ```
 POST /api/payment
 Content-Type: application/json
@@ -233,11 +258,13 @@ Content-Type: application/json
 ```
 
 #### Update Payment
+
 ```
 PATCH /api/payment/{id}
 ```
 
 #### Delete Payment
+
 ```
 DELETE /api/payment/{id}
 ```
@@ -245,16 +272,19 @@ DELETE /api/payment/{id}
 ### Employees
 
 #### Get All Employees
+
 ```
 GET /api/employee?page=1&pageSize=10
 ```
 
 #### Get Employee by ID
+
 ```
 GET /api/employee/{id}
 ```
 
 #### Create Employee
+
 ```
 POST /api/employee
 Content-Type: application/json
@@ -270,11 +300,13 @@ Content-Type: application/json
 ```
 
 #### Update Employee
+
 ```
 PATCH /api/employee/{id}
 ```
 
 #### Delete Employee
+
 ```
 DELETE /api/employee/{id}
 ```
@@ -282,19 +314,23 @@ DELETE /api/employee/{id}
 ### Communication Logs
 
 #### Get All Communication Logs
+
 ```
 GET /api/communication-log?page=1&pageSize=10&clientId=uuid-here
 ```
 
 Query Parameters:
+
 - `clientId` (optional): Filter by client ID
 
 #### Get Communication Log by ID
+
 ```
 GET /api/communication-log/{id}
 ```
 
 #### Create Communication Log
+
 ```
 POST /api/communication-log
 Content-Type: application/json
@@ -311,11 +347,13 @@ Content-Type: application/json
 ```
 
 #### Update Communication Log
+
 ```
 PATCH /api/communication-log/{id}
 ```
 
 #### Delete Communication Log
+
 ```
 DELETE /api/communication-log/{id}
 ```
@@ -323,6 +361,7 @@ DELETE /api/communication-log/{id}
 ## Response Format
 
 ### Success Response
+
 ```json
 {
   "data": {...},
@@ -336,6 +375,7 @@ DELETE /api/communication-log/{id}
 ```
 
 ### Error Response
+
 ```json
 {
   "error": "Error message",
@@ -355,6 +395,7 @@ DELETE /api/communication-log/{id}
 ## Database Schema
 
 Run the migration file in Supabase to create the database schema:
+
 ```sql
 supabase/migrations/001_initial_schema.sql
 ```

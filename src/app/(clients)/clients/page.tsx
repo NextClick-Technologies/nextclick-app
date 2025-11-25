@@ -49,17 +49,27 @@ export default function ClientsPage() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <MetricCard label="Total Clients" value={totalClients} isLoading={isLoading} />
+          <MetricCard
+            label="Total Clients"
+            value={totalClients}
+            isLoading={isLoading}
+          />
           <MetricCard
             label="Male Clients"
             value={clients.filter((c) => c.gender === "MALE").length}
-            badge={<Badge>{clients.filter((c) => c.gender === "MALE").length}</Badge>}
+            badge={
+              <Badge>{clients.filter((c) => c.gender === "MALE").length}</Badge>
+            }
             isLoading={isLoading}
           />
           <MetricCard
             label="Female Clients"
             value={clients.filter((c) => c.gender === "FEMALE").length}
-            badge={<Badge variant="secondary">{clients.filter((c) => c.gender === "FEMALE").length}</Badge>}
+            badge={
+              <Badge variant="secondary">
+                {clients.filter((c) => c.gender === "FEMALE").length}
+              </Badge>
+            }
             isLoading={isLoading}
           />
         </div>
@@ -80,21 +90,21 @@ export default function ClientsPage() {
                 </div>
               </div>
             </div>
-            
+
             {error && (
               <div className="text-center py-8 text-destructive">
                 Error loading clients: {error.message}
               </div>
             )}
-            
+
             {isLoading && (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             )}
-            
+
             {!isLoading && !error && <ClientTable clients={filteredClients} />}
-            
+
             {!isLoading && !error && filteredClients.length === 0 && (
               <div className="text-center py-8 text-muted-foreground">
                 No clients found

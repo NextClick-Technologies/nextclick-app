@@ -113,5 +113,7 @@ export type UpdatePaymentInput = z.infer<typeof updatePaymentSchema>;
 export type EmployeeInput = z.infer<typeof employeeSchema>;
 export type UpdateEmployeeInput = z.infer<typeof updateEmployeeSchema>;
 export type CommunicationLogInput = z.infer<typeof communicationLogSchema>;
-export type UpdateCommunicationLogInput = z.infer<typeof updateCommunicationLogSchema>;
+export type UpdateCommunicationLogInput = z.infer<
+  typeof updateCommunicationLogSchema
+>;
 export type PaginationParams = z.infer<typeof paginationSchema>;

@@ -30,8 +30,13 @@ export default function ProjectsPage() {
   );
 
   const activeProjects = projects.filter((p) => p.status === "ACTIVE").length;
-  const completedProjects = projects.filter((p) => p.status === "COMPLETED").length;
-  const totalBudget = projects.reduce((sum, p) => sum + Number(p.budget || 0), 0);
+  const completedProjects = projects.filter(
+    (p) => p.status === "COMPLETED"
+  ).length;
+  const totalBudget = projects.reduce(
+    (sum, p) => sum + Number(p.budget || 0),
+    0
+  );
 
   return (
     <AppLayout>
@@ -52,7 +57,11 @@ export default function ProjectsPage() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-4">
-          <MetricCard label="Total Projects" value={totalProjects} isLoading={isLoading} />
+          <MetricCard
+            label="Total Projects"
+            value={totalProjects}
+            isLoading={isLoading}
+          />
           <MetricCard
             label="Active"
             value={activeProjects}
@@ -88,21 +97,23 @@ export default function ProjectsPage() {
                 </div>
               </div>
             </div>
-            
+
             {error && (
               <div className="text-center py-8 text-destructive">
                 Error loading projects: {error.message}
               </div>
             )}
-            
+
             {isLoading && (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             )}
-            
-            {!isLoading && !error && <ProjectTable projects={filteredProjects} />}
-            
+
+            {!isLoading && !error && (
+              <ProjectTable projects={filteredProjects} />
+            )}
+
             {!isLoading && !error && filteredProjects.length === 0 && (
               <div className="text-center py-8 text-muted-foreground">
                 No projects found

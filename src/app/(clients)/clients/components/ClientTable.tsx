@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { Client } from "@/types/database"
-import { Badge } from "@/components/ui/badge"
-import { Avatar } from "@/components/ui/avatar"
+import { Client } from "@/types/database";
+import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
 
 interface ClientTableProps {
-  clients: Client[]
+  clients: Client[];
 }
 
 export function ClientTable({ clients }: ClientTableProps) {
@@ -38,11 +38,14 @@ export function ClientTable({ clients }: ClientTableProps) {
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10 bg-primary/10 flex items-center justify-center">
                     <span className="text-sm font-medium">
-                      {client.name[0]}{client.familyName[0]}
+                      {client.name[0]}
+                      {client.familyName[0]}
                     </span>
                   </Avatar>
                   <div>
-                    <p className="font-medium">{client.name} {client.familyName}</p>
+                    <p className="font-medium">
+                      {client.name} {client.familyName}
+                    </p>
                   </div>
                 </div>
               </td>
@@ -50,7 +53,9 @@ export function ClientTable({ clients }: ClientTableProps) {
                 <Badge variant="outline">{client.title}</Badge>
               </td>
               <td className="py-4">
-                <p className="text-sm text-muted-foreground">{client.email || "-"}</p>
+                <p className="text-sm text-muted-foreground">
+                  {client.email || "-"}
+                </p>
               </td>
               <td className="py-4">
                 <p className="text-sm">{client.phoneNumber}</p>
@@ -67,5 +72,5 @@ export function ClientTable({ clients }: ClientTableProps) {
         </tbody>
       </table>
     </div>
-  )
+  );
 }

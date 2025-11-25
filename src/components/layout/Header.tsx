@@ -41,10 +41,13 @@ export function Header() {
             <span className="sr-only">Notifications</span>
           </Button>
           <ThemeToggle />
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+              <Button
+                variant="ghost"
+                className="relative h-10 w-10 rounded-full"
+              >
                 <Avatar className="h-10 w-10 bg-primary/10 flex items-center justify-center">
                   <span className="text-sm font-medium">
                     {session?.user?.name?.charAt(0) || "U"}
@@ -64,7 +67,9 @@ export function Header() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/auth/signin" })}>
+              <DropdownMenuItem
+                onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Sign out</span>
               </DropdownMenuItem>

@@ -1,10 +1,6 @@
 import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
-import {
-  apiSuccess,
-  apiError,
-  handleApiError,
-} from "@/lib/api/utils";
+import { apiSuccess, apiError, handleApiError } from "@/lib/api/utils";
 import { updateClientSchema } from "@/schemas/api";
 
 // GET /api/client/[id] - Get a single client
@@ -66,10 +62,7 @@ export async function DELETE(
   try {
     const { id } = params;
 
-    const { error } = await supabaseAdmin
-      .from("clients")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabaseAdmin.from("clients").delete().eq("id", id);
 
     if (error) {
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);

@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { Company } from "@/types/database"
-import { Avatar } from "@/components/ui/avatar"
-import { Building2 } from "lucide-react"
+import { Company } from "@/types/database";
+import { Avatar } from "@/components/ui/avatar";
+import { Building2 } from "lucide-react";
 
 interface CompanyTableProps {
-  companies: Company[]
+  companies: Company[];
 }
 
 export function CompanyTable({ companies }: CompanyTableProps) {
@@ -42,7 +42,9 @@ export function CompanyTable({ companies }: CompanyTableProps) {
                 </div>
               </td>
               <td className="py-4">
-                <p className="text-sm text-muted-foreground">{company.email || "-"}</p>
+                <p className="text-sm text-muted-foreground">
+                  {company.email || "-"}
+                </p>
               </td>
               <td className="py-4">
                 <p className="text-sm">{company.phoneNumber || "-"}</p>
@@ -57,5 +59,5 @@ export function CompanyTable({ companies }: CompanyTableProps) {
         </tbody>
       </table>
     </div>
-  )
+  );
 }

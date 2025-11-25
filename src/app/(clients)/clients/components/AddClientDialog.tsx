@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { useCreateClient } from "@/hooks/useApi"
-import { Loader2 } from "lucide-react"
+} from "@/components/ui/select";
+import { useCreateClient } from "@/hooks/useApi";
+import { Loader2 } from "lucide-react";
 
 interface AddClientDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
@@ -33,13 +33,13 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
     gender: "MALE",
     phoneNumber: "",
     email: "",
-  })
+  });
 
-  const createClient = useCreateClient()
+  const createClient = useCreateClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     try {
       await createClient.mutateAsync({
         title: formData.title as "MR" | "MRS" | "MS" | "DR" | "PROF",
@@ -48,8 +48,8 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
         gender: formData.gender as "MALE" | "FEMALE" | "OTHER",
         phoneNumber: formData.phoneNumber,
         email: formData.email || undefined,
-      })
-      
+      });
+
       // Reset form
       setFormData({
         title: "MR",
@@ -58,13 +58,13 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
         gender: "MALE",
         phoneNumber: "",
         email: "",
-      })
-      
-      onOpenChange(false)
+      });
+
+      onOpenChange(false);
     } catch (error) {
-      console.error("Failed to create client:", error)
+      console.error("Failed to create client:", error);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -77,7 +77,7 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
             <Label htmlFor="title">Title</Label>
             <Select
               value={formData.title}
-              onValueChange={(value) => 
+              onValueChange={(value) =>
                 setFormData({ ...formData, title: value })
               }
             >
@@ -93,34 +93,32 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
               </SelectContent>
             </Select>
           </div>
-          
+
           <FormField
             label="First Name"
             id="name"
             placeholder="Enter first name"
             value={formData.name}
-            onChange={(value) => 
-              setFormData({ ...formData, name: value })
-            }
+            onChange={(value) => setFormData({ ...formData, name: value })}
             required
           />
-          
+
           <FormField
             label="Family Name"
             id="familyName"
             placeholder="Enter family name"
             value={formData.familyName}
-            onChange={(value) => 
+            onChange={(value) =>
               setFormData({ ...formData, familyName: value })
             }
             required
           />
-          
+
           <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
             <Select
               value={formData.gender}
-              onValueChange={(value) => 
+              onValueChange={(value) =>
                 setFormData({ ...formData, gender: value })
               }
             >
@@ -134,29 +132,27 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
               </SelectContent>
             </Select>
           </div>
-          
+
           <FormField
             label="Phone Number"
             id="phoneNumber"
             placeholder="+1234567890"
             value={formData.phoneNumber}
-            onChange={(value) => 
+            onChange={(value) =>
               setFormData({ ...formData, phoneNumber: value })
             }
             required
           />
-          
+
           <FormField
             label="Email (Optional)"
             id="email"
             type="email"
             placeholder="email@example.com"
             value={formData.email}
-            onChange={(value) => 
-              setFormData({ ...formData, email: value })
-            }
+            onChange={(value) => setFormData({ ...formData, email: value })}
           />
-          
+
           <div className="flex gap-3 pt-4">
             <Button
               type="button"
@@ -167,15 +163,21 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
             >
               Cancel
             </Button>
-            <Button type="submit" className="flex-1" disabled={createClient.isPending}>
-              {createClient.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button
+              type="submit"
+              className="flex-1"
+              disabled={createClient.isPending}
+            >
+              {createClient.isPending && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
               Add Client
             </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 function FormField({
@@ -187,13 +189,13 @@ function FormField({
   onChange,
   required = false,
 }: {
-  label: string
-  id: string
-  type?: string
-  placeholder: string
-  value: string
-  onChange: (value: string) => void
-  required?: boolean
+  label: string;
+  id: string;
+  type?: string;
+  placeholder: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
 }) {
   return (
     <div className="space-y-2">
@@ -207,5 +209,5 @@ function FormField({
         required={required}
       />
     </div>
-  )
+  );
 }

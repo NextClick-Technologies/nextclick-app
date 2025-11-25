@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { Project } from "@/types/database"
-import { Badge } from "@/components/ui/badge"
-import { Avatar } from "@/components/ui/avatar"
-import { FolderKanban } from "lucide-react"
+import { Project } from "@/types/database";
+import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
+import { FolderKanban } from "lucide-react";
 
 interface ProjectTableProps {
-  projects: Project[]
+  projects: Project[];
 }
 
 export function ProjectTable({ projects }: ProjectTableProps) {
@@ -122,5 +122,5 @@ export function ProjectTable({ projects }: ProjectTableProps) {
         </tbody>
       </table>
     </div>
-  )
+  );
 }

@@ -17,7 +17,9 @@ export async function GET(request: NextRequest) {
     const orderByParam = searchParams.get("orderBy");
     const projectId = searchParams.get("projectId");
 
-    let query = supabaseAdmin.from("milestones").select("*", { count: "exact" });
+    let query = supabaseAdmin
+      .from("milestones")
+      .select("*", { count: "exact" });
 
     if (projectId) {
       query = query.eq("projectId", projectId);

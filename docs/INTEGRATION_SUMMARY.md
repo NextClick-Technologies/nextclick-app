@@ -5,21 +5,25 @@ The Next Click ERP frontend has been successfully integrated with the backend AP
 ## ✅ Summary of Changes
 
 ### 1. **Provider Setup**
+
 - ✅ Added `QueryProvider` for TanStack Query (data fetching & caching)
 - ✅ Added `SessionProvider` for NextAuth (authentication)
 - ✅ Integrated both providers into root layout
 
 ### 2. **API Hooks** (`/src/hooks/useApi.ts`)
+
 Created 49 hooks for all 7 entities with full CRUD operations:
+
 - **Clients**: 5 hooks (list, get, create, update, delete)
 - **Companies**: 5 hooks
 - **Projects**: 5 hooks
 - **Milestones**: 5 hooks
 - **Payments**: 5 hooks
-- **Employees**: 5 hooks  
+- **Employees**: 5 hooks
 - **Communication Logs**: 5 hooks
 
 All hooks include:
+
 - Automatic pagination
 - Query parameter support (filtering, sorting)
 - Loading & error states
@@ -29,6 +33,7 @@ All hooks include:
 ### 3. **Pages Integrated**
 
 #### Clients Page (`/clients`)
+
 - Real-time data from API
 - Create new clients
 - Search functionality
@@ -37,6 +42,7 @@ All hooks include:
 - Error handling
 
 #### Companies Page (`/companies`)
+
 - Real-time data from API
 - Create new companies
 - Search functionality
@@ -44,6 +50,7 @@ All hooks include:
 - Full CRUD ready
 
 #### Projects Page (`/projects`)
+
 - Real-time data from API
 - Create new projects with client selection
 - Search functionality
@@ -52,6 +59,7 @@ All hooks include:
 - Advanced form with dates, priorities, etc.
 
 ### 4. **Authentication**
+
 - Sign-in page (`/auth/signin`)
 - Sign-out page (`/auth/signout`)
 - User dropdown in header
@@ -59,7 +67,9 @@ All hooks include:
 - Session management
 
 ### 5. **Database Types**
+
 Added convenience type exports to `/src/types/database.ts`:
+
 ```typescript
 export type Client = Database["public"]["Tables"]["clients"]["Row"];
 export type ClientInsert = Database["public"]["Tables"]["clients"]["Insert"];
@@ -70,10 +80,12 @@ export type ClientUpdate = Database["public"]["Tables"]["clients"]["Update"];
 ## 🚀 Getting Started
 
 1. **Ensure database is set up**:
+
    - Run the SQL migration in Supabase
    - Add test data if needed
 
 2. **Start the dev server**:
+
    ```bash
    npm run dev
    ```
@@ -86,6 +98,7 @@ export type ClientUpdate = Database["public"]["Tables"]["clients"]["Update"];
 ## 📊 Features Implemented
 
 ### Data Fetching
+
 - ✅ Pagination (page, pageSize)
 - ✅ Sorting (orderBy parameter)
 - ✅ Filtering (entity-specific filters)
@@ -94,6 +107,7 @@ export type ClientUpdate = Database["public"]["Tables"]["clients"]["Update"];
 - ✅ Error retry logic
 
 ### UI/UX
+
 - ✅ Loading states with spinners
 - ✅ Skeleton screens
 - ✅ Empty states
@@ -103,6 +117,7 @@ export type ClientUpdate = Database["public"]["Tables"]["clients"]["Update"];
 - ✅ Dark mode support
 
 ### Forms
+
 - ✅ Validation
 - ✅ Loading states during submission
 - ✅ Error handling
@@ -111,6 +126,7 @@ export type ClientUpdate = Database["public"]["Tables"]["clients"]["Update"];
 - ✅ Automatic list refresh
 
 ### Auth
+
 - ✅ Protected routes
 - ✅ User session display
 - ✅ Sign-in/out flows
@@ -173,12 +189,14 @@ docs/
 ## 🔮 Next Steps (Optional)
 
 ### Immediate Enhancements
+
 1. **Add Edit Functionality**: Implement edit dialogs for all entities
 2. **Add Delete with Confirmation**: Delete buttons with confirmation modals
 3. **Server-side Search**: Move search to API for better performance
 4. **Pagination Controls**: Add prev/next buttons
 
 ### Advanced Features
+
 1. **Real-time Updates**: Use Supabase real-time subscriptions
 2. **Optimistic Updates**: Update UI before server responds
 3. **Virtual Scrolling**: For large lists
@@ -187,6 +205,7 @@ docs/
 6. **Bulk Actions**: Select multiple items for batch operations
 
 ### Polish
+
 1. **Loading Skeletons**: More detailed skeleton screens
 2. **Animations**: Smooth transitions between states
 3. **Mobile Optimization**: Better mobile UX
@@ -210,11 +229,13 @@ docs/
 The frontend is now fully integrated with your backend API. All pages are connected, authentication is working, and the app is ready for testing and further development.
 
 Start the dev server and test it out:
+
 ```bash
 npm run dev
 ```
 
 Then navigate to:
+
 - http://localhost:3000/clients
 - http://localhost:3000/companies
 - http://localhost:3000/projects

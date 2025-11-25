@@ -66,7 +66,9 @@ export function parseOrderBy(orderByParam: string | null): {
     const [column, direction] = item.split(":");
     return {
       column: column.trim(),
-      ascending: direction?.toLowerCase() !== "desc" && direction?.toLowerCase() !== "dsc",
+      ascending:
+        direction?.toLowerCase() !== "desc" &&
+        direction?.toLowerCase() !== "dsc",
     };
   });
 }
