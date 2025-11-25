@@ -7,6 +7,9 @@ import {
   parsePagination,
   parseOrderBy,
   buildPaginatedResponse,
+  transformToDb,
+  transformFromDb,
+  transformColumnName,
 } from "@/lib/api/api-utils";
 import { milestoneSchema } from "@/schemas/milestone.schema";
 
@@ -22,12 +25,12 @@ export async function GET(request: NextRequest) {
       .select("*", { count: "exact" });
 
     if (projectId) {
-      query = query.eq("projectId", projectId);
+      query = query.eq(transformColumnName("projectId"), projectId);
     }
 
     const orderByRules = parseOrderBy(orderByParam);
     orderByRules.forEach(({ column, ascending }) => {
-      query = query.order(column, { ascending });
+      query = query.order(transformColumnName(column), { ascending });
     });
 
     const from = (page - 1) * pageSize;
@@ -41,7 +44,12 @@ export async function GET(request: NextRequest) {
     }
 
     return apiSuccess(
-      buildPaginatedResponse(data || [], page, pageSize, count || 0)
+      buildPaginatedResponse(
+        transformFromDb<unknown[]>(data || []),
+        page,
+        pageSize,
+        count || 0
+      )
     );
   } catch (error) {
     return handleApiError(error);
@@ -56,7 +64,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabaseAdmin
       .from("milestones")
       // @ts-expect-error - Supabase type inference issue with partial updates
-      .insert([validatedData])
+      .insert([transformToDb(validatedData)])
       .select()
       .single();
 
@@ -64,7 +72,7 @@ export async function POST(request: NextRequest) {
       return apiError(error.message, 500);
     }
 
-    return apiSuccess(data, 201);
+    return apiSuccess(transformFromDb(data), 201);
   } catch (error) {
     return handleApiError(error);
   }

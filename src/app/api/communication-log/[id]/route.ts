@@ -1,6 +1,12 @@
 import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
-import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
+import {
+  apiSuccess,
+  apiError,
+  handleApiError,
+  transformToDb,
+  transformFromDb,
+} from "@/lib/api/api-utils";
 import { updateCommunicationLogSchema } from "@/schemas/communication-log.schema";
 
 export async function GET(
@@ -20,7 +26,7 @@ export async function GET(
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
     }
 
-    return apiSuccess(data);
+    return apiSuccess(transformFromDb(data));
   } catch (error) {
     return handleApiError(error);
   }
@@ -38,7 +44,10 @@ export async function PATCH(
     const { data, error } = await supabaseAdmin
       .from("communication_logs")
       // @ts-expect-error - Supabase type inference issue with partial updates
-      .update({ ...validatedData, updatedAt: new Date().toISOString() })
+      .update({
+        ...transformToDb(validatedData),
+        updated_at: new Date().toISOString(),
+      })
       .eq("id", id)
       .select()
       .single();
@@ -47,7 +56,7 @@ export async function PATCH(
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
     }
 
-    return apiSuccess(data);
+    return apiSuccess(transformFromDb(data));
   } catch (error) {
     return handleApiError(error);
   }
