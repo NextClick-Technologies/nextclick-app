@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar } from "@/components/ui/avatar"
-import { TeamMember, Activity } from "@/types"
+import type { TeamMember } from "@/types/team-member.type";
+import type { Activity } from "@/types/activity.type";
 import { Circle } from "lucide-react"
 
 interface LiveCollaborationProps {

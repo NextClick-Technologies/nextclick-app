@@ -1,6 +1,6 @@
 "use client";
 
-import { Client } from "@/types/database";
+import { Client } from "@/types/database.type";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 

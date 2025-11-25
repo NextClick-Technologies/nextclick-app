@@ -7,8 +7,8 @@ import {
   parsePagination,
   parseOrderBy,
   buildPaginatedResponse,
-} from "@/lib/api/utils";
-import { clientSchema } from "@/schemas/api";
+} from "@/lib/api/api-utils";
+import { clientSchema } from "@/schemas/client.schema";
 
 // GET /api/client - Get all clients with pagination
 export async function GET(request: NextRequest) {

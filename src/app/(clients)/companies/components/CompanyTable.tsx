@@ -1,6 +1,6 @@
 "use client";
 
-import { Company } from "@/types/database";
+import { Company } from "@/types/database.type";
 import { Avatar } from "@/components/ui/avatar";
 import { Building2 } from "lucide-react";
 

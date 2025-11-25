@@ -1,10 +1,8 @@
-import type {
-  Client,
-  TeamMember,
-  Activity,
-  AIInsight,
-  DashboardMetrics,
-} from "@/types";
+import type { Client } from "@/types/client.type";
+import type { TeamMember } from "@/types/team-member.type";
+import type { Activity } from "@/types/activity.type";
+import type { AIInsight } from "@/types/ai-insight.type";
+import type { DashboardMetrics } from "@/types/dashboard-metrics.type";
 
 export const mockClients: Client[] = [
   {

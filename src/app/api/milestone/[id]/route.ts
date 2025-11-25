@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
-import { apiSuccess, apiError, handleApiError } from "@/lib/api/utils";
-import { updateMilestoneSchema } from "@/schemas/api";
+import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
+import { updateMilestoneSchema } from "@/schemas/milestone.schema";
 
 export async function GET(
   request: NextRequest,

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Plus, Search, Loader2 } from "lucide-react";
-import { useProjects } from "@/hooks/useApi";
+import { useProjects } from "@/hooks/useProject";
 import { AddProjectDialog } from "./components/AddProjectDialog";
 import { ProjectTable } from "./components/ProjectTable";
 

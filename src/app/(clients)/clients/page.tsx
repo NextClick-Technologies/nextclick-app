@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Plus, Search, Loader2 } from "lucide-react";
 import { AddClientDialog } from "./components/AddClientDialog";
 import { ClientTable } from "./components/ClientTable";
-import { useClients } from "@/hooks/useApi";
+import { useClients } from "@/hooks/useClient";
 
 export default function ClientsPage() {
   const [searchQuery, setSearchQuery] = useState("");

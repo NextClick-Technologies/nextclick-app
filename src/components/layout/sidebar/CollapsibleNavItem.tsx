@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 import { LucideIcon, ChevronDown, ChevronRight } from "lucide-react";
 
 interface Submenu {

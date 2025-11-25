@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { supabaseAdmin } from "@/lib/supabase/server";
+import type { Employee } from "@/types/database.type";
 
 export const authConfig: NextAuthConfig = {
   providers: [
@@ -20,7 +21,7 @@ export const authConfig: NextAuthConfig = {
           .from("employees")
           .select("*")
           .eq("email", credentials.email as string)
-          .single();
+          .single<Employee>();
 
         if (!employee) {
           return null;

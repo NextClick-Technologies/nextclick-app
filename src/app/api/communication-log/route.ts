@@ -7,8 +7,8 @@ import {
   parsePagination,
   parseOrderBy,
   buildPaginatedResponse,
-} from "@/lib/api/utils";
-import { communicationLogSchema } from "@/schemas/api";
+} from "@/lib/api/api-utils";
+import { communicationLogSchema } from "@/schemas/communication-log.schema";
 
 export async function GET(request: NextRequest) {
   try {

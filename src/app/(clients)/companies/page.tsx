@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Plus, Search, Loader2 } from "lucide-react";
-import { useCompanies } from "@/hooks/useApi";
+import { useCompanies } from "@/hooks/useCompany";
 import { AddCompanyDialog } from "./components/AddCompanyDialog";
 import { CompanyTable } from "./components/CompanyTable";
 

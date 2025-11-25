@@ -7,8 +7,8 @@ import {
   parsePagination,
   parseOrderBy,
   buildPaginatedResponse,
-} from "@/lib/api/utils";
-import { paymentSchema } from "@/schemas/api";
+} from "@/lib/api/api-utils";
+import { paymentSchema } from "@/schemas/payment.schema";
 
 export async function GET(request: NextRequest) {
   try {

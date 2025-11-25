@@ -17,7 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCreateProject, useClients } from "@/hooks/useApi";
+import { useCreateProject } from "@/hooks/useProject";
+import { useClients } from "@/hooks/useClient";
 import { Loader2 } from "lucide-react";
 
 interface AddProjectDialogProps {

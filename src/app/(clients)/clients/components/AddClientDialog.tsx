@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCreateClient } from "@/hooks/useApi";
+import { useCreateClient } from "@/hooks/useClient";
 import { Loader2 } from "lucide-react";
 
 interface AddClientDialogProps {

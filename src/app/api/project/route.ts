@@ -7,8 +7,8 @@ import {
   parsePagination,
   parseOrderBy,
   buildPaginatedResponse,
-} from "@/lib/api/utils";
-import { projectSchema } from "@/schemas/api";
+} from "@/lib/api/api-utils";
+import { projectSchema } from "@/schemas/project.schema";
 
 export async function GET(request: NextRequest) {
   try {

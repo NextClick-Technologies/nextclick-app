@@ -7,8 +7,8 @@ import {
   parsePagination,
   parseOrderBy,
   buildPaginatedResponse,
-} from "@/lib/api/utils";
-import { milestoneSchema } from "@/schemas/api";
+} from "@/lib/api/api-utils";
+import { milestoneSchema } from "@/schemas/milestone.schema";
 
 export async function GET(request: NextRequest) {
   try {
