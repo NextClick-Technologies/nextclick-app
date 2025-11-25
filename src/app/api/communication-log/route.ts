@@ -56,7 +56,8 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabaseAdmin
       .from("communication_logs")
-      .insert([validatedData as CommunicationLogInsert])
+      // @ts-expect-error - Supabase type inference issue with insert
+      .insert([validatedData])
       .select()
       .single();
 

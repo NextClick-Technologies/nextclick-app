@@ -38,7 +38,8 @@ export async function PATCH(
 
     const { data, error } = await supabaseAdmin
       .from("communication_logs")
-      .update({ ...validatedData, updatedAt: new Date().toISOString() } as CommunicationLogUpdate)
+      // @ts-expect-error - Supabase type inference issue with partial updates
+      .update({ ...validatedData, updatedAt: new Date().toISOString() })
       .eq("id", id)
       .select()
       .single();

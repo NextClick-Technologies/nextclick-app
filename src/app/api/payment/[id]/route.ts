@@ -2,7 +2,6 @@ import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
 import { updatePaymentSchema } from "@/schemas/payment.schema";
-import type { PaymentUpdate } from "@/types/database.type";
 
 export async function GET(
   request: NextRequest,
@@ -38,10 +37,11 @@ export async function PATCH(
 
     const { data, error } = await supabaseAdmin
       .from("payments")
+      // @ts-expect-error - Supabase type inference issue with partial updates
       .update({
         ...validatedData,
         updatedAt: new Date().toISOString(),
-      } as PaymentUpdate)
+      })
       .eq("id", id)
       .select()
       .single();

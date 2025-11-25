@@ -38,10 +38,11 @@ export async function PATCH(
 
     const { data, error } = await supabaseAdmin
       .from("milestones")
+      // @ts-expect-error - Supabase type inference issue with partial updates
       .update({
         ...validatedData,
         updatedAt: new Date().toISOString(),
-      } as MilestoneUpdate)
+      })
       .eq("id", id)
       .select()
       .single();

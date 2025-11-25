@@ -49,7 +49,8 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabaseAdmin
       .from("employees")
-      .insert([validatedData as EmployeeInsert])
+      // @ts-expect-error - Supabase type inference issue with partial updates
+      .insert([validatedData])
       .select()
       .single();
 
