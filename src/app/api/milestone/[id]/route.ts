@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
 import { updateMilestoneSchema } from "@/schemas/milestone.schema";
+import type { MilestoneUpdate } from "@/types/database.type";
 
 export async function GET(
   request: NextRequest,
@@ -37,7 +38,10 @@ export async function PATCH(
 
     const { data, error } = await supabaseAdmin
       .from("milestones")
-      .update({ ...validatedData, updatedAt: new Date().toISOString() })
+      .update({
+        ...validatedData,
+        updatedAt: new Date().toISOString(),
+      } as MilestoneUpdate)
       .eq("id", id)
       .select()
       .single();

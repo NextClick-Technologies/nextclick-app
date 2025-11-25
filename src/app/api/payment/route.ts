@@ -9,6 +9,7 @@ import {
   buildPaginatedResponse,
 } from "@/lib/api/api-utils";
 import { paymentSchema } from "@/schemas/payment.schema";
+import type { PaymentInsert } from "@/types/database.type";
 
 export async function GET(request: NextRequest) {
   try {
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabaseAdmin
       .from("payments")
-      .insert([validatedData])
+      .insert([validatedData as PaymentInsert])
       .select()
       .single();
 

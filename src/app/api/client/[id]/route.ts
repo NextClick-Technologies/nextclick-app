@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
 import { updateClientSchema } from "@/schemas/client.schema";
+import type { ClientUpdate } from "@/types/database";
 
 // GET /api/client/[id] - Get a single client
 export async function GET(
@@ -39,7 +40,7 @@ export async function PATCH(
 
     const { data, error } = await supabaseAdmin
       .from("clients")
-      .update({ ...validatedData, updatedAt: new Date().toISOString() })
+      .update({ ...validatedData, updatedAt: new Date().toISOString() } as ClientUpdate)
       .eq("id", id)
       .select()
       .single();

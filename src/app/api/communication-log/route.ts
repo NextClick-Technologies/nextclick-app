@@ -9,6 +9,7 @@ import {
   buildPaginatedResponse,
 } from "@/lib/api/api-utils";
 import { communicationLogSchema } from "@/schemas/communication-log.schema";
+import type { CommunicationLogInsert } from "@/types/database";
 
 export async function GET(request: NextRequest) {
   try {
@@ -55,7 +56,7 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabaseAdmin
       .from("communication_logs")
-      .insert([validatedData])
+      .insert([validatedData as CommunicationLogInsert])
       .select()
       .single();
 

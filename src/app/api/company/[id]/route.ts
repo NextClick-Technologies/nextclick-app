@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
 import { updateCompanySchema } from "@/schemas/company.schema";
+import type { CompanyUpdate } from "@/types/database.type";
 
 export async function GET(
   request: NextRequest,
@@ -37,7 +38,10 @@ export async function PATCH(
 
     const { data, error } = await supabaseAdmin
       .from("companies")
-      .update({ ...validatedData, updatedAt: new Date().toISOString() })
+      .update({
+        ...validatedData,
+        updatedAt: new Date().toISOString(),
+      } as CompanyUpdate)
       .eq("id", id)
       .select()
       .single();

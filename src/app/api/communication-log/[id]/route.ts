@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
 import { updateCommunicationLogSchema } from "@/schemas/communication-log.schema";
+import type { CommunicationLogUpdate } from "@/types/database";
 
 export async function GET(
   request: NextRequest,
@@ -37,7 +38,7 @@ export async function PATCH(
 
     const { data, error } = await supabaseAdmin
       .from("communication_logs")
-      .update({ ...validatedData, updatedAt: new Date().toISOString() })
+      .update({ ...validatedData, updatedAt: new Date().toISOString() } as CommunicationLogUpdate)
       .eq("id", id)
       .select()
       .single();

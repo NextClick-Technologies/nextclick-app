@@ -9,6 +9,7 @@ import {
   buildPaginatedResponse,
 } from "@/lib/api/api-utils";
 import { projectSchema } from "@/schemas/project.schema";
+import type { ProjectInsert } from "@/types/database.type";
 
 export async function GET(request: NextRequest) {
   try {
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabaseAdmin
       .from("projects")
-      .insert([validatedData])
+      .insert([validatedData as ProjectInsert])
       .select()
       .single();
 
