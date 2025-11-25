@@ -4,47 +4,15 @@ import type { Activity } from "@/types/activity.type";
 import type { AIInsight } from "@/types/ai-insight.type";
 import type { DashboardMetrics } from "@/types/dashboard-metrics.type";
 
+// Mock clients data - deprecated, use real data from database
 export const mockClients: Client[] = [
-  {
-    id: "1",
-    name: "John Smith",
-    company: "Tunza Care",
-    email: "john@tunzacare.com",
-    phone: "+1 234 567 8900",
-    status: "active",
-    value: 185000,
-    projects: 4,
-  },
-  {
-    id: "2",
-    name: "Sarah Johnson",
-    company: "NMCYBER",
-    email: "sarah@nmcyber.com",
-    phone: "+1 234 567 8901",
-    status: "active",
-    value: 295000,
-    projects: 6,
-  },
-  {
-    id: "3",
-    name: "Mike Wilson",
-    company: "ABC Corporation",
-    email: "mike@abccorp.com",
-    phone: "+1 234 567 8902",
-    status: "active",
-    value: 125000,
-    projects: 3,
-  },
-  {
-    id: "4",
-    name: "Emily Davis",
-    company: "XYZ Limited",
-    email: "emily@xyzltd.com",
-    phone: "+1 234 567 8903",
-    status: "pending",
-    value: 89000,
-    projects: 1,
-  },
+  // Commented out - use real data from API instead
+  // {
+  //   id: "1",
+  //   name: "John",
+  //   familyName: "Smith",
+  //   ...
+  // },
 ];
 
 export const mockTeamMembers: TeamMember[] = [

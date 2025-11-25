@@ -1,14 +1,12 @@
-import type {
-  Title,
-  Gender,
-  PaymentTerms,
-  ProjectStatus,
-  ProjectPriority,
-  MilestoneStatus,
-  PaymentStatus,
-  PaymentMethod,
-  CommunicationChannel,
-} from "@/const";
+import type { Title } from "./client.type";
+import type { Gender } from "./client.type";
+import type { PaymentTerms } from "./project.type";
+import type { ProjectStatus } from "./project.type";
+import type { ProjectPriority } from "./project.type";
+import type { MilestoneStatus } from "./milestone.type";
+import type { PaymentStatus } from "./payment.type";
+import type { PaymentMethod } from "./payment.type";
+import type { CommunicationChannel } from "./communication-log.type";
 
 export type Json =
   | string
@@ -30,6 +28,8 @@ export interface Database {
           gender: Gender;
           phone_number: string;
           email: string;
+          total_contract_value: number | null;
+          join_date: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -41,6 +41,8 @@ export interface Database {
           gender: Gender;
           phone_number: string;
           email: string;
+          total_contract_value?: number | null;
+          join_date?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -52,6 +54,8 @@ export interface Database {
           gender?: Gender;
           phone_number?: string;
           email?: string;
+          total_contract_value?: number | null;
+          join_date?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -63,6 +67,9 @@ export interface Database {
           email: string;
           address: string;
           phone_number: string;
+          contact_person: string | null;
+          industry: string | null;
+          status: string;
           created_at: string;
           updated_at: string;
         };
@@ -72,6 +79,9 @@ export interface Database {
           email: string;
           address: string;
           phone_number: string;
+          contact_person?: string | null;
+          industry?: string | null;
+          status?: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -81,6 +91,9 @@ export interface Database {
           email?: string;
           address?: string;
           phone_number?: string;
+          contact_person?: string | null;
+          industry?: string | null;
+          status?: string;
           created_at?: string;
           updated_at?: string;
         };

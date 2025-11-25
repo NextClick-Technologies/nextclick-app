@@ -1,9 +1,8 @@
 "use client";
 
-import { Client } from "@/types/database.type";
+import { Client, Gender } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
-import { Gender } from "@/const";
 
 interface ClientTableProps {
   clients: Client[];
@@ -40,7 +39,7 @@ export function ClientTable({ clients }: ClientTableProps) {
                   <Avatar className="h-10 w-10 bg-primary/10 flex items-center justify-center">
                     <span className="text-sm font-medium">
                       {client.name[0]}
-                      {client.familyName[0]}
+                      {client.familyName?.[0] || ""}
                     </span>
                   </Avatar>
                   <div>

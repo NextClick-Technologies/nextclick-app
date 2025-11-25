@@ -9,7 +9,6 @@ interface FormFieldProps {
   type?: string;
   placeholder: string;
   register: UseFormRegister<any>;
-  validation?: Record<string, any>;
   error?: FieldError;
 }
 
@@ -19,18 +18,12 @@ export function FormField({
   type = "text",
   placeholder,
   register,
-  validation = {},
   error,
 }: FormFieldProps) {
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
-      <Input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        {...register(id, validation)}
-      />
+      <Input id={id} type={type} placeholder={placeholder} {...register(id)} />
       {error && <p className="text-sm text-destructive">{error.message}</p>}
     </div>
   );

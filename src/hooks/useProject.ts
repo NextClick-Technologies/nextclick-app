@@ -1,9 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type {
-  Project,
-  ProjectInsert,
-  ProjectUpdate,
-} from "@/types/database.type";
+import type { Project } from "@/types/project.type";
+import type { DbProjectInsert, DbProjectUpdate } from "@/types";
 import {
   fetchApi,
   fetchByIdApi,
@@ -35,8 +32,8 @@ export function useProject(id: string | null) {
 export function useCreateProject() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: ProjectInsert) =>
-      createApi<Project, ProjectInsert>("project", data),
+    mutationFn: (data: unknown) =>
+      createApi<Project, DbProjectInsert>("project", data as DbProjectInsert),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
@@ -46,8 +43,12 @@ export function useCreateProject() {
 export function useUpdateProject() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: ProjectUpdate }) =>
-      updateApi<Project, ProjectUpdate>("project", id, data),
+    mutationFn: ({ id, data }: { id: string; data: unknown }) =>
+      updateApi<Project, DbProjectUpdate>(
+        "project",
+        id,
+        data as DbProjectUpdate
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["project"] });

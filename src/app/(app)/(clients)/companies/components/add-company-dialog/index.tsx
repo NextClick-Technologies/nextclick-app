@@ -10,8 +10,9 @@ import { Button } from "@/components/ui/button";
 import { useCreateCompany } from "@/hooks/useCompany";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { companySchema, type CompanyInput } from "@/schemas/company.schema";
 import { FormField } from "./FormField";
-import { getInitialCompanyFormData, type CompanyFormData } from "./types";
 
 interface AddCompanyDialogProps {
   open: boolean;
@@ -29,11 +30,19 @@ export function AddCompanyDialog({
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<CompanyFormData>({
-    defaultValues: getInitialCompanyFormData(),
+  } = useForm<CompanyInput>({
+    resolver: zodResolver(companySchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phoneNumber: "",
+      address: "",
+      contactPerson: undefined,
+      industry: undefined,
+    },
   });
 
-  const onSubmit = async (data: CompanyFormData) => {
+  const onSubmit = async (data: CompanyInput) => {
     try {
       await createCompany.mutateAsync(data);
       reset();
@@ -56,35 +65,47 @@ export function AddCompanyDialog({
             placeholder="Enter company name"
             register={register}
             error={errors.name}
-            validation={{
-              required: "Company name is required",
-              minLength: {
-                value: 2,
-                message: "Company name must be at least 2 characters",
-              },
-            }}
           />
 
           <FormField
-            label="Email (Optional)"
+            label="Email"
             id="email"
             type="email"
             placeholder="company@example.com"
             register={register}
+            error={errors.email}
           />
 
           <FormField
-            label="Phone Number (Optional)"
+            label="Phone Number"
             id="phoneNumber"
             placeholder="+1234567890"
             register={register}
+            error={errors.phoneNumber}
           />
 
           <FormField
-            label="Address (Optional)"
+            label="Address"
             id="address"
             placeholder="Enter company address"
             register={register}
+            error={errors.address}
+          />
+
+          <FormField
+            label="Contact Person (Optional)"
+            id="contactPerson"
+            placeholder="Enter contact person name"
+            register={register}
+            error={errors.contactPerson}
+          />
+
+          <FormField
+            label="Industry (Optional)"
+            id="industry"
+            placeholder="e.g., Technology, Healthcare"
+            register={register}
+            error={errors.industry}
           />
 
           <div className="flex gap-3 pt-4">

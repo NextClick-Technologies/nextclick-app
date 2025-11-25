@@ -10,9 +10,10 @@ import { Button } from "@/components/ui/button";
 import { useCreateClient } from "@/hooks/useClient";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { clientSchema, type ClientInput } from "@/schemas/client.schema";
 import { FormField } from "./FormField";
 import { ClientSelectFields } from "./ClientSelectFields";
-import { getInitialClientFormData, type ClientFormData } from "./types";
 
 interface AddClientDialogProps {
   open: boolean;
@@ -28,11 +29,11 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<ClientFormData>({
-    defaultValues: getInitialClientFormData(),
+  } = useForm<ClientInput>({
+    resolver: zodResolver(clientSchema),
   });
 
-  const onSubmit = async (data: ClientFormData) => {
+  const onSubmit = async (data: ClientInput) => {
     try {
       await createClient.mutateAsync(data);
       reset();
@@ -57,13 +58,6 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
             placeholder="Enter first name"
             register={register}
             error={errors.name}
-            validation={{
-              required: "First name is required",
-              minLength: {
-                value: 2,
-                message: "First name must be at least 2 characters",
-              },
-            }}
           />
 
           <FormField
@@ -72,13 +66,6 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
             placeholder="Enter family name"
             register={register}
             error={errors.familyName}
-            validation={{
-              required: "Family name is required",
-              minLength: {
-                value: 2,
-                message: "Family name must be at least 2 characters",
-              },
-            }}
           />
 
           <FormField
@@ -87,7 +74,6 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
             placeholder="+1234567890"
             register={register}
             error={errors.phoneNumber}
-            validation={{ required: "Phone number is required" }}
           />
 
           <FormField

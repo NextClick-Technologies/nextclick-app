@@ -1,9 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type {
-  Payment,
-  PaymentInsert,
-  PaymentUpdate,
-} from "@/types/database.type";
+import type { Payment } from "@/types/payment.type";
+import type { DbPaymentInsert, DbPaymentUpdate } from "@/types";
 import {
   fetchApi,
   fetchByIdApi,
@@ -35,8 +32,8 @@ export function usePayment(id: string | null) {
 export function useCreatePayment() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: PaymentInsert) =>
-      createApi<Payment, PaymentInsert>("payment", data),
+    mutationFn: (data: DbPaymentInsert) =>
+      createApi<Payment, DbPaymentInsert>("payment", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
     },
@@ -46,8 +43,8 @@ export function useCreatePayment() {
 export function useUpdatePayment() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: PaymentUpdate }) =>
-      updateApi<Payment, PaymentUpdate>("payment", id, data),
+    mutationFn: ({ id, data }: { id: string; data: DbPaymentUpdate }) =>
+      updateApi<Payment, DbPaymentUpdate>("payment", id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
       queryClient.invalidateQueries({ queryKey: ["payment"] });

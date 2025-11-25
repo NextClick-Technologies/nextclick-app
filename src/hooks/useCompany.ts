@@ -1,9 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type {
-  Company,
-  CompanyInsert,
-  CompanyUpdate,
-} from "@/types/database.type";
+import type { Company } from "@/types/company.type";
+import type { DbCompanyInsert, DbCompanyUpdate } from "@/types";
 import {
   fetchApi,
   fetchByIdApi,
@@ -35,8 +32,8 @@ export function useCompany(id: string | null) {
 export function useCreateCompany() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: CompanyInsert) =>
-      createApi<Company, CompanyInsert>("company", data),
+    mutationFn: (data: unknown) =>
+      createApi<Company, DbCompanyInsert>("company", data as DbCompanyInsert),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["companies"] });
     },
@@ -46,8 +43,12 @@ export function useCreateCompany() {
 export function useUpdateCompany() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: CompanyUpdate }) =>
-      updateApi<Company, CompanyUpdate>("company", id, data),
+    mutationFn: ({ id, data }: { id: string; data: unknown }) =>
+      updateApi<Company, DbCompanyUpdate>(
+        "company",
+        id,
+        data as DbCompanyUpdate
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["companies"] });
       queryClient.invalidateQueries({ queryKey: ["company"] });

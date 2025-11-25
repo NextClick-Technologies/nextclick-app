@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { supabaseAdmin } from "@/lib/supabase/server";
-import type { Employee } from "@/types/database.type";
+import type { Employee } from "@/types";
 
 export const authConfig: NextAuthConfig = {
   providers: [

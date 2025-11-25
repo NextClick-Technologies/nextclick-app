@@ -1,15 +1,19 @@
 import { z } from "zod";
+import { Title, Gender } from "@/types";
 
 export const clientSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  title: z.enum(["mr", "mrs", "ms", "dr", "prof", "sr"]).optional().nullable(),
-  familyName: z.string().min(1, "Family name is required"),
-  gender: z.enum(["male", "female", "other"]),
+  title: z.enum(Title).default(Title.MR),
+  gender: z.enum(Gender).default(Gender.OTHER),
+  name: z.string().min(2, "First Name must be at least 2 characters"),
+  familyName: z.string().min(2, "Family Name must be at least 2 characters"),
   phoneNumber: z.string().min(1, "Phone number is required"),
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Invalid email address").optional().or(z.literal("")),
+  totalContractValue: z.number().optional().nullable(),
+  joinDate: z.string().datetime().optional().nullable(),
+  companyId: z.string().uuid().optional().nullable(),
 });
 
 export const updateClientSchema = clientSchema.partial();
 
-export type ClientInput = z.infer<typeof clientSchema>;
-export type UpdateClientInput = z.infer<typeof updateClientSchema>;
+export type ClientInput = z.input<typeof clientSchema>;
+export type UpdateClientInput = z.input<typeof updateClientSchema>;

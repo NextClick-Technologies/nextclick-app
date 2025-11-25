@@ -11,12 +11,12 @@ import { useCreateProject } from "@/hooks/useProject";
 import { useClients } from "@/hooks/useClient";
 import { Loader2 } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
-import { PaymentTerms, ProjectStatus, ProjectPriority } from "@/const";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { projectSchema, type ProjectInput } from "@/schemas/project.schema";
 import { FormField } from "./FormField";
 import { ClientSelect } from "./ClientSelect";
 import { ProjectSelectFields } from "./ProjectSelectFields";
 import { DescriptionField } from "./DescriptionField";
-import { getInitialFormData, type ProjectFormData } from "./types";
 
 interface AddProjectDialogProps {
   open: boolean;
@@ -37,32 +37,13 @@ export function AddProjectDialog({
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<ProjectFormData>({
-    defaultValues: getInitialFormData(),
+  } = useForm<ProjectInput>({
+    resolver: zodResolver(projectSchema),
   });
 
-  const onSubmit = async (data: ProjectFormData) => {
+  const onSubmit = async (data: ProjectInput) => {
     try {
-      await createProject.mutateAsync({
-        name: data.name,
-        type: data.type,
-        startDate: data.startDate
-          ? new Date(data.startDate).toISOString()
-          : new Date().toISOString(),
-        finishDate: data.finishDate
-          ? new Date(data.finishDate).toISOString()
-          : new Date().toISOString(),
-        budget: data.budget,
-        paymentTerms:
-          data.paymentTerms as (typeof PaymentTerms)[keyof typeof PaymentTerms],
-        status:
-          data.status as (typeof ProjectStatus)[keyof typeof ProjectStatus],
-        priority:
-          data.priority as (typeof ProjectPriority)[keyof typeof ProjectPriority],
-        description: data.description,
-        clientId: data.clientId,
-      });
-
+      await createProject.mutateAsync(data);
       reset();
       onOpenChange(false);
     } catch (error) {
@@ -87,23 +68,15 @@ export function AddProjectDialog({
               placeholder="Enter project name"
               register={register}
               error={errors.name}
-              validation={{
-                required: "Project name is required",
-                minLength: {
-                  value: 2,
-                  message: "Project name must be at least 2 characters",
-                },
-              }}
             />
 
             <Controller
               name="clientId"
               control={control}
-              rules={{ required: "Client is required" }}
               render={({ field }) => (
                 <div className="space-y-2">
                   <ClientSelect
-                    value={field.value}
+                    value={field.value ?? ""}
                     clients={clients}
                     onChange={field.onChange}
                     required

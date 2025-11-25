@@ -10,7 +10,7 @@ import { Plus, Search, Loader2 } from "lucide-react";
 import { AddClientDialog } from "./components/add-client-dialog";
 import { ClientTable } from "./components/ClientTable";
 import { useClients } from "@/hooks/useClient";
-import { Gender } from "@/const";
+import { Gender } from "@/types/client.type";
 
 export default function ClientsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,7 +27,7 @@ export default function ClientsPage() {
   const filteredClients = clients.filter(
     (client) =>
       client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      client.familyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      client.familyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       client.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

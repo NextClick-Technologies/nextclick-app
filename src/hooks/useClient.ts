@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Client, ClientInsert, ClientUpdate } from "@/types/database.type";
+import type { Client } from "@/types/client.type";
+import type { DbClientInsert, DbClientUpdate } from "@/types";
 import {
   fetchApi,
   fetchByIdApi,
@@ -31,8 +32,8 @@ export function useClient(id: string | null) {
 export function useCreateClient() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: ClientInsert) =>
-      createApi<Client, ClientInsert>("client", data),
+    mutationFn: (data: unknown) =>
+      createApi<Client, DbClientInsert>("client", data as DbClientInsert),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clients"] });
     },
@@ -42,8 +43,8 @@ export function useCreateClient() {
 export function useUpdateClient() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: ClientUpdate }) =>
-      updateApi<Client, ClientUpdate>("client", id, data),
+    mutationFn: ({ id, data }: { id: string; data: unknown }) =>
+      updateApi<Client, DbClientUpdate>("client", id, data as DbClientUpdate),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clients"] });
       queryClient.invalidateQueries({ queryKey: ["client"] });

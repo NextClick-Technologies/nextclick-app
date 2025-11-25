@@ -1,9 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type {
-  Employee,
-  EmployeeInsert,
-  EmployeeUpdate,
-} from "@/types/database.type";
+import type { Employee } from "@/types/employee.type";
+import type { DbEmployeeInsert, DbEmployeeUpdate } from "@/types";
 import {
   fetchApi,
   fetchByIdApi,
@@ -35,8 +32,8 @@ export function useEmployee(id: string | null) {
 export function useCreateEmployee() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: EmployeeInsert) =>
-      createApi<Employee, EmployeeInsert>("employee", data),
+    mutationFn: (data: DbEmployeeInsert) =>
+      createApi<Employee, DbEmployeeInsert>("employee", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
     },
@@ -46,8 +43,8 @@ export function useCreateEmployee() {
 export function useUpdateEmployee() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: EmployeeUpdate }) =>
-      updateApi<Employee, EmployeeUpdate>("employee", id, data),
+    mutationFn: ({ id, data }: { id: string; data: DbEmployeeUpdate }) =>
+      updateApi<Employee, DbEmployeeUpdate>("employee", id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       queryClient.invalidateQueries({ queryKey: ["employee"] });

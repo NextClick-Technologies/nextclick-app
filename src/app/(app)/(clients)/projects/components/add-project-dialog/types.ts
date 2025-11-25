@@ -1,4 +1,8 @@
-import { PaymentTerms, ProjectStatus, ProjectPriority } from "@/const";
+import {
+  PaymentTerms,
+  ProjectStatus,
+  ProjectPriority,
+} from "@/types/project.type";
 
 export interface ProjectFormData {
   name: string;

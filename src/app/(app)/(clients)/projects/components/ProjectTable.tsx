@@ -1,6 +1,6 @@
 "use client";
 
-import { Project } from "@/types/database.type";
+import { Project } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { FolderKanban } from "lucide-react";

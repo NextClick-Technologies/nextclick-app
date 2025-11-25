@@ -6,17 +6,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Client } from "@/types/database.type";
+import type { Client } from "@/types";
 
 interface ClientSelectProps {
-  value: string;
+  value?: string;
   clients: Client[];
   onChange: (value: string) => void;
   required?: boolean;
 }
 
 export function ClientSelect({
-  value,
+  value = "",
   clients,
   onChange,
   required = false,

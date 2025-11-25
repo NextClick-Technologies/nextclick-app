@@ -10,7 +10,7 @@ import { Plus, Search, Loader2 } from "lucide-react";
 import { useProjects } from "@/hooks/useProject";
 import { AddProjectDialog } from "./components/add-project-dialog";
 import { ProjectTable } from "./components/ProjectTable";
-import { ProjectStatus } from "@/const";
+import { ProjectStatus } from "@/types/project.type";
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");

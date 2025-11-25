@@ -1,4 +1,4 @@
-import { Title, Gender } from "@/const";
+import { Title, Gender } from "@/types/client.type";
 
 export interface ClientFormData {
   title: (typeof Title)[keyof typeof Title];

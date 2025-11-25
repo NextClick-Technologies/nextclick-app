@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { CommunicationLog } from "@/types/communication-log.type";
 import type {
-  CommunicationLog,
-  CommunicationLogInsert,
-  CommunicationLogUpdate,
-} from "@/types/database.type";
+  DbCommunicationLogInsert,
+  DbCommunicationLogUpdate,
+} from "@/types";
 import {
   fetchApi,
   fetchByIdApi,
@@ -35,8 +35,8 @@ export function useCommunicationLog(id: string | null) {
 export function useCreateCommunicationLog() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: CommunicationLogInsert) =>
-      createApi<CommunicationLog, CommunicationLogInsert>(
+    mutationFn: (data: DbCommunicationLogInsert) =>
+      createApi<CommunicationLog, DbCommunicationLogInsert>(
         "communication-log",
         data
       ),
@@ -49,8 +49,14 @@ export function useCreateCommunicationLog() {
 export function useUpdateCommunicationLog() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: CommunicationLogUpdate }) =>
-      updateApi<CommunicationLog, CommunicationLogUpdate>(
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: DbCommunicationLogUpdate;
+    }) =>
+      updateApi<CommunicationLog, DbCommunicationLogUpdate>(
         "communication-log",
         id,
         data

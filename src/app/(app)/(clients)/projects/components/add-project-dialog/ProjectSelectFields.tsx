@@ -6,7 +6,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PaymentTerms, ProjectStatus, ProjectPriority } from "@/const";
+import {
+  PaymentTerms,
+  ProjectStatus,
+  ProjectPriority,
+} from "@/types/project.type";
 import { Control, Controller } from "react-hook-form";
 
 interface ProjectSelectFieldsProps {

@@ -1,11 +1,14 @@
 import { Label } from "@/components/ui/label";
 
 interface DescriptionFieldProps {
-  value: string;
+  value?: string;
   onChange: (value: string) => void;
 }
 
-export function DescriptionField({ value, onChange }: DescriptionFieldProps) {
+export function DescriptionField({
+  value = "",
+  onChange,
+}: DescriptionFieldProps) {
   return (
     <div className="space-y-2">
       <Label htmlFor="description">Description (Optional)</Label>
