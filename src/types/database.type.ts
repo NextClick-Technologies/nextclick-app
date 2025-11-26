@@ -30,7 +30,7 @@ export interface Database {
           email: string;
           total_contract_value: number | null;
           join_date: string | null;
-          company_id: string | null;
+          company_id: string;
           status: string;
           created_at: string;
           updated_at: string;
@@ -45,7 +45,7 @@ export interface Database {
           email: string;
           total_contract_value?: number | null;
           join_date?: string | null;
-          company_id?: string | null;
+          company_id: string;
           status?: string;
           created_at?: string;
           updated_at?: string;
@@ -60,7 +60,7 @@ export interface Database {
           email?: string;
           total_contract_value?: number | null;
           join_date?: string | null;
-          company_id?: string | null;
+          company_id?: string;
           status?: string;
           created_at?: string;
           updated_at?: string;

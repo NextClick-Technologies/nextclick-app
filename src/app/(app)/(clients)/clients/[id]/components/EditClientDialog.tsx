@@ -64,7 +64,7 @@ export function EditClientDialog({
       email: client.email || "",
       totalContractValue: client.totalContractValue ?? 0,
       joinDate: client.joinDate || undefined,
-      companyId: client.companyId || undefined,
+      companyId: client.companyId,
       status: client.status,
     },
   });
@@ -80,7 +80,7 @@ export function EditClientDialog({
       email: client.email || "",
       totalContractValue: client.totalContractValue ?? 0,
       joinDate: client.joinDate || undefined,
-      companyId: client.companyId || undefined,
+      companyId: client.companyId,
       status: client.status,
     });
   }, [client, reset]);
@@ -178,18 +178,12 @@ export function EditClientDialog({
               control={control}
               render={({ field }) => (
                 <div className="space-y-2">
-                  <Label htmlFor="companyId">Company (Optional)</Label>
-                  <Select
-                    value={field.value ?? "no-company"}
-                    onValueChange={(value) =>
-                      field.onChange(value === "no-company" ? undefined : value)
-                    }
-                  >
+                  <Label htmlFor="companyId">Company</Label>
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a company" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="no-company">No Company</SelectItem>
                       {companies.map((company) => (
                         <SelectItem key={company.id} value={company.id}>
                           {company.name}

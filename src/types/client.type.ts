@@ -40,7 +40,7 @@ export interface Client {
   email: string;
   totalContractValue: number | null;
   joinDate: string | null;
-  companyId: string | null;
+  companyId: string;
   status: ClientStatus;
   createdAt: string;
   updatedAt: string;
