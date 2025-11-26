@@ -44,4 +44,8 @@ export interface Client {
   status: ClientStatus;
   createdAt: string;
   updatedAt: string;
+  company?: {
+    id: string;
+    name: string;
+  };
 }

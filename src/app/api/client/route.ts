@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import {
@@ -47,9 +48,11 @@ export async function GET(request: NextRequest) {
 
     // Fetch companies for all clients
     const companyIds = [
-      ...new Set(data?.map((client) => client.company_id).filter(Boolean)),
+      ...new Set(
+        (data as any[])?.map((client: any) => client.company_id).filter(Boolean)
+      ),
     ];
-    let companies = [];
+    let companies: any[] = [];
     if (companyIds.length > 0) {
       const { data: companiesData } = await supabaseAdmin
         .from("companies")
@@ -59,8 +62,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch project counts for all clients
-    const clientIds = data?.map((client) => client.id) || [];
-    let projectCounts = [];
+    const clientIds = (data as any[])?.map((client: any) => client.id) || [];
+    let projectCounts: Array<{ clientId: string; count: number }> = [];
     if (clientIds.length > 0) {
       const { data: projectsData } = await supabaseAdmin
         .from("projects")
@@ -68,10 +71,13 @@ export async function GET(request: NextRequest) {
         .in("client_id", clientIds);
 
       // Count projects per client
-      const countsMap = (projectsData || []).reduce((acc, project) => {
-        acc[project.client_id] = (acc[project.client_id] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      const countsMap = ((projectsData as any[]) || []).reduce(
+        (acc: Record<string, number>, project: any) => {
+          acc[project.client_id] = (acc[project.client_id] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
       projectCounts = Object.entries(countsMap).map(([clientId, count]) => ({
         clientId,

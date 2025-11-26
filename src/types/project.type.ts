@@ -46,4 +46,9 @@ export interface Project {
   clientId: string;
   createdAt: string;
   updatedAt: string;
+  client?: {
+    id: string;
+    name: string;
+    familyName: string;
+  };
 }
