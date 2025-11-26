@@ -1,15 +1,16 @@
 import { z } from "zod";
+import { Title, Gender } from "@/types";
 
 export const employeeSchema = z.object({
-  title: z.enum(["mr", "mrs", "ms", "dr", "prof", "sr"]).optional().nullable(),
+  title: z.enum(Title).optional().nullable(),
   name: z.string().min(1, "Name is required"),
   familyName: z.string().min(1, "Family name is required"),
   preferredName: z.string().optional().nullable(),
-  gender: z.enum(["male", "female", "other"]),
+  gender: z.enum(Gender),
   phoneNumber: z.string().min(1, "Phone number is required"),
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   photo: z.string().url().optional().nullable(),
-  userId: z.string().optional().nullable(),
+  userId: z.uuid().optional().nullable(),
 });
 
 export const updateEmployeeSchema = employeeSchema.partial();

@@ -7,10 +7,10 @@ export const clientSchema = z.object({
   name: z.string().min(2, "First Name must be at least 2 characters"),
   familyName: z.string().min(2, "Family Name must be at least 2 characters"),
   phoneNumber: z.string().min(1, "Phone number is required"),
-  email: z.string().email("Invalid email address").optional().or(z.literal("")),
+  email: z.email("Invalid email address").optional().or(z.literal("")),
   totalContractValue: z.number().optional().nullable(),
-  joinDate: z.string().datetime().optional().nullable(),
-  companyId: z.string().uuid().optional().nullable(),
+  joinDate: z.iso.datetime().optional().nullable(),
+  companyId: z.uuid().optional().nullable(),
 });
 
 export const updateClientSchema = clientSchema.partial();

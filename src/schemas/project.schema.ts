@@ -15,7 +15,7 @@ export const projectSchema = z.object({
   priority: z.enum(["low", "medium", "high", "urgent"]).default("medium"),
   description: z.string().optional(),
   completionDate: z.string().datetime().optional().nullable(),
-  clientId: z.string().uuid("Please select a client"),
+  clientId: z.uuid("Please select a client"),
 });
 
 export const updateProjectSchema = projectSchema.partial();
