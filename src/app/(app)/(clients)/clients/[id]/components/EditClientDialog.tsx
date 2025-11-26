@@ -140,14 +140,23 @@ export function EditClientDialog({
               register={register}
             />
 
-            <FormField
-              label="Total Contract Value"
-              id="totalContractValue"
-              type="number"
-              placeholder="0"
-              register={register}
-              error={errors.totalContractValue}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="totalContractValue">Total Contract Value</Label>
+              <Input
+                type="number"
+                id="totalContractValue"
+                placeholder="0"
+                {...register("totalContractValue", { valueAsNumber: true })}
+                className={
+                  errors.totalContractValue ? "border-destructive" : ""
+                }
+              />
+              {errors.totalContractValue && (
+                <p className="text-sm text-destructive">
+                  {errors.totalContractValue.message}
+                </p>
+              )}
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="joinDate">Join Date</Label>
@@ -171,16 +180,16 @@ export function EditClientDialog({
                 <div className="space-y-2">
                   <Label htmlFor="companyId">Company (Optional)</Label>
                   <Select
-                    value={field.value || "none"}
+                    value={field.value ?? "no-company"}
                     onValueChange={(value) =>
-                      field.onChange(value === "none" ? null : value)
+                      field.onChange(value === "no-company" ? undefined : value)
                     }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a company" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">No Company</SelectItem>
+                      <SelectItem value="no-company">No Company</SelectItem>
                       {companies.map((company) => (
                         <SelectItem key={company.id} value={company.id}>
                           {company.name}

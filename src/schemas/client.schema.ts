@@ -9,8 +9,8 @@ export const clientSchema = z.object({
   phoneNumber: z.string().min(1, "Phone number is required"),
   email: z.email("Invalid email address").optional().or(z.literal("")),
   totalContractValue: z.number().default(0),
-  joinDate: z.iso.datetime().optional().nullable(),
-  companyId: z.uuid().optional().nullable(),
+  joinDate: z.string().optional().nullable(),
+  companyId: z.string().uuid().optional().nullable(),
   status: z.enum(ClientStatus).default(ClientStatus.ACTIVE),
 });
 
