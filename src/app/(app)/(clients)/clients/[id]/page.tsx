@@ -11,7 +11,7 @@ import { ContactInformation } from "./components/ContactInformation";
 import { CompanyDetails } from "./components/CompanyDetails";
 import { FinancialInformation } from "./components/FinancialInformation";
 import { ProjectSummary } from "./components/ProjectSummary";
-import { EditClientDialog } from "./components/EditClientDialog";
+import { EditClientDialog } from "./components/edit-client-dialog";
 import { DeleteClientDialog } from "./components/DeleteClientDialog";
 
 export default function ClientDetailPage() {
