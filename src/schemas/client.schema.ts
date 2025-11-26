@@ -10,7 +10,10 @@ export const clientSchema = z.object({
   email: z.email("Invalid email address").optional().or(z.literal("")),
   totalContractValue: z.number().default(0),
   joinDate: z.string().optional().nullable(),
-  companyId: z.string().uuid("Please select a company"),
+  companyId: z
+    .string()
+    .min(1, "Please select a company")
+    .uuid("Please select a valid company"),
   status: z.enum(ClientStatus).default(ClientStatus.ACTIVE),
 });
 

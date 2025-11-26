@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useCreateClient } from "@/hooks/useClient";
+import { useCompanies } from "@/hooks/useCompany";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { clientSchema, type ClientInput } from "@/schemas/client.schema";
 import { FormField } from "./FormField";
 import { ClientSelectFields } from "./ClientSelectFields";
+import { CompanySelect } from "./CompanySelect";
 
 interface AddClientDialogProps {
   open: boolean;
@@ -22,6 +24,8 @@ interface AddClientDialogProps {
 
 export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
   const createClient = useCreateClient();
+  const { data: companiesData } = useCompanies({ pageSize: 100 });
+  const companies = companiesData?.data || [];
 
   const {
     register,
@@ -82,6 +86,12 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
             type="email"
             placeholder="email@example.com"
             register={register}
+          />
+
+          <CompanySelect
+            control={control}
+            companies={companies}
+            error={errors.companyId}
           />
 
           <div className="flex gap-2">

@@ -7,13 +7,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { UpdateClientInput } from "@/schemas/client.schema";
+import type { ClientInput } from "@/schemas/client.schema";
 import type { Company } from "@/types";
 
 interface CompanySelectProps {
-  control: Control<UpdateClientInput>;
+  control: Control<ClientInput>;
   companies: Company[];
-  error?: FieldErrors<UpdateClientInput>["companyId"];
+  error?: FieldErrors<ClientInput>["companyId"];
 }
 
 export function CompanySelect({

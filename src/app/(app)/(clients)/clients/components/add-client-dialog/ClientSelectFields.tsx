@@ -25,7 +25,7 @@ export function ClientSelectFields({ control }: ClientSelectFieldsProps) {
             <Label htmlFor="title">Title</Label>
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="Select a title" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={Title.MR}>Mr</SelectItem>
@@ -48,7 +48,7 @@ export function ClientSelectFields({ control }: ClientSelectFieldsProps) {
             <Label htmlFor="gender">Gender</Label>
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="Select a gender" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={Gender.MALE}>Male</SelectItem>
