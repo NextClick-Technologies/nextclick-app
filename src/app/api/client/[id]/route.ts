@@ -19,7 +19,7 @@ export async function GET(
 
     const { data, error } = await supabaseAdmin
       .from("clients")
-      .select("*")
+      .select("*, company:companies(id, name)")
       .eq("id", id)
       .single();
 

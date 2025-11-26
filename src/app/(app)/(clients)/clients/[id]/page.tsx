@@ -8,7 +8,6 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { useClient, useDeleteClient } from "@/hooks/useClient";
 import { ClientDetailHeader } from "./components/ClientDetailHeader";
 import { ContactInformation } from "./components/ContactInformation";
-import { CompanyDetails } from "./components/CompanyDetails";
 import { FinancialInformation } from "./components/FinancialInformation";
 import { ProjectSummary } from "./components/ProjectSummary";
 import { EditClientDialog } from "./components/edit-client-dialog";
@@ -85,14 +84,16 @@ export default function ClientDetailPage() {
         />
 
         <div className="grid gap-6 lg:grid-cols-3">
-          {/* Left Column - Contact & Company Info */}
-          <div className="lg:col-span-2 space-y-6">
+          {/* Left Column - Contact Info */}
+          <div className="lg:col-span-2">
             <ContactInformation
               email={client.email}
               phoneNumber={client.phoneNumber}
               contactPerson={`${client.name} ${client.familyName}`}
+              status={client.status}
+              joinDate={client.joinDate}
+              companyName={client.company?.name || "N/A"}
             />
-            <CompanyDetails joinDate={client.joinDate} status={client.status} />
           </div>
 
           {/* Right Column - Financial & Project Summary */}
