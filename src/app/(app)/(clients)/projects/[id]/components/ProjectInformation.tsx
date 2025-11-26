@@ -107,17 +107,6 @@ export function ProjectInformation({
               <p className="text-sm">{projectManagerName || "N/A"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                Team Members:
-              </p>
-              <div className="mt-2">
-                <TeamMembers
-                  members={members}
-                  onManageTeam={() => setIsManageTeamOpen(true)}
-                />
-              </div>
-            </div>
-            <div>
               <p className="text-sm font-medium text-muted-foreground">Type:</p>
               <p className="text-sm">{type || "N/A"}</p>
             </div>
@@ -173,6 +162,17 @@ export function ProjectInformation({
                 <p className="text-sm">{description}</p>
               </div>
             )}
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Team Members:
+              </p>
+              <div className="mt-2">
+                <TeamMembers
+                  members={members}
+                  onManageTeam={() => setIsManageTeamOpen(true)}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </Card>
