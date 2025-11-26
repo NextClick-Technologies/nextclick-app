@@ -30,7 +30,13 @@ export function EditCompanyDialog({
 }: EditCompanyDialogProps) {
   const updateCompany = useUpdateCompany();
 
-  const form = useForm<UpdateCompanyInput>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateCompanyInput>({
     resolver: zodResolver(updateCompanySchema),
     defaultValues: {
       name: company.name,
@@ -43,19 +49,18 @@ export function EditCompanyDialog({
     },
   });
 
+  // Reset form when company changes
   useEffect(() => {
-    if (open) {
-      form.reset({
-        name: company.name,
-        email: company.email || "",
-        phoneNumber: company.phoneNumber || "",
-        address: company.address || "",
-        contactPerson: company.contactPerson || "",
-        industry: company.industry || "",
-        status: company.status,
-      });
-    }
-  }, [open, company, form]);
+    reset({
+      name: company.name,
+      email: company.email || "",
+      phoneNumber: company.phoneNumber || "",
+      address: company.address || "",
+      contactPerson: company.contactPerson || "",
+      industry: company.industry || "",
+      status: company.status,
+    });
+  }, [company, reset]);
 
   const onSubmit = async (data: UpdateCompanyInput) => {
     try {
@@ -74,19 +79,20 @@ export function EditCompanyDialog({
           <DialogTitle>Edit Company</DialogTitle>
         </DialogHeader>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col flex-1 min-h-0"
         >
           <div className="flex-1 overflow-y-auto px-1">
             <EditCompanyForm
-              register={form.register}
-              errors={form.errors}
-              control={form.control}
+              register={register}
+              errors={errors}
+              control={control}
             />
           </div>
           <FormActions
             onCancel={() => onOpenChange(false)}
-            isSubmitting={updateCompany.isPending}
+            isSubmitting={isSubmitting}
+            isPending={updateCompany.isPending}
           />
         </form>
       </DialogContent>

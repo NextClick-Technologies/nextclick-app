@@ -35,7 +35,13 @@ export function EditProjectDialog({
     return date.split("T")[0]; // Convert ISO to YYYY-MM-DD
   };
 
-  const form = useForm<UpdateProjectInput>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateProjectInput>({
     resolver: zodResolver(updateProjectSchema),
     defaultValues: {
       name: project.name || "",
@@ -51,22 +57,21 @@ export function EditProjectDialog({
     },
   });
 
+  // Reset form when project changes
   useEffect(() => {
-    if (open) {
-      form.reset({
-        name: project.name || "",
-        type: project.type || "",
-        startDate: formatDateForInput(project.startDate),
-        finishDate: formatDateForInput(project.finishDate),
-        budget: Number(project.budget || 0),
-        paymentTerms: project.paymentTerms || "net_30d",
-        status: project.status || "active",
-        priority: project.priority || "medium",
-        description: project.description || "",
-        clientId: project.clientId || "",
-      });
-    }
-  }, [open, project, form]);
+    reset({
+      name: project.name || "",
+      type: project.type || "",
+      startDate: formatDateForInput(project.startDate),
+      finishDate: formatDateForInput(project.finishDate),
+      budget: Number(project.budget || 0),
+      paymentTerms: project.paymentTerms || "net_30d",
+      status: project.status || "active",
+      priority: project.priority || "medium",
+      description: project.description || "",
+      clientId: project.clientId || "",
+    });
+  }, [project, reset]);
 
   const onSubmit = async (data: UpdateProjectInput) => {
     try {
@@ -84,24 +89,23 @@ export function EditProjectDialog({
         <DialogHeader>
           <DialogTitle>Edit Project</DialogTitle>
         </DialogHeader>
-        {open && (
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col flex-1 min-h-0"
-          >
-            <div className="flex-1 overflow-y-auto px-1">
-              <EditProjectForm
-                register={form.register}
-                errors={form.errors}
-                control={form.control}
-              />
-            </div>
-            <FormActions
-              onCancel={() => onOpenChange(false)}
-              isSubmitting={updateProject.isPending}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col flex-1 min-h-0"
+        >
+          <div className="flex-1 overflow-y-auto px-1">
+            <EditProjectForm
+              register={register}
+              errors={errors}
+              control={control}
             />
-          </form>
-        )}
+          </div>
+          <FormActions
+            onCancel={() => onOpenChange(false)}
+            isSubmitting={isSubmitting}
+            isPending={updateProject.isPending}
+          />
+        </form>
       </DialogContent>
     </Dialog>
   );
