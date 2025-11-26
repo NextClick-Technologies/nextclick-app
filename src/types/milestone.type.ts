@@ -18,8 +18,12 @@ export interface Milestone {
   projectId: string;
   name: string;
   description: string;
+  startDate: string;
+  finishDate: string;
+  completionDate: string | null;
   status: MilestoneStatus;
-  dueDate: string;
+  remarks: string | null;
+  order?: number;
   createdAt: string;
   updatedAt: string;
 }

@@ -9,6 +9,8 @@ import { useProject, useDeleteProject } from "@/hooks/useProject";
 import { ProjectDetailHeader } from "./components/ProjectDetailHeader";
 import { ProjectInformation } from "./components/ProjectInformation";
 import { BudgetInformation } from "./components/BudgetInformation";
+import { MilestoneTimeline } from "./components/MilestoneTimeline";
+import { MilestoneStats } from "./components/MilestoneStats";
 import { EditProjectDialog } from "./components/edit-project-dialog";
 import { DeleteProjectDialog } from "./components/DeleteProjectDialog";
 
@@ -97,8 +99,8 @@ export default function ProjectDetailPage() {
         />
 
         <div className="grid gap-6 lg:grid-cols-3">
-          {/* Left Column - Project Info */}
-          <div className="lg:col-span-2">
+          {/* Left Column - Project Info & Milestones */}
+          <div className="lg:col-span-2 space-y-6">
             <ProjectInformation
               projectId={projectId}
               type={project.type}
@@ -112,14 +114,20 @@ export default function ProjectDetailPage() {
               projectManagerName={projectManagerName}
               members={project.members}
             />
+
+            {/* Milestone Timeline */}
+            <MilestoneTimeline projectId={projectId} />
           </div>
 
-          {/* Right Column - Budget Info */}
-          <div>
+          {/* Right Column - Budget Info & Milestone Stats */}
+          <div className="space-y-6">
             <BudgetInformation
               budget={project.budget}
               paymentTerms={project.paymentTerms}
             />
+
+            {/* Milestone Statistics */}
+            <MilestoneStats projectId={projectId} />
           </div>
         </div>
       </div>

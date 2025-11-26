@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Milestone } from "@/types/milestone.type";
-import type { DbMilestoneInsert, DbMilestoneUpdate } from "@/types";
+import type {
+  MilestoneInput,
+  UpdateMilestoneInput,
+} from "@/schemas/milestone.schema";
 import {
   fetchApi,
   fetchByIdApi,
@@ -32,8 +35,8 @@ export function useMilestone(id: string | null) {
 export function useCreateMilestone() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: DbMilestoneInsert) =>
-      createApi<Milestone, DbMilestoneInsert>("milestone", data),
+    mutationFn: (data: MilestoneInput) =>
+      createApi<Milestone, MilestoneInput>("milestone", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["milestones"] });
     },
@@ -43,8 +46,8 @@ export function useCreateMilestone() {
 export function useUpdateMilestone() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: DbMilestoneUpdate }) =>
-      updateApi<Milestone, DbMilestoneUpdate>("milestone", id, data),
+    mutationFn: ({ id, data }: { id: string; data: UpdateMilestoneInput }) =>
+      updateApi<Milestone, UpdateMilestoneInput>("milestone", id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["milestones"] });
       queryClient.invalidateQueries({ queryKey: ["milestone"] });
