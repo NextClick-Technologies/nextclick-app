@@ -3,6 +3,7 @@
 import { Client, ClientStatus } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
+import { useRouter } from "next/navigation";
 
 interface ClientTableProps {
   clients: Client[];
@@ -15,6 +16,8 @@ export function ClientTable({
   companies = [],
   projectCounts = [],
 }: ClientTableProps) {
+  const router = useRouter();
+
   const getCompanyName = (companyId: string | null) => {
     if (!companyId) return "-";
     const company = companies.find((c) => c.id === companyId);
@@ -41,6 +44,10 @@ export function ClientTable({
     }
   };
 
+  const handleRowClick = (clientId: string) => {
+    router.push(`/clients/${clientId}`);
+  };
+
   return (
     <div className="overflow-x-auto max-h-[calc(100vh-32rem)] overflow-y-auto">
       <table className="w-full">
@@ -65,7 +72,11 @@ export function ClientTable({
         </thead>
         <tbody className="divide-y">
           {clients.map((client) => (
-            <tr key={client.id} className="group hover:bg-muted/50">
+            <tr
+              key={client.id}
+              onClick={() => handleRowClick(client.id)}
+              className="group hover:bg-muted/50 cursor-pointer transition-colors"
+            >
               <td className="py-4">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10 bg-primary/10 flex items-center justify-center">
