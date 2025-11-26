@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Client, Gender } from "@/types";
+import { Client, ClientStatus } from "@/types";
 
 interface ClientMetricsProps {
   clients: Client[];
@@ -15,6 +15,14 @@ export function ClientMetrics({
   totalClients,
   isLoading,
 }: ClientMetricsProps) {
+  const activeClients = clients.filter(
+    (c) => c.status === ClientStatus.ACTIVE
+  ).length;
+  const totalValue = clients.reduce(
+    (sum, client) => sum + (client.totalContractValue ?? 0),
+    0
+  );
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <MetricCard
@@ -23,29 +31,21 @@ export function ClientMetrics({
         isLoading={isLoading}
       />
       <MetricCard
-        label="Male Clients"
-        value={clients.filter((c) => c.gender === Gender.MALE).length}
-        badge={
-          <Badge>
-            {clients.filter((c) => c.gender === Gender.MALE).length}
-          </Badge>
-        }
+        label="Active Clients"
+        value={activeClients}
+        badge={<Badge>{activeClients}</Badge>}
         isLoading={isLoading}
       />
       <MetricCard
-        label="Female Clients"
-        value={clients.filter((c) => c.gender === Gender.FEMALE).length}
-        badge={
-          <Badge variant="secondary">
-            {clients.filter((c) => c.gender === Gender.FEMALE).length}
-          </Badge>
-        }
+        label="Total Value"
+        value={`$${totalValue.toLocaleString()}`}
         isLoading={isLoading}
       />
     </div>
   );
 }
 
+// MetricCard Component
 function MetricCard({
   label,
   value,

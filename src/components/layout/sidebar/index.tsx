@@ -22,9 +22,9 @@ const navigation = [
     name: "Client Management",
     icon: Users,
     submenu: [
-      { name: "Companies", href: "/companies" },
       { name: "Clients", href: "/clients" },
       { name: "Projects", href: "/projects" },
+      { name: "Companies", href: "/companies" },
     ],
   },
   {
