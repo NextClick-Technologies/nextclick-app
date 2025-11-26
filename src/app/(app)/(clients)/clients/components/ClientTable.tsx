@@ -1,14 +1,46 @@
 "use client";
 
-import { Client, Gender } from "@/types";
+import { Client, ClientStatus } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 
 interface ClientTableProps {
   clients: Client[];
+  companies?: { id: string; name: string }[];
+  projectCounts?: { clientId: string; count: number }[];
 }
 
-export function ClientTable({ clients }: ClientTableProps) {
+export function ClientTable({
+  clients,
+  companies = [],
+  projectCounts = [],
+}: ClientTableProps) {
+  const getCompanyName = (companyId: string | null) => {
+    if (!companyId) return "-";
+    const company = companies.find((c) => c.id === companyId);
+    return company?.name || "-";
+  };
+
+  const getProjectCount = (clientId: string) => {
+    const projectCount = projectCounts.find((pc) => pc.clientId === clientId);
+    return projectCount?.count || 0;
+  };
+
+  const getStatusVariant = (
+    status: ClientStatus
+  ): "default" | "secondary" | "outline" => {
+    switch (status) {
+      case ClientStatus.ACTIVE:
+        return "default";
+      case ClientStatus.INACTIVE:
+        return "secondary";
+      case ClientStatus.PENDING:
+        return "outline";
+      default:
+        return "outline";
+    }
+  };
+
   return (
     <div className="overflow-x-auto max-h-[calc(100vh-32rem)] overflow-y-auto">
       <table className="w-full">
@@ -18,16 +50,16 @@ export function ClientTable({ clients }: ClientTableProps) {
               Client
             </th>
             <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
-              Title
+              Company
             </th>
             <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
-              Email
+              Total Projects
             </th>
             <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
-              Phone
+              Total Contract Value
             </th>
             <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
-              Gender
+              Status
             </th>
           </tr>
         </thead>
@@ -50,23 +82,21 @@ export function ClientTable({ clients }: ClientTableProps) {
                 </div>
               </td>
               <td className="py-4">
-                <Badge variant="outline">{client.title}</Badge>
-              </td>
-              <td className="py-4">
                 <p className="text-sm text-muted-foreground">
-                  {client.email || "-"}
+                  {getCompanyName(client.companyId)}
                 </p>
               </td>
               <td className="py-4">
-                <p className="text-sm">{client.phoneNumber}</p>
+                <Badge variant="outline">{getProjectCount(client.id)}</Badge>
               </td>
               <td className="py-4">
-                <Badge
-                  variant={
-                    client.gender === Gender.MALE ? "default" : "secondary"
-                  }
-                >
-                  {client.gender}
+                <p className="text-sm font-medium">
+                  ${(client.totalContractValue ?? 0).toLocaleString()}
+                </p>
+              </td>
+              <td className="py-4">
+                <Badge variant={getStatusVariant(client.status)}>
+                  {client.status}
                 </Badge>
               </td>
             </tr>

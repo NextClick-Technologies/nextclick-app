@@ -22,6 +22,11 @@ export default function ClientsPage() {
 
   const clients = data?.data || [];
   const totalClients = data?.pagination.total || 0;
+  const companies =
+    (data?.metadata?.companies as { id: string; name: string }[]) || [];
+  const projectCounts =
+    (data?.metadata?.projectCounts as { clientId: string; count: number }[]) ||
+    [];
 
   // Filter clients based on search query
   const filteredClients = clients.filter(
@@ -106,7 +111,13 @@ export default function ClientsPage() {
               </div>
             )}
 
-            {!isLoading && !error && <ClientTable clients={filteredClients} />}
+            {!isLoading && !error && (
+              <ClientTable
+                clients={filteredClients}
+                companies={companies}
+                projectCounts={projectCounts}
+              />
+            )}
 
             {!isLoading && !error && filteredClients.length === 0 && (
               <div className="text-center py-8 text-muted-foreground">

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Title, Gender } from "@/types";
+import { Title, Gender, ClientStatus } from "@/types";
 
 export const clientSchema = z.object({
   title: z.enum(Title).default(Title.MR),
@@ -8,9 +8,10 @@ export const clientSchema = z.object({
   familyName: z.string().min(2, "Family Name must be at least 2 characters"),
   phoneNumber: z.string().min(1, "Phone number is required"),
   email: z.email("Invalid email address").optional().or(z.literal("")),
-  totalContractValue: z.number().optional().nullable(),
+  totalContractValue: z.number().default(0),
   joinDate: z.iso.datetime().optional().nullable(),
   companyId: z.uuid().optional().nullable(),
+  status: z.enum(ClientStatus).default(ClientStatus.ACTIVE),
 });
 
 export const updateClientSchema = clientSchema.partial();

@@ -22,6 +22,14 @@ export const Gender = {
 } as const;
 export type Gender = (typeof Gender)[keyof typeof Gender];
 
+// Client Status enum values
+export const ClientStatus = {
+  ACTIVE: "active",
+  INACTIVE: "inactive",
+  PENDING: "pending",
+} as const;
+export type ClientStatus = (typeof ClientStatus)[keyof typeof ClientStatus];
+
 export interface Client {
   id: string;
   name: string;
@@ -33,6 +41,7 @@ export interface Client {
   totalContractValue: number | null;
   joinDate: string | null;
   companyId: string | null;
+  status: ClientStatus;
   createdAt: string;
   updatedAt: string;
 }

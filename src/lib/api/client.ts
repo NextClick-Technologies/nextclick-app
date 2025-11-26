@@ -7,6 +7,7 @@ export interface PaginatedResponse<T> {
     total: number;
     totalPages: number;
   };
+  metadata?: Record<string, unknown>;
 }
 
 export interface SingleResponse<T> {

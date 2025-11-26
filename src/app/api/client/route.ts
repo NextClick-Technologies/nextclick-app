@@ -45,12 +45,50 @@ export async function GET(request: NextRequest) {
       return apiError(error.message, 500);
     }
 
+    // Fetch companies for all clients
+    const companyIds = [
+      ...new Set(data?.map((client) => client.company_id).filter(Boolean)),
+    ];
+    let companies = [];
+    if (companyIds.length > 0) {
+      const { data: companiesData } = await supabaseAdmin
+        .from("companies")
+        .select("id, name")
+        .in("id", companyIds);
+      companies = companiesData || [];
+    }
+
+    // Fetch project counts for all clients
+    const clientIds = data?.map((client) => client.id) || [];
+    let projectCounts = [];
+    if (clientIds.length > 0) {
+      const { data: projectsData } = await supabaseAdmin
+        .from("projects")
+        .select("client_id")
+        .in("client_id", clientIds);
+
+      // Count projects per client
+      const countsMap = (projectsData || []).reduce((acc, project) => {
+        acc[project.client_id] = (acc[project.client_id] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      projectCounts = Object.entries(countsMap).map(([clientId, count]) => ({
+        clientId,
+        count,
+      }));
+    }
+
     return apiSuccess(
       buildPaginatedResponse(
         transformFromDb<unknown[]>(data || []),
         page,
         pageSize,
-        count || 0
+        count || 0,
+        {
+          companies: transformFromDb(companies),
+          projectCounts,
+        }
       )
     );
   } catch (error) {

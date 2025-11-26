@@ -15,6 +15,7 @@ export interface PaginatedResponse<T> {
     total: number;
     totalPages: number;
   };
+  metadata?: Record<string, unknown>;
 }
 
 export function apiSuccess<T>(data: T, status: number = 200) {
@@ -78,9 +79,10 @@ export function buildPaginatedResponse<T>(
   data: T[],
   page: number,
   pageSize: number,
-  total: number
+  total: number,
+  metadata?: Record<string, unknown>
 ): PaginatedResponse<T> {
-  return {
+  const response: PaginatedResponse<T> = {
     data,
     pagination: {
       page,
@@ -89,6 +91,12 @@ export function buildPaginatedResponse<T>(
       totalPages: Math.ceil(total / pageSize),
     },
   };
+
+  if (metadata) {
+    response.metadata = metadata;
+  }
+
+  return response;
 }
 
 // ===========================
