@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -70,16 +71,30 @@ export function ManageTeamDialog({
         onSuccess: () => {
           setSelectedEmployeeId("");
           setRole("");
+          toast.success("Team member added successfully");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Failed to add team member");
         },
       }
     );
   };
 
   const handleRemoveMember = (employeeId: string) => {
-    removeMember.mutate({
-      projectId,
-      employeeId,
-    });
+    removeMember.mutate(
+      {
+        projectId,
+        employeeId,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Team member removed successfully");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Failed to remove team member");
+        },
+      }
+    );
   };
 
   const getInitials = (name: string, familyName: string) => {
@@ -90,8 +105,17 @@ export function ManageTeamDialog({
     return `${name} ${familyName}`;
   };
 
+  const handleOpenChange = (newOpen: boolean) => {
+    onOpenChange(newOpen);
+    // Reset form when dialog closes
+    if (!newOpen) {
+      setSelectedEmployeeId("");
+      setRole("");
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Manage Team Members</DialogTitle>
@@ -195,7 +219,11 @@ export function ManageTeamDialog({
                       onClick={() => handleRemoveMember(member.id)}
                       disabled={removeMember.isPending}
                     >
-                      <X className="h-4 w-4" />
+                      {removeMember.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <X className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 ))}

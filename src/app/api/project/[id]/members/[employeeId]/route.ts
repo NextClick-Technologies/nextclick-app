@@ -1,6 +1,6 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
-import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
+import { apiError, handleApiError } from "@/lib/api/api-utils";
 
 export async function DELETE(
   request: NextRequest,
@@ -19,7 +19,7 @@ export async function DELETE(
       return apiError(error.message, 500);
     }
 
-    return apiSuccess({ message: "Team member removed successfully" }, 204);
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     return handleApiError(error);
   }
