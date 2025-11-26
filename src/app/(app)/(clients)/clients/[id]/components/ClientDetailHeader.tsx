@@ -21,7 +21,7 @@ export function ClientDetailHeader({
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-col gap-4 items-start">
-        <Button variant="outline" size="sm" onClick={onBack}>
+        <Button variant="ghost" size="sm" onClick={onBack}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
