@@ -72,19 +72,13 @@ export function ProjectTable({ projects }: ProjectTableProps) {
               Type
             </th>
             <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
-              Status
-            </th>
-            <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
               Priority
             </th>
             <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
-              Start Date
+              Budget
             </th>
             <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
-              Finish Date
-            </th>
-            <th className="pb-3 text-right text-sm font-medium text-muted-foreground">
-              Budget
+              Status
             </th>
           </tr>
         </thead>
@@ -114,11 +108,6 @@ export function ProjectTable({ projects }: ProjectTableProps) {
                 <p className="text-sm">{project.type || "-"}</p>
               </td>
               <td className="py-4">
-                <Badge variant={getStatusVariant(project.status)}>
-                  {project.status.replace("_", " ")}
-                </Badge>
-              </td>
-              <td className="py-4">
                 {project.priority ? (
                   <Badge variant={getPriorityVariant(project.priority)}>
                     {project.priority}
@@ -127,16 +116,15 @@ export function ProjectTable({ projects }: ProjectTableProps) {
                   <span className="text-sm text-muted-foreground">-</span>
                 )}
               </td>
-              <td className="py-4">
-                <p className="text-sm">{formatDate(project.startDate)}</p>
-              </td>
-              <td className="py-4">
-                <p className="text-sm">{formatDate(project.finishDate)}</p>
-              </td>
-              <td className="py-4 text-right">
+              <td className="py-4 text-left">
                 <p className="font-medium">
                   ${Number(project.budget || 0).toLocaleString()}
                 </p>
+              </td>
+              <td className="py-4">
+                <Badge variant={getStatusVariant(project.status)}>
+                  {project.status.replace("_", " ")}
+                </Badge>
               </td>
             </tr>
           ))}
