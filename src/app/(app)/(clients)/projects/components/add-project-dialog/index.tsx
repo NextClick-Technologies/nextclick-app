@@ -9,14 +9,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCreateProject } from "@/hooks/useProject";
 import { useClients } from "@/hooks/useClient";
+import { useEmployees } from "@/hooks/useEmployee";
 import { Loader2 } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { projectSchema, type ProjectInput } from "@/schemas/project.schema";
 import { FormField } from "./FormField";
 import { ClientSelect } from "./ClientSelect";
-import { ProjectSelectFields } from "./ProjectSelectFields";
+import { ProjectManagerSelect } from "./ProjectManagerSelect";
 import { DescriptionField } from "./DescriptionField";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ProjectStatus, ProjectPriority } from "@/types/project.type";
 
 interface AddProjectDialogProps {
   open: boolean;
@@ -30,6 +40,8 @@ export function AddProjectDialog({
   const createProject = useCreateProject();
   const { data: clientsData } = useClients({ pageSize: 100 });
   const clients = clientsData?.data || [];
+  const { data: employeesData } = useEmployees({ pageSize: 100 });
+  const employees = employeesData?.data || [];
 
   const {
     register,
@@ -62,15 +74,16 @@ export function AddProjectDialog({
           className="flex flex-col flex-1 min-h-0"
         >
           <div className="space-y-4 overflow-y-auto flex-1 p-2">
-            <FormField
-              label="Project Name"
-              id="name"
-              placeholder="Enter project name"
-              register={register}
-              error={errors.name}
-            />
-
+            {/* Project Name and Client side-by-side */}
             <div className="grid grid-cols-2 gap-4">
+              <FormField
+                label="Project Name"
+                id="name"
+                placeholder="Enter project name"
+                register={register}
+                error={errors.name}
+              />
+
               <Controller
                 name="clientId"
                 control={control}
@@ -90,6 +103,21 @@ export function AddProjectDialog({
                   </div>
                 )}
               />
+            </div>
+
+            {/* Project Manager and Type side-by-side */}
+            <div className="grid grid-cols-2 gap-4">
+              <Controller
+                name="projectManager"
+                control={control}
+                render={({ field }) => (
+                  <ProjectManagerSelect
+                    value={field.value ?? ""}
+                    employees={employees}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
 
               <FormField
                 label="Type (Optional)"
@@ -99,6 +127,44 @@ export function AddProjectDialog({
               />
             </div>
 
+            {/* Budget and Payment Terms inline */}
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                label="Budget (Optional)"
+                id="budget"
+                type="number"
+                placeholder="Enter budget"
+                register={register}
+              />
+
+              <div className="space-y-2">
+                <Controller
+                  name="paymentTerms"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Label htmlFor="paymentTerms">Payment Terms</Label>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select payment terms" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="net_30d">Net 30 Days</SelectItem>
+                          <SelectItem value="net_60d">Net 60 Days</SelectItem>
+                          <SelectItem value="net_90d">Net 90 Days</SelectItem>
+                          <SelectItem value="immediate">Immediate</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Start Date and Finish Date side-by-side */}
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 label="Start Date (Optional)"
@@ -117,12 +183,66 @@ export function AddProjectDialog({
               />
             </div>
 
-            <ProjectSelectFields
-              control={control}
-              register={register}
-              errors={errors}
-            />
+            {/* Status and Priority side-by-side */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="status">Status</Label>
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ProjectStatus.ACTIVE}>
+                          Active
+                        </SelectItem>
+                        <SelectItem value={ProjectStatus.COMPLETED}>
+                          Completed
+                        </SelectItem>
+                        <SelectItem value={ProjectStatus.ON_HOLD}>
+                          On Hold
+                        </SelectItem>
+                        <SelectItem value={ProjectStatus.CANCELLED}>
+                          Cancelled
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="priority">Priority</Label>
+                <Controller
+                  name="priority"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ProjectPriority.LOW}>Low</SelectItem>
+                        <SelectItem value={ProjectPriority.MEDIUM}>
+                          Medium
+                        </SelectItem>
+                        <SelectItem value={ProjectPriority.HIGH}>
+                          High
+                        </SelectItem>
+                        <SelectItem value={ProjectPriority.URGENT}>
+                          Urgent
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Description */}
             <Controller
               name="description"
               control={control}

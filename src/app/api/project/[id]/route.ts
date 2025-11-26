@@ -18,7 +18,9 @@ export async function GET(
 
     const { data, error } = await supabaseAdmin
       .from("projects")
-      .select("*, client:clients(id, name, family_name)")
+      .select(
+        "*, client:clients(id, name, family_name), employee:employees(id, name, family_name)"
+      )
       .eq("id", id)
       .single();
 

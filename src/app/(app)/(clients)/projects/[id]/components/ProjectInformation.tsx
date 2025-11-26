@@ -13,6 +13,7 @@ interface ProjectInformationProps {
   completionDate: string | null;
   description: string | null;
   clientName: string;
+  projectManagerName: string | null;
 }
 
 export function ProjectInformation({
@@ -24,6 +25,7 @@ export function ProjectInformation({
   completionDate,
   description,
   clientName,
+  projectManagerName,
 }: ProjectInformationProps) {
   const getStatusVariant = (
     status: ProjectStatus
@@ -78,6 +80,12 @@ export function ProjectInformation({
           <div>
             <p className="text-sm font-medium text-muted-foreground">Client:</p>
             <p className="text-sm">{clientName}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">
+              Project Manager:
+            </p>
+            <p className="text-sm">{projectManagerName || "N/A"}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-muted-foreground">Type:</p>

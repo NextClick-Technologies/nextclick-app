@@ -16,6 +16,7 @@ export const projectSchema = z.object({
   description: z.string().optional(),
   completionDate: z.string().optional().nullable(),
   clientId: z.uuid("Please select a client"),
+  projectManager: z.string().uuid().optional().nullable(),
 });
 
 export const updateProjectSchema = projectSchema.partial();

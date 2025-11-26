@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ClientSelect } from "./ClientSelect";
+import { ProjectManagerSelect } from "./ProjectManagerSelect";
 import { ProjectSelects } from "./ProjectSelects";
 
 interface EditProjectFormProps {
@@ -21,18 +22,21 @@ export function EditProjectForm({
 }: EditProjectFormProps) {
   return (
     <div className="space-y-4 py-4">
-      {/* Project Name */}
-      <div className="space-y-2">
-        <Label htmlFor="name">Project Name</Label>
-        <Input id="name" {...register("name")} />
-        {errors.name && (
-          <p className="text-sm text-destructive">{errors.name.message}</p>
-        )}
+      {/* Project Name and Client side-by-side */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">Project Name</Label>
+          <Input id="name" {...register("name")} />
+          {errors.name && (
+            <p className="text-sm text-destructive">{errors.name.message}</p>
+          )}
+        </div>
+        <ClientSelect control={control} errors={errors} />
       </div>
 
-      {/* Client and Type side-by-side */}
+      {/* Project Manager and Type side-by-side */}
       <div className="grid grid-cols-2 gap-4">
-        <ClientSelect control={control} errors={errors} />
+        <ProjectManagerSelect control={control} errors={errors} />
         <div className="space-y-2">
           <Label htmlFor="type">Type</Label>
           <Input id="type" {...register("type")} />

@@ -34,14 +34,6 @@ export function ProjectSelectFields({
   return (
     <>
       <div className="grid grid-cols-2 gap-4">
-        <FormField
-          label="Budget (Optional)"
-          id="budget"
-          type="number"
-          placeholder="0"
-          register={register}
-        />
-
         <Controller
           name="paymentTerms"
           control={control}
@@ -70,9 +62,7 @@ export function ProjectSelectFields({
             </div>
           )}
         />
-      </div>
 
-      <div className="grid grid-cols-2 gap-4">
         <Controller
           name="priority"
           control={control}
@@ -93,7 +83,9 @@ export function ProjectSelectFields({
             </div>
           )}
         />
+      </div>
 
+      <div className="grid grid-cols-2 gap-4">
         <Controller
           name="status"
           control={control}

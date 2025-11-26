@@ -82,6 +82,10 @@ export default function ProjectDetailPage() {
     ? `${project.client.name} ${project.client.familyName}`
     : "N/A";
 
+  const projectManagerName = project.employee
+    ? `${project.employee.name} ${project.employee.familyName}`
+    : null;
+
   return (
     <AppLayout>
       <div className="space-y-6">
@@ -104,6 +108,7 @@ export default function ProjectDetailPage() {
               completionDate={project.completionDate}
               description={project.description}
               clientName={clientName}
+              projectManagerName={projectManagerName}
             />
           </div>
 

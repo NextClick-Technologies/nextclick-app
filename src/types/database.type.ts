@@ -118,6 +118,7 @@ export interface Database {
           description: string;
           completion_date: string | null;
           client_id: string;
+          project_manager: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -134,6 +135,7 @@ export interface Database {
           description: string;
           completion_date?: string | null;
           client_id: string;
+          project_manager?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -150,6 +152,7 @@ export interface Database {
           description?: string;
           completion_date?: string | null;
           client_id?: string;
+          project_manager?: string | null;
           created_at?: string;
           updated_at?: string;
         };

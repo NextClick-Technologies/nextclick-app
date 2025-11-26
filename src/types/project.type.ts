@@ -44,9 +44,15 @@ export interface Project {
   description: string;
   completionDate: string | null;
   clientId: string;
+  projectManager: string | null;
   createdAt: string;
   updatedAt: string;
   client?: {
+    id: string;
+    name: string;
+    familyName: string;
+  };
+  employee?: {
     id: string;
     name: string;
     familyName: string;

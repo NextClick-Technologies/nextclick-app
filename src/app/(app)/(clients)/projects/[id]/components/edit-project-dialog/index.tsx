@@ -54,6 +54,7 @@ export function EditProjectDialog({
       priority: project.priority || "medium",
       description: project.description || "",
       clientId: project.clientId || "",
+      projectManager: project.projectManager || "",
     },
   });
 
@@ -70,6 +71,7 @@ export function EditProjectDialog({
       priority: project.priority || "medium",
       description: project.description || "",
       clientId: project.clientId || "",
+      projectManager: project.projectManager || "",
     });
   }, [project, reset]);
 
