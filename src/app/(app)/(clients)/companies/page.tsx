@@ -3,16 +3,16 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Plus, Search, Loader2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useCompanies } from "@/hooks/useCompany";
 import { AddCompanyDialog } from "./components/add-company-dialog";
-import { CompanyTable } from "./components/CompanyTable";
+import { CompanyDatabase } from "./components/company-database";
 
 export default function CompaniesPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [page] = useState(1);
   const pageSize = 20;
@@ -22,12 +22,18 @@ export default function CompaniesPage() {
   const companies = data?.data || [];
   const totalCompanies = data?.pagination.total || 0;
 
-  const filteredCompanies = companies.filter(
-    (company) =>
+  const filteredCompanies = companies.filter((company) => {
+    const matchesSearch =
       company.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       company.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      company.address?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      company.address?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "all" ||
+      company.status?.toLowerCase() === statusFilter.toLowerCase();
+
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <AppLayout>
@@ -71,46 +77,15 @@ export default function CompaniesPage() {
           />
         </div>
 
-        <Card className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Company Database</h2>
-              <div className="flex items-center gap-4">
-                <div className="relative w-64">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    placeholder="Search companies..."
-                    className="pl-10"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {error && (
-              <div className="text-center py-8 text-destructive">
-                Error loading companies: {error.message}
-              </div>
-            )}
-
-            {isLoading && (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            )}
-
-            {!isLoading && !error && (
-              <CompanyTable companies={filteredCompanies} />
-            )}
-
-            {!isLoading && !error && filteredCompanies.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                No companies found
-              </div>
-            )}
-          </div>
-        </Card>
+        <CompanyDatabase
+          companies={filteredCompanies}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+          isLoading={isLoading}
+          error={error}
+        />
       </div>
 
       <AddCompanyDialog
