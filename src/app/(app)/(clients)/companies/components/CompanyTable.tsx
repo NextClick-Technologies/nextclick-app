@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Company } from "@/types";
 import { Avatar } from "@/components/ui/avatar";
 import { Building2 } from "lucide-react";
@@ -9,6 +10,8 @@ interface CompanyTableProps {
 }
 
 export function CompanyTable({ companies }: CompanyTableProps) {
+  const router = useRouter();
+
   return (
     <div className="overflow-x-auto max-h-[calc(100vh-32rem)] overflow-y-auto">
       <table className="w-full">
@@ -30,7 +33,11 @@ export function CompanyTable({ companies }: CompanyTableProps) {
         </thead>
         <tbody className="divide-y">
           {companies.map((company) => (
-            <tr key={company.id} className="group hover:bg-muted/50">
+            <tr
+              key={company.id}
+              onClick={() => router.push(`/companies/${company.id}`)}
+              className="group hover:bg-muted/50 cursor-pointer"
+            >
               <td className="py-4">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10 bg-primary/10 flex items-center justify-center">

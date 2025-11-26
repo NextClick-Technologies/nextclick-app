@@ -26,7 +26,7 @@ export async function GET(
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
     }
 
-    return apiSuccess(transformFromDb(data));
+    return apiSuccess({ data: transformFromDb(data) });
   } catch (error) {
     return handleApiError(error);
   }
@@ -56,7 +56,7 @@ export async function PATCH(
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
     }
 
-    return apiSuccess(transformFromDb(data));
+    return apiSuccess({ data: transformFromDb(data) });
   } catch (error) {
     return handleApiError(error);
   }
