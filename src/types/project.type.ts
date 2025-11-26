@@ -35,8 +35,8 @@ export interface Project {
   id: string;
   name: string;
   type: string;
-  startDate: string;
-  finishDate: string;
+  startDate: string | null;
+  finishDate: string | null;
   budget: string;
   paymentTerms: PaymentTerms;
   status: ProjectStatus;

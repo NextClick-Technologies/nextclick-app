@@ -109,8 +109,8 @@ export interface Database {
           id: string;
           name: string;
           type: string;
-          start_date: string;
-          finish_date: string;
+          start_date: string | null;
+          finish_date: string | null;
           budget: string;
           payment_terms: PaymentTerms;
           status: ProjectStatus;
@@ -125,8 +125,8 @@ export interface Database {
           id?: string;
           name: string;
           type: string;
-          start_date: string;
-          finish_date: string;
+          start_date?: string | null;
+          finish_date?: string | null;
           budget: string;
           payment_terms: PaymentTerms;
           status: ProjectStatus;
@@ -141,8 +141,8 @@ export interface Database {
           id?: string;
           name?: string;
           type?: string;
-          start_date?: string;
-          finish_date?: string;
+          start_date?: string | null;
+          finish_date?: string | null;
           budget?: string;
           payment_terms?: PaymentTerms;
           status?: ProjectStatus;

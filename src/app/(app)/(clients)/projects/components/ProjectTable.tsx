@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Project } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
@@ -10,6 +11,7 @@ interface ProjectTableProps {
 }
 
 export function ProjectTable({ projects }: ProjectTableProps) {
+  const router = useRouter();
   const formatDate = (date: string | null) => {
     if (!date) return "-";
     return new Date(date).toLocaleDateString("en-US", {
@@ -75,7 +77,11 @@ export function ProjectTable({ projects }: ProjectTableProps) {
         </thead>
         <tbody className="divide-y">
           {projects.map((project) => (
-            <tr key={project.id} className="group hover:bg-muted/50">
+            <tr
+              key={project.id}
+              onClick={() => router.push(`/projects/${project.id}`)}
+              className="group hover:bg-muted/50 cursor-pointer"
+            >
               <td className="py-4">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10 bg-primary/10 flex items-center justify-center">
