@@ -57,4 +57,10 @@ export interface Project {
     name: string;
     familyName: string;
   };
+  members?: Array<{
+    id: string;
+    name: string;
+    familyName: string;
+    role?: string | null;
+  }>;
 }

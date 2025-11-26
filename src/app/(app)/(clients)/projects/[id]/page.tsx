@@ -100,6 +100,7 @@ export default function ProjectDetailPage() {
           {/* Left Column - Project Info */}
           <div className="lg:col-span-2">
             <ProjectInformation
+              projectId={projectId}
               type={project.type}
               status={project.status}
               priority={project.priority}
@@ -109,6 +110,7 @@ export default function ProjectDetailPage() {
               description={project.description}
               clientName={clientName}
               projectManagerName={projectManagerName}
+              members={project.members}
             />
           </div>
 

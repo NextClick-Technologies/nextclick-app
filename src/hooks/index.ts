@@ -5,3 +5,4 @@ export * from "./useEmployee";
 export * from "./useMilestone";
 export * from "./usePayment";
 export * from "./useProject";
+export * from "./useProjectMembers";

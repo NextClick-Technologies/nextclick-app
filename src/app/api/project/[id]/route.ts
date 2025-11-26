@@ -19,7 +19,7 @@ export async function GET(
     const { data, error } = await supabaseAdmin
       .from("projects")
       .select(
-        "*, client:clients(id, name, family_name), employee:employees(id, name, family_name)"
+        "*, client:clients(id, name, family_name), employee:employees(id, name, family_name), project_members(id, role, member:employees(id, name, family_name))"
       )
       .eq("id", id)
       .single();
@@ -28,7 +28,18 @@ export async function GET(
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
     }
 
-    return apiSuccess({ data: transformFromDb(data) });
+    // Transform project_members array if it exists
+    const transformedData = {
+      ...transformFromDb(data),
+      members: data.project_members?.map((pm: any) => ({
+        id: pm.member.id,
+        name: pm.member.name,
+        familyName: pm.member.family_name,
+        role: pm.role,
+      })),
+    };
+
+    return apiSuccess({ data: transformedData });
   } catch (error) {
     return handleApiError(error);
   }

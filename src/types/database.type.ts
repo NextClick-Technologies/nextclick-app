@@ -315,6 +315,29 @@ export interface Database {
           updated_at?: string;
         };
       };
+      project_members: {
+        Row: {
+          id: string;
+          project_id: string;
+          employee_id: string;
+          role: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          project_id: string;
+          employee_id: string;
+          role?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          project_id?: string;
+          employee_id?: string;
+          role?: string | null;
+          created_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
@@ -363,3 +386,10 @@ export type CommunicationLogInsert =
   Database["public"]["Tables"]["communication_logs"]["Insert"];
 export type CommunicationLogUpdate =
   Database["public"]["Tables"]["communication_logs"]["Update"];
+
+export type ProjectMember =
+  Database["public"]["Tables"]["project_members"]["Row"];
+export type ProjectMemberInsert =
+  Database["public"]["Tables"]["project_members"]["Insert"];
+export type ProjectMemberUpdate =
+  Database["public"]["Tables"]["project_members"]["Update"];
