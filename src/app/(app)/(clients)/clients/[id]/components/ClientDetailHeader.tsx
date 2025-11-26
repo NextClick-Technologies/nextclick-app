@@ -20,7 +20,7 @@ export function ClientDetailHeader({
 }: ClientDetailHeaderProps) {
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-4 items-start">
         <Button variant="outline" size="sm" onClick={onBack}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
