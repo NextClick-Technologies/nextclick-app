@@ -104,7 +104,7 @@ export function MilestoneTimeline({ projectId }: MilestoneTimelineProps) {
     <>
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="space-y-4">
             <div className="flex items-center gap-2">
               <CalendarClock className="h-5 w-5 text-muted-foreground" />
               <CardTitle>Project Milestones</CardTitle>
@@ -112,6 +112,7 @@ export function MilestoneTimeline({ projectId }: MilestoneTimelineProps) {
                 <Badge variant="secondary">{data.data.length}</Badge>
               )}
             </div>
+
             <div className="flex items-center gap-2">
               {/* Status Filter */}
               <Select

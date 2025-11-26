@@ -98,9 +98,9 @@ export default function ProjectDetailPage() {
           onDelete={handleDelete}
         />
 
+        {/* Project Information and Budget Information */}
         <div className="grid gap-6 lg:grid-cols-3">
-          {/* Left Column - Project Info & Milestones */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2">
             <ProjectInformation
               projectId={projectId}
               type={project.type}
@@ -114,19 +114,23 @@ export default function ProjectDetailPage() {
               projectManagerName={projectManagerName}
               members={project.members}
             />
-
-            {/* Milestone Timeline */}
-            <MilestoneTimeline projectId={projectId} />
           </div>
 
-          {/* Right Column - Budget Info & Milestone Stats */}
-          <div className="space-y-6">
+          <div>
             <BudgetInformation
               budget={project.budget}
               paymentTerms={project.paymentTerms}
             />
+          </div>
+        </div>
 
-            {/* Milestone Statistics */}
+        {/* Project Milestones and Milestone Progress */}
+        <div className="grid gap-6 lg:grid-cols-5">
+          <div className="lg:col-span-2">
+            <MilestoneTimeline projectId={projectId} />
+          </div>
+
+          <div className="lg:col-span-3">
             <MilestoneStats projectId={projectId} />
           </div>
         </div>
