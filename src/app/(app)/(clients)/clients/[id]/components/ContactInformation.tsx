@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ClientStatus } from "@/types";
@@ -11,6 +12,7 @@ interface ContactInformationProps {
   status: ClientStatus;
   joinDate: string | null;
   companyName: string;
+  companyId: string | null;
 }
 
 export function ContactInformation({
@@ -20,6 +22,7 @@ export function ContactInformation({
   status,
   joinDate,
   companyName,
+  companyId,
 }: ContactInformationProps) {
   const getStatusVariant = (
     status: ClientStatus
@@ -83,7 +86,16 @@ export function ContactInformation({
             <p className="text-sm font-medium text-muted-foreground">
               Company:
             </p>
-            <p className="text-sm">{companyName}</p>
+            {companyId ? (
+              <Link
+                href={`/companies/${companyId}`}
+                className="text-sm text-primary hover:underline"
+              >
+                {companyName}
+              </Link>
+            ) : (
+              <p className="text-sm">{companyName}</p>
+            )}
           </div>
         </div>
       </div>

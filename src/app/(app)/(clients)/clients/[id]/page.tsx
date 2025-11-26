@@ -93,6 +93,7 @@ export default function ClientDetailPage() {
               status={client.status}
               joinDate={client.joinDate}
               companyName={client.company?.name || "N/A"}
+              companyId={client.company?.id || null}
             />
           </div>
 
