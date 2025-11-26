@@ -52,8 +52,8 @@ export function Sidebar() {
   useEffect(() => {
     navigation.forEach((item) => {
       if ("submenu" in item && item.submenu) {
-        const hasActiveChild = item.submenu.some(
-          (sub) => pathname === sub.href
+        const hasActiveChild = item.submenu.some((sub) =>
+          pathname.startsWith(sub.href)
         );
         if (hasActiveChild) {
           setOpenMenus((prev) => {

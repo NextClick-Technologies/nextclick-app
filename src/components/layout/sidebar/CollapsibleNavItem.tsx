@@ -24,7 +24,7 @@ export function CollapsibleNavItem({
   pathname,
   onToggle,
 }: CollapsibleNavItemProps) {
-  const hasActiveChild = submenu.some((sub) => pathname === sub.href);
+  const hasActiveChild = submenu.some((sub) => pathname.startsWith(sub.href));
 
   return (
     <div>
@@ -50,7 +50,7 @@ export function CollapsibleNavItem({
       {isOpen && (
         <div className="ml-6 mt-1 space-y-1 border-l-2 border-muted/50 pl-2">
           {submenu.map((subItem) => {
-            const isActive = pathname === subItem.href;
+            const isActive = pathname.startsWith(subItem.href);
             return (
               <Link
                 key={subItem.href}
