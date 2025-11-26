@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Project } from "@/types";
+import { Project, ProjectStatus, ProjectPriority } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { FolderKanban } from "lucide-react";
@@ -12,6 +12,7 @@ interface ProjectTableProps {
 
 export function ProjectTable({ projects }: ProjectTableProps) {
   const router = useRouter();
+
   const formatDate = (date: string | null) => {
     if (!date) return "-";
     return new Date(date).toLocaleDateString("en-US", {
@@ -21,30 +22,42 @@ export function ProjectTable({ projects }: ProjectTableProps) {
     });
   };
 
-  const getStatusVariant = (status: string) => {
+  const getStatusVariant = (
+    status: ProjectStatus
+  ): "default" | "secondary" | "outline" | "destructive" => {
     switch (status) {
-      case "ACTIVE":
+      case ProjectStatus.ACTIVE:
         return "default";
-      case "COMPLETED":
+      case ProjectStatus.COMPLETED:
         return "secondary";
-      case "ON_HOLD":
+      case ProjectStatus.ON_HOLD:
         return "outline";
+      case ProjectStatus.CANCELLED:
+        return "destructive";
       default:
         return "outline";
     }
   };
 
-  const getPriorityVariant = (priority: string | null) => {
+  const getPriorityVariant = (
+    priority: ProjectPriority | null
+  ): "default" | "secondary" | "outline" | "destructive" => {
+    if (!priority) return "outline";
     switch (priority) {
-      case "HIGH":
+      case ProjectPriority.URGENT:
+      case ProjectPriority.HIGH:
         return "destructive";
-      case "MEDIUM":
+      case ProjectPriority.MEDIUM:
         return "default";
-      case "LOW":
+      case ProjectPriority.LOW:
         return "secondary";
       default:
         return "outline";
     }
+  };
+
+  const handleRowClick = (projectId: string) => {
+    router.push(`/projects/${projectId}`);
   };
 
   return (
@@ -79,8 +92,8 @@ export function ProjectTable({ projects }: ProjectTableProps) {
           {projects.map((project) => (
             <tr
               key={project.id}
-              onClick={() => router.push(`/projects/${project.id}`)}
-              className="group hover:bg-muted/50 cursor-pointer"
+              onClick={() => handleRowClick(project.id)}
+              className="group hover:bg-muted/50 cursor-pointer transition-colors"
             >
               <td className="py-4">
                 <div className="flex items-center gap-3">
@@ -106,10 +119,12 @@ export function ProjectTable({ projects }: ProjectTableProps) {
                 </Badge>
               </td>
               <td className="py-4">
-                {project.priority && (
+                {project.priority ? (
                   <Badge variant={getPriorityVariant(project.priority)}>
                     {project.priority}
                   </Badge>
+                ) : (
+                  <span className="text-sm text-muted-foreground">-</span>
                 )}
               </td>
               <td className="py-4">

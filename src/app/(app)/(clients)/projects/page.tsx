@@ -3,17 +3,17 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Plus, Search, Loader2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useProjects } from "@/hooks/useProject";
 import { AddProjectDialog } from "./components/add-project-dialog";
-import { ProjectTable } from "./components/ProjectTable";
+import { ProjectDatabase } from "./components/project-database";
 import { ProjectStatus } from "@/types/project.type";
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [page] = useState(1);
   const pageSize = 20;
@@ -23,12 +23,17 @@ export default function ProjectsPage() {
   const projects = data?.data || [];
   const totalProjects = data?.pagination.total || 0;
 
-  const filteredProjects = projects.filter(
-    (project) =>
+  const filteredProjects = projects.filter((project) => {
+    const matchesSearch =
       project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       project.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      project.description?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "all" || project.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
 
   const activeProjects = projects.filter(
     (p) => p.status === ProjectStatus.ACTIVE
@@ -84,46 +89,15 @@ export default function ProjectsPage() {
           />
         </div>
 
-        <Card className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Project Database</h2>
-              <div className="flex items-center gap-4">
-                <div className="relative w-64">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    placeholder="Search projects..."
-                    className="pl-10"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {error && (
-              <div className="text-center py-8 text-destructive">
-                Error loading projects: {error.message}
-              </div>
-            )}
-
-            {isLoading && (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            )}
-
-            {!isLoading && !error && (
-              <ProjectTable projects={filteredProjects} />
-            )}
-
-            {!isLoading && !error && filteredProjects.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                No projects found
-              </div>
-            )}
-          </div>
-        </Card>
+        <ProjectDatabase
+          projects={filteredProjects}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+          isLoading={isLoading}
+          error={error}
+        />
       </div>
 
       <AddProjectDialog
