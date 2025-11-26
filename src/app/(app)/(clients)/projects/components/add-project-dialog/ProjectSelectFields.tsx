@@ -11,17 +11,37 @@ import {
   ProjectStatus,
   ProjectPriority,
 } from "@/types/project.type";
-import { Control, Controller } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  UseFormRegister,
+  FieldErrors,
+} from "react-hook-form";
+import { FormField } from "./FormField";
+import type { ProjectInput } from "@/schemas/project.schema";
 
 interface ProjectSelectFieldsProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>;
+  register: UseFormRegister<ProjectInput>;
+  errors: FieldErrors<ProjectInput>;
 }
 
-export function ProjectSelectFields({ control }: ProjectSelectFieldsProps) {
+export function ProjectSelectFields({
+  control,
+  register,
+  errors,
+}: ProjectSelectFieldsProps) {
   return (
     <>
       <div className="grid grid-cols-2 gap-4">
+        <FormField
+          label="Budget (Optional)"
+          id="budget"
+          type="number"
+          placeholder="0"
+          register={register}
+        />
+
         <Controller
           name="paymentTerms"
           control={control}
@@ -30,7 +50,7 @@ export function ProjectSelectFields({ control }: ProjectSelectFieldsProps) {
               <Label htmlFor="paymentTerms">Payment Terms</Label>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Select payment terms" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={PaymentTerms.NET_30D}>
@@ -50,6 +70,29 @@ export function ProjectSelectFields({ control }: ProjectSelectFieldsProps) {
             </div>
           )}
         />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <Controller
+          name="priority"
+          control={control}
+          render={({ field }) => (
+            <div className="space-y-2">
+              <Label htmlFor="priority">Priority</Label>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ProjectPriority.LOW}>Low</SelectItem>
+                  <SelectItem value={ProjectPriority.MEDIUM}>Medium</SelectItem>
+                  <SelectItem value={ProjectPriority.HIGH}>High</SelectItem>
+                  <SelectItem value={ProjectPriority.URGENT}>Urgent</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        />
 
         <Controller
           name="status"
@@ -59,7 +102,7 @@ export function ProjectSelectFields({ control }: ProjectSelectFieldsProps) {
               <Label htmlFor="status">Status</Label>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={ProjectStatus.ACTIVE}>Active</SelectItem>
@@ -76,27 +119,6 @@ export function ProjectSelectFields({ control }: ProjectSelectFieldsProps) {
           )}
         />
       </div>
-
-      <Controller
-        name="priority"
-        control={control}
-        render={({ field }) => (
-          <div className="space-y-2">
-            <Label htmlFor="priority">Priority</Label>
-            <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={ProjectPriority.LOW}>Low</SelectItem>
-                <SelectItem value={ProjectPriority.MEDIUM}>Medium</SelectItem>
-                <SelectItem value={ProjectPriority.HIGH}>High</SelectItem>
-                <SelectItem value={ProjectPriority.URGENT}>Urgent</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        )}
-      />
     </>
   );
 }

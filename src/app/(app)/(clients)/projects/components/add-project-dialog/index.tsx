@@ -70,32 +70,34 @@ export function AddProjectDialog({
               error={errors.name}
             />
 
-            <Controller
-              name="clientId"
-              control={control}
-              render={({ field }) => (
-                <div className="space-y-2">
-                  <ClientSelect
-                    value={field.value ?? ""}
-                    clients={clients}
-                    onChange={field.onChange}
-                    required
-                  />
-                  {errors.clientId && (
-                    <p className="text-sm text-destructive">
-                      {errors.clientId.message}
-                    </p>
-                  )}
-                </div>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <Controller
+                name="clientId"
+                control={control}
+                render={({ field }) => (
+                  <div className="space-y-2">
+                    <ClientSelect
+                      value={field.value ?? ""}
+                      clients={clients}
+                      onChange={field.onChange}
+                      required
+                    />
+                    {errors.clientId && (
+                      <p className="text-sm text-destructive">
+                        {errors.clientId.message}
+                      </p>
+                    )}
+                  </div>
+                )}
+              />
 
-            <FormField
-              label="Type (Optional)"
-              id="type"
-              placeholder="e.g., web-development, mobile-app"
-              register={register}
-            />
+              <FormField
+                label="Type (Optional)"
+                id="type"
+                placeholder="e.g., web-development"
+                register={register}
+              />
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <FormField
@@ -115,15 +117,11 @@ export function AddProjectDialog({
               />
             </div>
 
-            <FormField
-              label="Budget (Optional)"
-              id="budget"
-              type="number"
-              placeholder="0"
+            <ProjectSelectFields
+              control={control}
               register={register}
+              errors={errors}
             />
-
-            <ProjectSelectFields control={control} />
 
             <Controller
               name="description"
