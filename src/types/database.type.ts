@@ -23,7 +23,7 @@ export interface Database {
         Row: {
           id: string;
           name: string;
-          title: Title | null;
+          title: Title;
           family_name: string;
           gender: Gender;
           phone_number: string;
@@ -38,7 +38,7 @@ export interface Database {
         Insert: {
           id?: string;
           name: string;
-          title?: Title | null;
+          title?: Title;
           family_name: string;
           gender: Gender;
           phone_number: string;
@@ -53,7 +53,7 @@ export interface Database {
         Update: {
           id?: string;
           name?: string;
-          title?: Title | null;
+          title?: Title;
           family_name?: string;
           gender?: Gender;
           phone_number?: string;
@@ -233,7 +233,7 @@ export interface Database {
       employees: {
         Row: {
           id: string;
-          title: Title | null;
+          title: Title;
           name: string;
           family_name: string;
           preferred_name: string | null;
@@ -247,7 +247,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          title?: Title | null;
+          title?: Title;
           name: string;
           family_name: string;
           preferred_name?: string | null;
@@ -261,7 +261,7 @@ export interface Database {
         };
         Update: {
           id?: string;
-          title?: Title | null;
+          title?: Title;
           name?: string;
           family_name?: string;
           preferred_name?: string | null;

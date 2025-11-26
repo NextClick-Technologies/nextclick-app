@@ -33,7 +33,7 @@ export type ClientStatus = (typeof ClientStatus)[keyof typeof ClientStatus];
 export interface Client {
   id: string;
   name: string;
-  title: Title | null;
+  title: Title;
   familyName: string;
   gender: Gender;
   phoneNumber: string;

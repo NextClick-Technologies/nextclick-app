@@ -1,32 +1,52 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { useClient } from "@/hooks/useClient";
+import { useClient, useDeleteClient } from "@/hooks/useClient";
 import { ClientDetailHeader } from "./components/ClientDetailHeader";
 import { ContactInformation } from "./components/ContactInformation";
 import { CompanyDetails } from "./components/CompanyDetails";
 import { FinancialInformation } from "./components/FinancialInformation";
 import { ProjectSummary } from "./components/ProjectSummary";
+import { EditClientDialog } from "./components/EditClientDialog";
+import { DeleteClientDialog } from "./components/DeleteClientDialog";
 
 export default function ClientDetailPage() {
   const params = useParams();
   const router = useRouter();
   const clientId = params.id as string;
 
-  const { data, isLoading, error } = useClient(clientId);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const { data, isLoading, error, refetch } = useClient(clientId);
+  const deleteClient = useDeleteClient();
   const client = data?.data;
 
   const handleBack = () => router.push("/clients");
+
   const handleEdit = () => {
-    // TODO: Implement edit functionality
-    console.log("Edit client:", clientId);
+    setIsEditDialogOpen(true);
   };
+
   const handleDelete = () => {
-    // TODO: Implement delete functionality
-    console.log("Delete client:", clientId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteClient.mutateAsync(clientId);
+      router.push("/clients");
+    } catch (error) {
+      console.error("Failed to delete client:", error);
+    }
+  };
+
+  const handleEditSuccess = () => {
+    refetch();
   };
 
   if (isLoading) {
@@ -84,6 +104,23 @@ export default function ClientDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Edit Dialog */}
+      <EditClientDialog
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        client={client}
+        onSuccess={handleEditSuccess}
+      />
+
+      {/* Delete Dialog */}
+      <DeleteClientDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        clientName={`${client.name} ${client.familyName}`}
+        onConfirm={handleConfirmDelete}
+        isDeleting={deleteClient.isPending}
+      />
     </AppLayout>
   );
 }
