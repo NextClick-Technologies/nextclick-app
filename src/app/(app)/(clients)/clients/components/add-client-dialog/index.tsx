@@ -16,6 +16,8 @@ import { clientSchema, type ClientInput } from "@/schemas/client.schema";
 import { FormField } from "./FormField";
 import { ClientSelectFields } from "./ClientSelectFields";
 import { CompanySelect } from "./CompanySelect";
+import { JoinDateInput } from "./JoinDateInput";
+import { StatusSelect } from "./StatusSelect";
 
 interface AddClientDialogProps {
   open: boolean;
@@ -35,6 +37,10 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
     formState: { errors, isSubmitting },
   } = useForm<ClientInput>({
     resolver: zodResolver(clientSchema),
+    defaultValues: {
+      joinDate: new Date().toISOString().split("T")[0],
+      status: "active",
+    },
   });
 
   const onSubmit = async (data: ClientInput) => {
@@ -56,43 +62,52 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-2">
           <ClientSelectFields control={control} />
 
-          <FormField
-            label="First Name"
-            id="name"
-            placeholder="Enter first name"
-            register={register}
-            error={errors.name}
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              label="First Name"
+              id="name"
+              placeholder="Enter first name"
+              register={register}
+              error={errors.name}
+            />
 
-          <FormField
-            label="Family Name"
-            id="familyName"
-            placeholder="Enter family name"
-            register={register}
-            error={errors.familyName}
-          />
+            <FormField
+              label="Family Name"
+              id="familyName"
+              placeholder="Enter family name"
+              register={register}
+              error={errors.familyName}
+            />
+          </div>
 
-          <FormField
-            label="Phone Number"
-            id="phoneNumber"
-            placeholder="+1234567890"
-            register={register}
-            error={errors.phoneNumber}
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              label="Phone Number"
+              id="phoneNumber"
+              placeholder="+1234567890"
+              register={register}
+              error={errors.phoneNumber}
+            />
 
-          <FormField
-            label="Email (Optional)"
-            id="email"
-            type="email"
-            placeholder="email@example.com"
-            register={register}
-          />
+            <FormField
+              label="Email (Optional)"
+              id="email"
+              type="email"
+              placeholder="email@example.com"
+              register={register}
+            />
+          </div>
 
           <CompanySelect
             control={control}
             companies={companies}
             error={errors.companyId}
           />
+
+          <div className="grid grid-cols-2 gap-4">
+            <JoinDateInput register={register} error={errors.joinDate} />
+            <StatusSelect control={control} error={errors.status} />
+          </div>
 
           <div className="flex gap-2">
             <Button

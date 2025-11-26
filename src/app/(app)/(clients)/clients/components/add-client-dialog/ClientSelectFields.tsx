@@ -16,7 +16,7 @@ interface ClientSelectFieldsProps {
 
 export function ClientSelectFields({ control }: ClientSelectFieldsProps) {
   return (
-    <>
+    <div className="grid grid-cols-2 gap-4">
       <Controller
         name="title"
         control={control}
@@ -59,6 +59,6 @@ export function ClientSelectFields({ control }: ClientSelectFieldsProps) {
           </div>
         )}
       />
-    </>
+    </div>
   );
 }

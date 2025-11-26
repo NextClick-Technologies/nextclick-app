@@ -25,44 +25,46 @@ export function EditClientForm({
     <div className="space-y-4 p-2 overflow-y-auto flex-1">
       <ClientSelectFields control={control} />
 
-      <FormField
-        label="First Name"
-        id="name"
-        placeholder="Enter first name"
-        register={register}
-        error={errors.name}
-      />
+      <div className="grid grid-cols-2 gap-4">
+        <FormField
+          label="First Name"
+          id="name"
+          placeholder="Enter first name"
+          register={register}
+          error={errors.name}
+        />
 
-      <FormField
-        label="Family Name"
-        id="familyName"
-        placeholder="Enter family name"
-        register={register}
-        error={errors.familyName}
-      />
+        <FormField
+          label="Family Name"
+          id="familyName"
+          placeholder="Enter family name"
+          register={register}
+          error={errors.familyName}
+        />
+      </div>
 
-      <FormField
-        label="Phone Number"
-        id="phoneNumber"
-        placeholder="+1234567890"
-        register={register}
-        error={errors.phoneNumber}
-      />
+      <div className="grid grid-cols-2 gap-4">
+        <FormField
+          label="Phone Number"
+          id="phoneNumber"
+          placeholder="+1234567890"
+          register={register}
+          error={errors.phoneNumber}
+        />
 
-      <FormField
-        label="Email (Optional)"
-        id="email"
-        type="email"
-        placeholder="email@example.com"
-        register={register}
-      />
+        <FormField
+          label="Email (Optional)"
+          id="email"
+          type="email"
+          placeholder="email@example.com"
+          register={register}
+        />
+      </div>
 
       <ContractValueInput
         register={register}
         error={errors.totalContractValue}
       />
-
-      <DateInput register={register} error={errors.joinDate} />
 
       <CompanySelect
         control={control}
@@ -70,7 +72,10 @@ export function EditClientForm({
         error={errors.companyId}
       />
 
-      <StatusSelect control={control} error={errors.status} />
+      <div className="grid grid-cols-2 gap-4">
+        <DateInput register={register} error={errors.joinDate} />
+        <StatusSelect control={control} error={errors.status} />
+      </div>
     </div>
   );
 }
