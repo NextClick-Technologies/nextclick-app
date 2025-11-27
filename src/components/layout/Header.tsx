@@ -2,7 +2,15 @@
 
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Bell, MessageSquare, Search, LogOut, Menu } from "lucide-react";
+import {
+  Bell,
+  MessageSquare,
+  Search,
+  LogOut,
+  Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -18,9 +26,15 @@ import { signOut, useSession } from "next-auth/react";
 
 interface HeaderProps {
   onMenuClick?: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header({
+  onMenuClick,
+  isCollapsed,
+  onToggleCollapse,
+}: HeaderProps) {
   const { data: session } = useSession();
 
   return (
@@ -37,10 +51,32 @@ export function Header({ onMenuClick }: HeaderProps) {
           <Menu className="h-5 w-5" />
         </Button>
 
-        <div className="flex flex-1 items-center gap-4">
+        {/* Desktop Collapse Toggle */}
+        {onToggleCollapse && (
+          <Button
+            variant="ghost"
+            onClick={onToggleCollapse}
+            className="hidden lg:flex h-full rounded-none hover:bg-accent"
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isCollapsed ? (
+              <PanelLeftOpen
+                className="scale-80 text-muted-foreground font-extralight"
+                style={{ width: "32px", height: "32px" }}
+              />
+            ) : (
+              <PanelLeftClose
+                className="scale-80 text-muted-foreground font-extralight"
+                style={{ width: "32px", height: "32px" }}
+              />
+            )}
+          </Button>
+        )}
+
+        <div className="flex flex-1 items-center gap-4 justify-end">
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Search for anything..." className="pl-10" />
+            <Input placeholder="Find..." className="pl-10" />
           </div>
         </div>
         <div className="flex items-center gap-2">

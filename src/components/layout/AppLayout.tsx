@@ -41,7 +41,11 @@ export function AppLayout({ children }: AppLayoutProps) {
           isCollapsed ? "lg:pl-16" : "lg:pl-64"
         )}
       >
-        <Header onMenuClick={() => setIsMobileOpen(true)} />
+        <Header
+          onMenuClick={() => setIsMobileOpen(true)}
+          isCollapsed={isCollapsed}
+          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+        />
         <main className="px-4 py-4 sm:px-6 sm:py-6">{children}</main>
       </div>
     </div>

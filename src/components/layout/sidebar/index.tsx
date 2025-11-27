@@ -129,24 +129,6 @@ export function Sidebar({
           </div>
         ))}
       </nav>
-
-      {onToggleCollapse && (
-        <div className="border-t p-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggleCollapse}
-            className="w-full"
-            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {isCollapsed ? (
-              <ChevronRight className="h-4 w-4" />
-            ) : (
-              <ChevronLeft className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-      )}
     </aside>
   );
 }
