@@ -9,7 +9,7 @@ import { useProject, useDeleteProject } from "@/hooks/useProject";
 import { ProjectDetailHeader } from "./components/ProjectDetailHeader";
 import { ProjectInformation } from "./components/ProjectInformation";
 import { BudgetInformation } from "./components/BudgetInformation";
-import { MilestoneTimeline } from "./components/(milestones)/project-milestones/milestone-timeline";
+import { ProjectMilestones } from "./components/(milestones)/project-milestones";
 import { MilestoneStats } from "./components/(milestones)/milestone-progress/MilestoneStats";
 import { EditProjectDialog } from "./components/edit-project-dialog";
 import { DeleteProjectDialog } from "./components/DeleteProjectDialog";
@@ -127,7 +127,7 @@ export default function ProjectDetailPage() {
         {/* Project Milestones and Milestone Progress */}
         <div className="grid gap-6 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <MilestoneTimeline projectId={projectId} />
+            <ProjectMilestones projectId={projectId} />
           </div>
 
           <div className="lg:col-span-3">

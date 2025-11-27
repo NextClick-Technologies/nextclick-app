@@ -4,12 +4,12 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useMilestones } from "@/hooks/useMilestone";
-import { AddMilestoneDialog } from "../AddMilestoneDialog";
-import { EditMilestoneDialog } from "../EditMilestoneDialog";
+import { AddMilestoneDialog } from "./add-milestone-dialog";
+import { EditMilestoneDialog } from "./edit-milestone-dialog";
 import { CalendarClock } from "lucide-react";
 import { MilestoneFilters, type StatusFilter } from "./MilestoneFilters";
 import { MilestoneList } from "./MilestoneList";
-import { DeleteMilestoneDialog } from "../DeleteMilestoneDialog";
+import { DeleteMilestoneDialog } from "./DeleteMilestoneDialog";
 import { useMilestoneActions } from "./useMilestoneActions";
 
 interface ProjectMilestonesProps {
