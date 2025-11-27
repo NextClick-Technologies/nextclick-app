@@ -87,19 +87,27 @@ export const authConfig: NextAuthConfig = {
       const isLoggedIn = !!auth?.user;
       const isOnAuth = nextUrl.pathname.startsWith("/auth");
       const isOnApi = nextUrl.pathname.startsWith("/api");
-      const isOnAdmin = nextUrl.pathname.startsWith("/admin");
+
+      // Admin routes: /admin/* or /(app)/admin/*
+      const isOnAdmin = nextUrl.pathname.includes("/admin");
+
+      // App routes: any route with (app) or starting with /dashboard, /clients, /companies, etc.
       const isOnApp =
-        nextUrl.pathname.startsWith("/app") ||
-        nextUrl.pathname.startsWith("/dashboard");
+        nextUrl.pathname.includes("/(app)") ||
+        nextUrl.pathname.startsWith("/dashboard") ||
+        nextUrl.pathname.startsWith("/clients") ||
+        nextUrl.pathname.startsWith("/companies") ||
+        nextUrl.pathname.startsWith("/projects") ||
+        nextUrl.pathname.startsWith("/employees") ||
+        nextUrl.pathname.startsWith("/payments") ||
+        nextUrl.pathname.startsWith("/communication");
 
       // Check if route is HR-related (employee management)
-      const isOnHR = nextUrl.pathname.match(
-        /\/(app\/)?(\(app\)\/)?(\(hr\)|employees)/
-      );
+      const isOnHR = nextUrl.pathname.includes("/employees");
 
       // Public routes - allow access to auth pages for non-logged-in users
-      if (isOnAuth && nextUrl.pathname !== "/auth/error") {
-        if (isLoggedIn) {
+      if (isOnAuth) {
+        if (isLoggedIn && nextUrl.pathname !== "/auth/error") {
           return Response.redirect(new URL("/dashboard", nextUrl));
         }
         return true;
@@ -112,7 +120,11 @@ export const authConfig: NextAuthConfig = {
 
       // Protect admin routes - only admins can access
       if (isOnAdmin) {
-        if (!isLoggedIn) return false;
+        if (!isLoggedIn) {
+          const signInUrl = new URL("/auth/signin", nextUrl);
+          signInUrl.searchParams.set("callbackUrl", nextUrl.pathname);
+          return Response.redirect(signInUrl);
+        }
         if (auth.user.role !== "admin") {
           return Response.redirect(new URL("/dashboard", nextUrl));
         }
@@ -121,21 +133,28 @@ export const authConfig: NextAuthConfig = {
 
       // Protect HR routes - employees and viewers cannot access
       if (isOnHR) {
-        if (!isLoggedIn) return false;
+        if (!isLoggedIn) {
+          const signInUrl = new URL("/auth/signin", nextUrl);
+          signInUrl.searchParams.set("callbackUrl", nextUrl.pathname);
+          return Response.redirect(signInUrl);
+        }
         if (auth.user.role === "employee" || auth.user.role === "viewer") {
           return Response.redirect(new URL("/dashboard", nextUrl));
         }
         return true;
       }
 
-      // Require auth for all app routes
+      // Protect all app routes - require authentication
       if (isOnApp || nextUrl.pathname === "/") {
         if (!isLoggedIn) {
-          return false;
+          const signInUrl = new URL("/auth/signin", nextUrl);
+          signInUrl.searchParams.set("callbackUrl", nextUrl.pathname);
+          return Response.redirect(signInUrl);
         }
         return true;
       }
 
+      // Default: allow public access (for static files, etc.)
       return true;
     },
   },

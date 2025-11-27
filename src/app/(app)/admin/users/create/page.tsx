@@ -33,30 +33,10 @@ export default function CreateUserPage() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  // Debug logging
-  useEffect(() => {
-    console.log("🔍 Auth Debug Info:");
-    console.log("  - authLoading:", authLoading);
-    console.log("  - isAdmin:", isAdmin);
-    console.log("  - user:", user);
-    console.log("  - user.role:", user?.role);
-    console.log("  - session:", session);
-    console.log("  - Will redirect?", !authLoading && !isAdmin);
-  }, [authLoading, isAdmin, user, session]);
-
   // Redirect if not admin (using useEffect to avoid setState during render)
   useEffect(() => {
-    console.log("🔄 Redirect useEffect triggered");
-    console.log("  - authLoading:", authLoading);
-    console.log("  - isAdmin:", isAdmin);
-
     if (!authLoading && !isAdmin) {
-      console.log("⚠️ REDIRECTING to dashboard - user is not admin");
       router.replace("/dashboard");
-    } else if (!authLoading && isAdmin) {
-      console.log("✅ User is admin - staying on page");
-    } else {
-      console.log("⏳ Still loading or indeterminate state");
     }
   }, [authLoading, isAdmin, router]);
 

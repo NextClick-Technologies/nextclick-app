@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 
 export default auth((req) => {
   // req.auth contains the session data
+  // The actual authorization logic is in the `authorized` callback in auth.ts
 });
 
 export const config = {
