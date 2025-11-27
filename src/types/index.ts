@@ -6,6 +6,7 @@ export * from "./milestone.type";
 export * from "./payment.type";
 export * from "./employee.type";
 export * from "./communication-log.type";
+export * from "./user.type";
 
 // Other types
 export * from "./activity.type";
@@ -22,6 +23,7 @@ export type {
   Payment as DbPayment,
   Employee as DbEmployee,
   CommunicationLog as DbCommunicationLog,
+  UserDB as DbUser,
   ClientInsert as DbClientInsert,
   CompanyInsert as DbCompanyInsert,
   ProjectInsert as DbProjectInsert,
@@ -29,6 +31,7 @@ export type {
   PaymentInsert as DbPaymentInsert,
   EmployeeInsert as DbEmployeeInsert,
   CommunicationLogInsert as DbCommunicationLogInsert,
+  UserInsert as DbUserInsert,
   ClientUpdate as DbClientUpdate,
   CompanyUpdate as DbCompanyUpdate,
   ProjectUpdate as DbProjectUpdate,
@@ -36,4 +39,5 @@ export type {
   PaymentUpdate as DbPaymentUpdate,
   EmployeeUpdate as DbEmployeeUpdate,
   CommunicationLogUpdate as DbCommunicationLogUpdate,
+  UserUpdate as DbUserUpdate,
 } from "./database.type";

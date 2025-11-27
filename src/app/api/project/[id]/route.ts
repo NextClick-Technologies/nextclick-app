@@ -19,7 +19,10 @@ export async function GET(
     const { data, error } = await supabaseAdmin
       .from("projects")
       .select(
-        "*, client:clients(id, name, family_name), employee:employees(id, name, family_name), project_members(id, role, member:employees(id, name, family_name))"
+        `*, 
+         client:clients(id, name, family_name), 
+         employee:employees(id, name, family_name), 
+         project_members(id, role, user_id, users(id, employees(id, name, family_name)))`
       )
       .eq("id", id)
       .single();
@@ -36,12 +39,19 @@ export async function GET(
     const baseData = transformFromDb(data) as Record<string, any>;
     const transformedData = {
       ...baseData,
-      members: (data as any).project_members?.map((pm: any) => ({
-        id: pm.member.id,
-        name: pm.member.name,
-        familyName: pm.member.family_name,
-        role: pm.role,
-      })),
+      members: (data as any).project_members
+        ?.map((pm: any) => {
+          const employee = pm.users?.employees?.[0];
+          return employee
+            ? {
+                id: employee.id,
+                name: employee.name,
+                familyName: employee.family_name,
+                role: pm.role,
+              }
+            : null;
+        })
+        .filter(Boolean),
     };
 
     return apiSuccess({ data: transformedData });

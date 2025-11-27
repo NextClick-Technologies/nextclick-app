@@ -6,3 +6,4 @@ export * from "./milestone.schema";
 export * from "./pagination.schema";
 export * from "./payment.schema";
 export * from "./project.schema";
+export * from "./user.schema";
