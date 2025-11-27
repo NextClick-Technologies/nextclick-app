@@ -9,8 +9,8 @@ import { useProject, useDeleteProject } from "@/hooks/useProject";
 import { ProjectDetailHeader } from "./components/ProjectDetailHeader";
 import { ProjectInformation } from "./components/ProjectInformation";
 import { BudgetInformation } from "./components/BudgetInformation";
-import { MilestoneTimeline } from "./components/MilestoneTimeline";
-import { MilestoneStats } from "./components/MilestoneStats";
+import { MilestoneTimeline } from "./components/(milestones)/project-milestones/milestone-timeline";
+import { MilestoneStats } from "./components/(milestones)/milestone-progress/MilestoneStats";
 import { EditProjectDialog } from "./components/edit-project-dialog";
 import { DeleteProjectDialog } from "./components/DeleteProjectDialog";
 
