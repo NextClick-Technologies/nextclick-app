@@ -1,121 +1,152 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
+  FolderKanban,
+  Building2,
   UserCog,
+  Wallet,
+  TrendingUp,
   FileText,
   Search,
   Package,
   CreditCard,
   Settings,
   Shield,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { NavItem } from "./NavItem";
-import { CollapsibleNavItem } from "./CollapsibleNavItem";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/utils/cn";
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+interface SectionNavItem {
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+interface NavSection {
+  section?: string;
+  items: SectionNavItem[];
+}
+
+const navigation: NavSection[] = [
   {
-    name: "Client Management",
-    icon: Users,
-    submenu: [
-      { name: "Clients", href: "/clients" },
-      { name: "Projects", href: "/projects" },
-      { name: "Companies", href: "/companies" },
+    items: [{ name: "Dashboard", href: "/dashboard", icon: LayoutDashboard }],
+  },
+  {
+    section: "Client Management",
+    items: [
+      { name: "Clients", href: "/clients", icon: Users },
+      { name: "Projects", href: "/projects", icon: FolderKanban },
+      { name: "Companies", href: "/companies", icon: Building2 },
     ],
   },
   {
-    name: "HR Management",
-    icon: UserCog,
-    submenu: [
-      { name: "Employees", href: "/employees" },
-      { name: "Payroll", href: "/payroll" },
-      { name: "Performance", href: "/performance" },
+    section: "HR Management",
+    items: [
+      { name: "Employees", href: "/employees", icon: UserCog },
+      { name: "Payroll", href: "/payroll", icon: Wallet },
+      { name: "Performance", href: "/performance", icon: TrendingUp },
     ],
   },
-  { name: "Document Center", href: "/documents", icon: FileText },
-  { name: "Research Hub", href: "/research", icon: Search },
-  { name: "Service Catalog", href: "/services", icon: Package },
-  { name: "Billing Management", href: "/billing", icon: CreditCard },
-  { name: "Service Management", href: "/service-mgmt", icon: Settings },
-  { name: "Security Center", href: "/security", icon: Shield },
+  {
+    section: "Others",
+    items: [
+      { name: "Document Center", href: "/documents", icon: FileText },
+      { name: "Research Hub", href: "/research", icon: Search },
+      { name: "Service Catalog", href: "/services", icon: Package },
+      { name: "Billing Management", href: "/billing", icon: CreditCard },
+      { name: "Service Management", href: "/service-mgmt", icon: Settings },
+      { name: "Security Center", href: "/security", icon: Shield },
+    ],
+  },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
+}
+
+export function Sidebar({
+  isCollapsed = false,
+  onToggleCollapse,
+}: SidebarProps) {
   const pathname = usePathname();
-  const [openMenus, setOpenMenus] = useState<string[]>([]);
-
-  // Auto-open menu when navigating to a page within a collapsible section
-  useEffect(() => {
-    navigation.forEach((item) => {
-      if ("submenu" in item && item.submenu) {
-        const hasActiveChild = item.submenu.some((sub) =>
-          pathname.startsWith(sub.href)
-        );
-        if (hasActiveChild) {
-          setOpenMenus((prev) => {
-            if (!prev.includes(item.name)) {
-              return [...prev, item.name];
-            }
-            return prev;
-          });
-        }
-      }
-    });
-  }, [pathname]);
-
-  const toggleMenu = (name: string) => {
-    setOpenMenus((prev) =>
-      prev.includes(name)
-        ? prev.filter((item) => item !== name)
-        : [...prev, name]
-    );
-  };
 
   return (
-    <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col border-r bg-card">
-      <div className="flex h-16 items-center gap-2 border-b px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
-          <span className="text-sm font-bold">NC</span>
-        </div>
-        <div>
-          <h1 className="text-sm font-semibold">Next Click ERP</h1>
-        </div>
+    <aside
+      className={cn(
+        "fixed inset-y-0 left-0 z-50 flex flex-col border-r bg-card transition-all duration-300",
+        isCollapsed ? "w-16" : "w-64"
+      )}
+    >
+      <div
+        className={cn(
+          "flex h-16 items-center border-b px-6",
+          isCollapsed && "justify-center px-0"
+        )}
+      >
+        {!isCollapsed ? (
+          <>
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
+              <span className="text-sm font-bold">NC</span>
+            </div>
+            <div className="ml-2">
+              <h1 className="text-sm font-semibold">Next Click ERP</h1>
+            </div>
+          </>
+        ) : (
+          <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
+            <span className="text-sm font-bold">NC</span>
+          </div>
+        )}
       </div>
-      <nav className="flex-1 overflow-y-auto px-3 py-2">
-        {navigation.map((item) => {
-          if ("submenu" in item && item.submenu) {
-            return (
-              <CollapsibleNavItem
-                key={item.name}
-                name={item.name}
-                icon={item.icon}
-                submenu={item.submenu}
-                isOpen={openMenus.includes(item.name)}
-                pathname={pathname}
-                onToggle={() => toggleMenu(item.name)}
-              />
-            );
-          }
 
-          if ("href" in item && item.href) {
-            return (
-              <NavItem
-                key={item.name}
-                name={item.name}
-                href={item.href}
-                icon={item.icon}
-                isActive={pathname === item.href}
-              />
-            );
-          }
-
-          return null;
-        })}
+      <nav className="flex-1 overflow-y-auto px-3 py-4">
+        {navigation.map((section, idx) => (
+          <div key={idx} className={cn(idx > 0 && "mt-6")}>
+            {section.section && !isCollapsed && (
+              <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                {section.section}
+              </h3>
+            )}
+            <div className="space-y-1">
+              {section.items.map((item) => (
+                <NavItem
+                  key={item.href}
+                  name={item.name}
+                  href={item.href}
+                  icon={item.icon}
+                  isActive={pathname === item.href}
+                  isCollapsed={isCollapsed}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
       </nav>
+
+      {onToggleCollapse && (
+        <div className="border-t p-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onToggleCollapse}
+            className="w-full"
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      )}
     </aside>
   );
 }
