@@ -1,11 +1,5 @@
 import { Milestone } from "@/types/milestone.type";
-import {
-  CheckCircle2,
-  Circle,
-  XCircle,
-  Clock,
-  LucideIcon,
-} from "lucide-react";
+import { CheckCircle2, Circle, XCircle, Clock, LucideIcon } from "lucide-react";
 
 export interface StatusConfig {
   icon: LucideIcon;
