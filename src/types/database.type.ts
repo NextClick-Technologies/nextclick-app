@@ -1,6 +1,6 @@
 import type { Title } from "./client.type";
 import type { Gender } from "./client.type";
-import type { EmployeeStatus } from "./client.type";
+import type { EmployeeStatus } from "./employee.type";
 import type { PaymentTerms } from "./project.type";
 import type { ProjectStatus } from "./project.type";
 import type { ProjectPriority } from "./project.type";

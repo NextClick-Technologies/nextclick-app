@@ -3,7 +3,17 @@
  * Represents the data structure AFTER transformation by transformFromDb()
  */
 
-import type { Title, Gender, EmployeeStatus } from "./client.type";
+import type { Title, Gender } from "./client.type";
+
+// Employee Status enum values
+export const EmployeeStatus = {
+  ACTIVE: "active",
+  INACTIVE: "inactive",
+  ON_LEAVE: "on_leave",
+  TERMINATED: "terminated",
+} as const;
+export type EmployeeStatus =
+  (typeof EmployeeStatus)[keyof typeof EmployeeStatus];
 
 export interface Employee {
   id: string;
