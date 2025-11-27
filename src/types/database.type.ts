@@ -1,5 +1,6 @@
 import type { Title } from "./client.type";
 import type { Gender } from "./client.type";
+import type { EmployeeStatus } from "./client.type";
 import type { PaymentTerms } from "./project.type";
 import type { ProjectStatus } from "./project.type";
 import type { ProjectPriority } from "./project.type";
@@ -236,7 +237,7 @@ export interface Database {
       employees: {
         Row: {
           id: string;
-          title: Title;
+          title: Title | null;
           name: string;
           family_name: string;
           preferred_name: string | null;
@@ -245,12 +246,24 @@ export interface Database {
           email: string;
           photo: string | null;
           user_id: string | null;
+          status: EmployeeStatus;
+          department: string | null;
+          position: string | null;
+          join_date: string | null;
+          salary: number | null;
+          emergency_contact: string | null;
+          emergency_phone: string | null;
+          address: string | null;
+          city: string | null;
+          state: string | null;
+          zip_code: string | null;
+          country: string | null;
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id?: string;
-          title?: Title;
+          title?: Title | null;
           name: string;
           family_name: string;
           preferred_name?: string | null;
@@ -259,12 +272,24 @@ export interface Database {
           email: string;
           photo?: string | null;
           user_id?: string | null;
+          status?: EmployeeStatus;
+          department?: string | null;
+          position?: string | null;
+          join_date?: string | null;
+          salary?: number | null;
+          emergency_contact?: string | null;
+          emergency_phone?: string | null;
+          address?: string | null;
+          city?: string | null;
+          state?: string | null;
+          zip_code?: string | null;
+          country?: string | null;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
-          title?: Title;
+          title?: Title | null;
           name?: string;
           family_name?: string;
           preferred_name?: string | null;
@@ -273,6 +298,18 @@ export interface Database {
           email?: string;
           photo?: string | null;
           user_id?: string | null;
+          status?: EmployeeStatus;
+          department?: string | null;
+          position?: string | null;
+          join_date?: string | null;
+          salary?: number | null;
+          emergency_contact?: string | null;
+          emergency_phone?: string | null;
+          address?: string | null;
+          city?: string | null;
+          state?: string | null;
+          zip_code?: string | null;
+          country?: string | null;
           created_at?: string;
           updated_at?: string;
         };

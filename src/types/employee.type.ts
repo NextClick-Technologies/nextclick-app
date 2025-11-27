@@ -3,7 +3,7 @@
  * Represents the data structure AFTER transformation by transformFromDb()
  */
 
-import type { Title, Gender } from "./client.type";
+import type { Title, Gender, EmployeeStatus } from "./client.type";
 
 export interface Employee {
   id: string;
@@ -16,6 +16,19 @@ export interface Employee {
   email: string;
   photo: string | null;
   userId: string | null;
+  status: EmployeeStatus;
+  // Additional fields for future scalability
+  department: string | null;
+  position: string | null;
+  joinDate: string | null;
+  salary: number | null;
+  emergencyContact: string | null;
+  emergencyPhone: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  zipCode: string | null;
+  country: string | null;
   createdAt: string;
   updatedAt: string;
 }

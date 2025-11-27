@@ -30,6 +30,16 @@ export const ClientStatus = {
 } as const;
 export type ClientStatus = (typeof ClientStatus)[keyof typeof ClientStatus];
 
+// Employee Status enum values
+export const EmployeeStatus = {
+  ACTIVE: "active",
+  INACTIVE: "inactive",
+  ON_LEAVE: "on_leave",
+  TERMINATED: "terminated",
+} as const;
+export type EmployeeStatus =
+  (typeof EmployeeStatus)[keyof typeof EmployeeStatus];
+
 export interface Client {
   id: string;
   name: string;
