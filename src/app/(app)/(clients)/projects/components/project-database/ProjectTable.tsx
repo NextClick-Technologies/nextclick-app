@@ -63,7 +63,7 @@ export function ProjectTable({ projects }: ProjectTableProps) {
   return (
     <>
       {/* Desktop Table View */}
-      <div className="hidden md:block overflow-x-auto max-h-[calc(100vh-32rem)] overflow-y-auto">
+      <div className="hidden md:block overflow-x-auto max-h-[calc(100vh-24rem)] overflow-y-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b">

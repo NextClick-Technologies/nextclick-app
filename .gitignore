@@ -52,3 +52,6 @@ playwright-test-output.log
 
 # Test results
 src/__test-results__/
+
+#Doc
+docs/
