@@ -9,16 +9,16 @@ interface EmployeeHeaderProps {
 
 export function EmployeeHeader({ onAddClick }: EmployeeHeaderProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
           Employee Management
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Manage your team members and track their information
         </p>
       </div>
-      <Button onClick={onAddClick}>
+      <Button onClick={onAddClick} className="w-full sm:w-auto">
         <Plus className="h-4 w-4 mr-2" />
         Add New Employee
       </Button>

@@ -24,8 +24,8 @@ export function CompanyFilters({
   onStatusChange,
 }: CompanyFiltersProps) {
   return (
-    <div className="flex items-center gap-4">
-      <div className="relative w-64">
+    <div className="flex flex-col gap-2 w-full sm:w-auto sm:flex-row sm:items-center sm:gap-4">
+      <div className="relative w-full sm:w-64">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Search companies..."
@@ -35,7 +35,7 @@ export function CompanyFilters({
         />
       </div>
       <Select value={statusFilter} onValueChange={onStatusChange}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-full sm:w-[180px]">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent>

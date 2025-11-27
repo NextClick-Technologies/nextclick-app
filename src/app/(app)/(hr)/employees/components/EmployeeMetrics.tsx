@@ -63,16 +63,16 @@ function MetricCard({
   isLoading?: boolean;
 }) {
   return (
-    <Card className="p-6">
+    <Card className="p-4 sm:p-6">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-muted-foreground">{label}</p>
+          <p className="text-xs sm:text-sm font-medium text-muted-foreground">{label}</p>
           {badge}
         </div>
         {isLoading ? (
-          <div className="h-8 w-20 bg-muted animate-pulse rounded" />
+          <div className="h-6 sm:h-8 w-16 sm:w-20 bg-muted animate-pulse rounded" />
         ) : (
-          <p className="text-2xl font-bold">{value}</p>
+          <p className="text-xl sm:text-2xl font-bold">{value}</p>
         )}
       </div>
     </Card>
