@@ -21,6 +21,7 @@ import {
 import { NavItem } from "./NavItem";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
+import { UserMenu } from "@/components/UserMenu";
 
 interface SectionNavItem {
   name: string;
@@ -129,6 +130,8 @@ export function Sidebar({
           </div>
         ))}
       </nav>
+
+      <UserMenu isCollapsed={isCollapsed} />
     </aside>
   );
 }
