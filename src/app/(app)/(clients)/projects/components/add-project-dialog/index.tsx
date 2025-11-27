@@ -65,7 +65,7 @@ export function AddProjectDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle>Add New Project</DialogTitle>
         </DialogHeader>
@@ -73,9 +73,9 @@ export function AddProjectDialog({
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col flex-1 min-h-0"
         >
-          <div className="space-y-4 overflow-y-auto flex-1 p-2">
+          <div className="space-y-4 overflow-y-auto flex-1 px-1 sm:p-2">
             {/* Project Name and Client side-by-side */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 label="Project Name"
                 id="name"
@@ -106,7 +106,7 @@ export function AddProjectDialog({
             </div>
 
             {/* Project Manager and Type side-by-side */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Controller
                 name="projectManager"
                 control={control}
@@ -128,7 +128,7 @@ export function AddProjectDialog({
             </div>
 
             {/* Budget and Payment Terms inline */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 label="Budget (Optional)"
                 id="budget"
@@ -165,7 +165,7 @@ export function AddProjectDialog({
             </div>
 
             {/* Start Date and Finish Date side-by-side */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 label="Start Date (Optional)"
                 id="startDate"
@@ -184,7 +184,7 @@ export function AddProjectDialog({
             </div>
 
             {/* Status and Priority side-by-side */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
                 <Controller
@@ -255,7 +255,7 @@ export function AddProjectDialog({
             />
           </div>
 
-          <div className="flex gap-3 pt-4 mt-4">
+          <div className="flex flex-col sm:flex-row gap-3 pt-4 mt-4">
             <Button
               type="button"
               variant="outline"

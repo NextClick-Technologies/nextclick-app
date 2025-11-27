@@ -23,7 +23,7 @@ export function EditProjectForm({
   return (
     <div className="space-y-4 py-4">
       {/* Project Name and Client side-by-side */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="name">Project Name</Label>
           <Input id="name" {...register("name")} />
@@ -35,7 +35,7 @@ export function EditProjectForm({
       </div>
 
       {/* Project Manager and Type side-by-side */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ProjectManagerSelect control={control} errors={errors} />
         <div className="space-y-2">
           <Label htmlFor="type">Type</Label>
@@ -47,7 +47,7 @@ export function EditProjectForm({
       </div>
 
       {/* Start Date and Finish Date side-by-side */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="startDate">Start Date</Label>
           <Input id="startDate" type="date" {...register("startDate")} />
