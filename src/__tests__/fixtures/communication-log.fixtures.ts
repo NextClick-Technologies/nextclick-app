@@ -2,10 +2,10 @@ import {
   CommunicationLog,
   CommunicationChannel,
 } from "@/types/communication-log.type";
-import {
-  DbCommunicationLog,
-  DbCommunicationLogInsert,
-  DbCommunicationLogUpdate,
+import type {
+  CommunicationLog as DbCommunicationLog,
+  CommunicationLogInsert as DbCommunicationLogInsert,
+  CommunicationLogUpdate as DbCommunicationLogUpdate,
 } from "@/types/database.type";
 
 /**
@@ -48,12 +48,13 @@ export const mockCommunicationLogs: CommunicationLog[] = [
 export const mockDbCommunicationLog: DbCommunicationLog = {
   id: "550e8400-e29b-41d4-a716-446655440601",
   client_id: "550e8400-e29b-41d4-a716-446655440001",
-  project_id: "550e8400-e29b-41d4-a716-446655440201",
   employee_id: "550e8400-e29b-41d4-a716-446655440301",
-  communication_date: "2024-02-10",
+  date: "2024-02-10",
   channel: CommunicationChannel.EMAIL,
-  subject: "Project kickoff meeting",
-  notes: "Discussed project timeline and deliverables",
+  summary:
+    "Project kickoff meeting - Discussed project timeline and deliverables",
+  follow_up_required: false,
+  follow_up_date: null,
   created_at: "2024-02-10T10:00:00.000Z",
   updated_at: "2024-02-10T10:00:00.000Z",
 };
@@ -63,18 +64,18 @@ export const mockDbCommunicationLog: DbCommunicationLog = {
  */
 export const mockCommunicationLogInsert: DbCommunicationLogInsert = {
   client_id: "550e8400-e29b-41d4-a716-446655440001",
-  project_id: "550e8400-e29b-41d4-a716-446655440201",
   employee_id: "550e8400-e29b-41d4-a716-446655440301",
-  communication_date: "2024-03-01",
+  date: "2024-03-01",
   channel: CommunicationChannel.MEETING,
-  subject: "Requirements clarification",
-  notes: "Clarified scope and requirements with client",
+  summary:
+    "Requirements clarification - Clarified scope and requirements with client",
+  follow_up_required: false,
 };
 
 /**
  * Mock Communication Log update data
  */
 export const mockCommunicationLogUpdate: DbCommunicationLogUpdate = {
-  notes: "Updated notes after meeting review",
+  summary: "Updated summary after meeting review",
   updated_at: new Date().toISOString(),
 };

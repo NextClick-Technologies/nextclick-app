@@ -1,8 +1,8 @@
 import { Company } from "@/types/company.type";
-import {
-  DbCompany,
-  DbCompanyInsert,
-  DbCompanyUpdate,
+import type {
+  Company as DbCompany,
+  CompanyInsert as DbCompanyInsert,
+  CompanyUpdate as DbCompanyUpdate,
 } from "@/types/database.type";
 
 /**

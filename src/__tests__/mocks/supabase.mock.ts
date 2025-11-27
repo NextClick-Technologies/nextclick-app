@@ -18,8 +18,8 @@ export class MockSupabaseQueryBuilder {
 
   constructor(data?: any, error?: Error | null, count?: number | null) {
     this.mockData = data;
-    this.mockError = error;
-    this.mockCount = count;
+    this.mockError = error ?? null;
+    this.mockCount = count ?? null;
   }
 
   select(columns?: string) {

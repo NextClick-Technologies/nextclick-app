@@ -1,8 +1,8 @@
 import { Client, Title, Gender, ClientStatus } from "@/types/client.type";
-import {
-  DbClient,
-  DbClientInsert,
-  DbClientUpdate,
+import type {
+  Client as DbClient,
+  ClientInsert as DbClientInsert,
+  ClientUpdate as DbClientUpdate,
 } from "@/types/database.type";
 
 /**

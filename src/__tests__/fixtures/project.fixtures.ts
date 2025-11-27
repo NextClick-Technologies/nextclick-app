@@ -4,10 +4,10 @@ import {
   ProjectStatus,
   ProjectPriority,
 } from "@/types/project.type";
-import {
-  DbProject,
-  DbProjectInsert,
-  DbProjectUpdate,
+import type {
+  Project as DbProject,
+  ProjectInsert as DbProjectInsert,
+  ProjectUpdate as DbProjectUpdate,
 } from "@/types/database.type";
 
 /**
@@ -32,6 +32,7 @@ export const mockProject: Project = {
   client: {
     id: "550e8400-e29b-41d4-a716-446655440001",
     name: "John Doe",
+    familyName: "Doe",
   },
 };
 
@@ -54,6 +55,7 @@ export const mockProject2: Project = {
   client: {
     id: "550e8400-e29b-41d4-a716-446655440002",
     name: "Jane Smith",
+    familyName: "Smith",
   },
 };
 

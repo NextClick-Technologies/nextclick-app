@@ -13,12 +13,27 @@ import {
   useUpdateMilestone,
   useDeleteMilestone,
 } from "@/hooks/useMilestone";
+import type {
+  MilestoneInput,
+  UpdateMilestoneInput,
+} from "@/schemas/milestone.schema";
 import {
   mockMilestone,
   mockMilestones,
-  mockMilestoneInsert,
   mockMilestoneUpdate,
 } from "@/__tests__/fixtures/milestone.fixtures";
+import { MilestoneStatus } from "@/types/milestone.type";
+
+// Frontend-style (camelCase) milestone input for testing
+const mockMilestoneInput: MilestoneInput = {
+  name: "Phase 3: Testing",
+  description: "Quality assurance and testing",
+  startDate: "2024-04-21",
+  finishDate: "2024-05-20",
+  status: MilestoneStatus.PENDING,
+  projectId: "550e8400-e29b-41d4-a716-446655440201",
+  order: 3,
+};
 
 let fetchSpy: jest.SpyInstance;
 
@@ -100,7 +115,7 @@ describe("useCreateMilestone - Create Milestone Mutation", () => {
       ok: true,
       status: 201,
       json: async () => ({
-        data: { ...mockMilestone, ...mockMilestoneInsert },
+        data: { ...mockMilestone, ...mockMilestoneInput },
       }),
     } as Response);
 
@@ -108,7 +123,7 @@ describe("useCreateMilestone - Create Milestone Mutation", () => {
       wrapper: createWrapper(),
     });
 
-    result.current.mutate(mockMilestoneInsert);
+    result.current.mutate(mockMilestoneInput);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toBeDefined();
@@ -125,7 +140,7 @@ describe("useCreateMilestone - Create Milestone Mutation", () => {
       wrapper: createWrapper(),
     });
 
-    result.current.mutate(mockMilestoneInsert);
+    result.current.mutate(mockMilestoneInput);
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.error).toBeTruthy();

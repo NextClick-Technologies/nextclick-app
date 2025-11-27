@@ -1,4 +1,11 @@
 import type { Client, Company, Project, Employee } from "@/types";
+import { Title, Gender, ClientStatus } from "@/types/client.type";
+import {
+  ProjectStatus,
+  PaymentTerms,
+  ProjectPriority,
+} from "@/types/project.type";
+import { EmployeeStatus } from "@/types/employee.type";
 
 /**
  * E2E test data generators
@@ -7,11 +14,16 @@ import type { Client, Company, Project, Employee } from "@/types";
 export const createTestClient = (
   overrides?: Partial<Client>
 ): Omit<Client, "id" | "createdAt" | "updatedAt"> => ({
-  name: `Test Client ${Date.now()}`,
+  name: `Test${Date.now()}`,
+  title: Title.MR,
+  familyName: `Client`,
+  gender: Gender.MALE,
+  phoneNumber: "555-0100",
   email: `client-${Date.now()}@example.com`,
-  phone: "555-0100",
-  companyId: null,
-  status: "active",
+  totalContractValue: null,
+  joinDate: null,
+  companyId: `company-${Date.now()}`,
+  status: ClientStatus.ACTIVE,
   ...overrides,
 });
 
@@ -19,9 +31,12 @@ export const createTestCompany = (
   overrides?: Partial<Company>
 ): Omit<Company, "id" | "createdAt" | "updatedAt"> => ({
   name: `Test Company ${Date.now()}`,
-  website: `https://company-${Date.now()}.example.com`,
+  email: `company-${Date.now()}@example.com`,
+  address: "123 Test St, Test City, TS 12345",
+  phoneNumber: "555-0300",
+  contactPerson: "Test Contact",
   industry: "Technology",
-  size: "50-200",
+  status: "active",
   ...overrides,
 });
 
@@ -30,26 +45,44 @@ export const createTestProject = (
   overrides?: Partial<Project>
 ): Omit<Project, "id" | "createdAt" | "updatedAt"> => ({
   name: `Test Project ${Date.now()}`,
+  type: "Web Development",
   description: "E2E test project",
   clientId,
-  status: "planning",
+  status: ProjectStatus.ACTIVE,
+  priority: ProjectPriority.MEDIUM,
   startDate: new Date().toISOString(),
-  budget: 10000,
+  finishDate: null,
+  budget: "10000",
+  paymentTerms: PaymentTerms.NET_30D,
+  completionDate: null,
+  projectManager: null,
   ...overrides,
 });
 
 export const createTestEmployee = (
   overrides?: Partial<Employee>
 ): Omit<Employee, "id" | "createdAt" | "updatedAt"> => ({
-  firstName: "Test",
-  lastName: `User ${Date.now()}`,
+  title: Title.MR,
+  name: "Test",
+  familyName: `User${Date.now()}`,
+  preferredName: null,
+  gender: Gender.MALE,
+  phoneNumber: "555-0200",
   email: `employee-${Date.now()}@example.com`,
-  phone: "555-0200",
+  photo: null,
+  userId: null,
   position: "Developer",
   department: "Engineering",
-  status: "active",
+  status: EmployeeStatus.ACTIVE,
+  joinDate: new Date().toISOString(),
   salary: 75000,
-  hireDate: new Date().toISOString(),
+  emergencyContact: null,
+  emergencyPhone: null,
+  address: null,
+  city: null,
+  state: null,
+  zipCode: null,
+  country: null,
   ...overrides,
 });
 

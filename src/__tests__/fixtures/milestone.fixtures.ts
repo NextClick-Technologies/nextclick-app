@@ -1,8 +1,8 @@
 import { Milestone, MilestoneStatus } from "@/types/milestone.type";
-import {
-  DbMilestone,
-  DbMilestoneInsert,
-  DbMilestoneUpdate,
+import type {
+  Milestone as DbMilestone,
+  MilestoneInsert as DbMilestoneInsert,
+  MilestoneUpdate as DbMilestoneUpdate,
 } from "@/types/database.type";
 
 /**
@@ -53,7 +53,6 @@ export const mockDbMilestone: DbMilestone = {
   completion_date: null,
   status: MilestoneStatus.COMPLETED,
   remarks: "Completed ahead of schedule",
-  order: 1,
   created_at: "2024-01-20T10:00:00.000Z",
   updated_at: "2024-02-15T10:00:00.000Z",
 };
@@ -68,7 +67,6 @@ export const mockMilestoneInsert: DbMilestoneInsert = {
   start_date: "2024-04-21",
   finish_date: "2024-05-20",
   status: MilestoneStatus.PENDING,
-  order: 3,
 };
 
 /**

@@ -206,7 +206,7 @@ describe("Client API Business Logic", () => {
 
     it("should build insert query", () => {
       const dbData = transformToDb(mockClientInput);
-      supabaseAdmin.from("clients").insert(dbData);
+      supabaseAdmin.from("clients").insert(dbData as never);
 
       expect(supabaseAdmin.from).toHaveBeenCalledWith("clients");
       expect(mockInsert).toHaveBeenCalled();

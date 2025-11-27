@@ -82,9 +82,9 @@ test.describe("Client Management", () => {
     await authenticatedPage.fill('input[name="email"]', testClient.email);
 
     // Fill optional fields if present
-    const phoneInput = authenticatedPage.locator('input[name="phone"]');
+    const phoneInput = authenticatedPage.locator('input[name="phoneNumber"]');
     if (await phoneInput.isVisible()) {
-      await phoneInput.fill(testClient.phone || "");
+      await phoneInput.fill(testClient.phoneNumber || "");
     }
 
     // Submit form and wait for API response

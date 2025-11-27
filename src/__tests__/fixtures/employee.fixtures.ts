@@ -1,9 +1,9 @@
 import { Employee, EmployeeStatus } from "@/types/employee.type";
 import { Title, Gender } from "@/types/client.type";
-import {
-  DbEmployee,
-  DbEmployeeInsert,
-  DbEmployeeUpdate,
+import type {
+  Employee as DbEmployee,
+  EmployeeInsert as DbEmployeeInsert,
+  EmployeeUpdate as DbEmployeeUpdate,
 } from "@/types/database.type";
 
 /**
