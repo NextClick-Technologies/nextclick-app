@@ -154,7 +154,9 @@ export function ClientTable({
                   </Badge>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs">Contract Value</p>
+                  <p className="text-muted-foreground text-xs">
+                    Contract Value
+                  </p>
                   <p className="font-medium mt-1">
                     ${(client.totalContractValue ?? 0).toLocaleString()}
                   </p>

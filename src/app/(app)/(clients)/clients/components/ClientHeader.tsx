@@ -11,7 +11,9 @@ export function ClientHeader({ onAddClick }: ClientHeaderProps) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Client Management</h1>
+        <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
+          Client Management
+        </h1>
         <p className="text-sm text-muted-foreground">
           Manage your clients and track their projects
         </p>
