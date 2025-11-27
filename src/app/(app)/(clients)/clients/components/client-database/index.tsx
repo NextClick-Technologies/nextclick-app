@@ -30,10 +30,10 @@ export function ClientDatabase({
   error,
 }: ClientDatabaseProps) {
   return (
-    <Card className="p-6">
+    <Card className="p-4 sm:p-6">
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Client Database</h2>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-lg font-semibold sm:text-xl">Client Database</h2>
           <ClientFilters
             searchQuery={searchQuery}
             onSearchChange={onSearchChange}
