@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
 import { z } from "zod";
+import { ProjectMemberInsert } from "@/types/database.type";
 
 // Schema for adding a team member
 const addMemberSchema = z.object({
@@ -31,13 +32,15 @@ export async function POST(
     }
 
     // Add the team member
+    const memberData: ProjectMemberInsert = {
+      project_id: projectId,
+      employee_id: employeeId,
+      role: role || null,
+    };
+
     const { data, error } = await supabaseAdmin
       .from("project_members")
-      .insert({
-        project_id: projectId,
-        employee_id: employeeId,
-        role: role || null,
-      })
+      .insert(memberData as any)
       .select("id, role, member:employees(id, name, family_name)")
       .single();
 
@@ -45,12 +48,16 @@ export async function POST(
       return apiError(error.message, 500);
     }
 
+    if (!data) {
+      return apiError("Failed to create team member", 500);
+    }
+
     // Transform the response
     const transformedData = {
-      id: data.member.id,
-      name: data.member.name,
-      familyName: data.member.family_name,
-      role: data.role,
+      id: (data as any).member.id,
+      name: (data as any).member.name,
+      familyName: (data as any).member.family_name,
+      role: (data as any).role,
     };
 
     return apiSuccess({ data: transformedData }, 201);

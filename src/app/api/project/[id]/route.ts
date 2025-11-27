@@ -28,10 +28,15 @@ export async function GET(
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
     }
 
+    if (!data) {
+      return apiError("Project not found", 404);
+    }
+
     // Transform project_members array if it exists
+    const baseData = transformFromDb(data) as Record<string, any>;
     const transformedData = {
-      ...transformFromDb(data),
-      members: data.project_members?.map((pm: any) => ({
+      ...baseData,
+      members: (data as any).project_members?.map((pm: any) => ({
         id: pm.member.id,
         name: pm.member.name,
         familyName: pm.member.family_name,
