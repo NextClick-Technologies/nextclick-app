@@ -8,6 +8,7 @@ import type { MilestoneStatus } from "./milestone.type";
 import type { PaymentStatus } from "./payment.type";
 import type { PaymentMethod } from "./payment.type";
 import type { CommunicationChannel } from "./communication-log.type";
+import type { UserRole } from "./auth.types";
 
 export type Json =
   | string
@@ -20,6 +21,88 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      users: {
+        Row: {
+          id: string;
+          email: string;
+          password_hash: string;
+          role: UserRole;
+          is_active: boolean;
+          email_verified: boolean;
+          email_verification_token: string | null;
+          email_verification_expires: string | null;
+          password_reset_token: string | null;
+          password_reset_expires: string | null;
+          last_login: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          email: string;
+          password_hash: string;
+          role?: UserRole;
+          is_active?: boolean;
+          email_verified?: boolean;
+          email_verification_token?: string | null;
+          email_verification_expires?: string | null;
+          password_reset_token?: string | null;
+          password_reset_expires?: string | null;
+          last_login?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string;
+          password_hash?: string;
+          role?: UserRole;
+          is_active?: boolean;
+          email_verified?: boolean;
+          email_verification_token?: string | null;
+          email_verification_expires?: string | null;
+          password_reset_token?: string | null;
+          password_reset_expires?: string | null;
+          last_login?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      audit_logs: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          action: string;
+          resource_type: string | null;
+          resource_id: string | null;
+          details: Json | null;
+          ip_address: string | null;
+          user_agent: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          action: string;
+          resource_type?: string | null;
+          resource_id?: string | null;
+          details?: Json | null;
+          ip_address?: string | null;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          action?: string;
+          resource_type?: string | null;
+          resource_id?: string | null;
+          details?: Json | null;
+          ip_address?: string | null;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+      };
       clients: {
         Row: {
           id: string;
@@ -356,21 +439,21 @@ export interface Database {
         Row: {
           id: string;
           project_id: string;
-          employee_id: string;
+          user_id: string;
           role: string | null;
           created_at: string;
         };
         Insert: {
           id?: string;
           project_id: string;
-          employee_id: string;
+          user_id: string;
           role?: string | null;
           created_at?: string;
         };
         Update: {
           id?: string;
           project_id?: string;
-          employee_id?: string;
+          user_id?: string;
           role?: string | null;
           created_at?: string;
         };
@@ -430,3 +513,11 @@ export type ProjectMemberInsert =
   Database["public"]["Tables"]["project_members"]["Insert"];
 export type ProjectMemberUpdate =
   Database["public"]["Tables"]["project_members"]["Update"];
+
+export type UserDB = Database["public"]["Tables"]["users"]["Row"];
+export type UserInsert = Database["public"]["Tables"]["users"]["Insert"];
+export type UserUpdate = Database["public"]["Tables"]["users"]["Update"];
+
+export type AuditLog = Database["public"]["Tables"]["audit_logs"]["Row"];
+export type AuditLogInsert = Database["public"]["Tables"]["audit_logs"]["Insert"];
+export type AuditLogUpdate = Database["public"]["Tables"]["audit_logs"]["Update"];

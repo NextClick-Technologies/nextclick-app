@@ -24,7 +24,7 @@ export async function POST(
       .from("project_members")
       .select("id")
       .eq("project_id", projectId)
-      .eq("employee_id", employeeId)
+      .eq("user_id", employeeId)
       .single();
 
     if (existing) {
@@ -34,7 +34,7 @@ export async function POST(
     // Add the team member
     const memberData: ProjectMemberInsert = {
       project_id: projectId,
-      employee_id: employeeId,
+      user_id: employeeId,
       role: role || null,
     };
 
