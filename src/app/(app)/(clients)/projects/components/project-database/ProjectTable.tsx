@@ -166,7 +166,10 @@ export function ProjectTable({ projects }: ProjectTableProps) {
                 </div>
               )}
               {project.priority && (
-                <Badge variant={getPriorityVariant(project.priority)} className="text-xs">
+                <Badge
+                  variant={getPriorityVariant(project.priority)}
+                  className="text-xs"
+                >
                   {project.priority}
                 </Badge>
               )}

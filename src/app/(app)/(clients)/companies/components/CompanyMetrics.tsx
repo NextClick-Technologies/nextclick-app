@@ -59,7 +59,9 @@ function MetricCard({
     <Card className="p-4 sm:p-6">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <p className="text-xs sm:text-sm font-medium text-muted-foreground">{label}</p>
+          <p className="text-xs sm:text-sm font-medium text-muted-foreground">
+            {label}
+          </p>
           {badge}
         </div>
         {isLoading ? (

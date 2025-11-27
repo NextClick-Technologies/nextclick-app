@@ -122,7 +122,9 @@ export function EmployeeTable({ employees }: EmployeeTableProps) {
                 </td>
                 <td className="py-4">
                   <Badge variant={getStatusVariant(employee.status)}>
-                    {employee.status ? employee.status.replace("_", " ") : "N/A"}
+                    {employee.status
+                      ? employee.status.replace("_", " ")
+                      : "N/A"}
                   </Badge>
                 </td>
               </tr>
@@ -185,7 +187,9 @@ export function EmployeeTable({ employees }: EmployeeTableProps) {
                   <span>{employee.department || "-"}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground text-xs">Position:</span>
+                  <span className="text-muted-foreground text-xs">
+                    Position:
+                  </span>
                   <span className="truncate">{employee.position || "-"}</span>
                 </div>
               </div>

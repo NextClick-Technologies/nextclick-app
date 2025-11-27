@@ -142,7 +142,9 @@ export function CompanyTable({ companies }: CompanyTableProps) {
               )}
               {company.address && (
                 <div className="flex items-start gap-2">
-                  <span className="text-muted-foreground text-xs shrink-0">Address:</span>
+                  <span className="text-muted-foreground text-xs shrink-0">
+                    Address:
+                  </span>
                   <span className="line-clamp-2">{company.address}</span>
                 </div>
               )}

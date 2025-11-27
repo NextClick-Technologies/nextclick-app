@@ -29,7 +29,9 @@ export function EmployeeDatabase({
     <Card className="p-4 sm:p-6">
       <div className="space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-lg font-semibold sm:text-xl">Employee Database</h2>
+          <h2 className="text-lg font-semibold sm:text-xl">
+            Employee Database
+          </h2>
           <EmployeeFilters
             searchQuery={searchQuery}
             onSearchChange={onSearchChange}
