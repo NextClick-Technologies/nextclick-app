@@ -6,6 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSidebar } from "@/contexts";
 
 interface NavItemProps {
   name: string;
@@ -22,9 +23,12 @@ export function NavItem({
   isActive,
   isCollapsed = false,
 }: NavItemProps) {
+  const { closeMobile } = useSidebar();
+
   const linkContent = (
     <Link
       href={href}
+      onClick={closeMobile}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
         isActive

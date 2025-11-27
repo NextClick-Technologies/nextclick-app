@@ -44,9 +44,6 @@ export function UserMenu({ isCollapsed = false }: UserMenuProps) {
                   <p className="text-sm font-medium leading-none truncate w-full">
                     {user?.name || "User"}
                   </p>
-                  <p className="text-xs text-muted-foreground truncate w-full mt-1">
-                    {user?.email || ""}
-                  </p>
                 </div>
               )}
             </Button>
