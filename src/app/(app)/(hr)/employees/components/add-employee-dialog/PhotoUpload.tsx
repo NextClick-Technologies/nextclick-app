@@ -40,7 +40,7 @@ export function PhotoUpload({
 
       // Compress image
       const compressedFile = await compressImage(file, {
-        maxSizeKB: 100,
+        maxSizeKB: 50,
         maxWidth: 800,
         maxHeight: 800,
         quality: 0.9,
@@ -109,7 +109,9 @@ export function PhotoUpload({
       <Label>Photo</Label>
       <div className="flex items-center gap-4">
         <Avatar className="h-20 w-20 bg-primary/10 flex items-center justify-center overflow-hidden">
-          {previewUrl ? (
+          {isUploading ? (
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          ) : previewUrl ? (
             <Image
               src={previewUrl}
               alt="Employee photo"
@@ -168,7 +170,7 @@ export function PhotoUpload({
             )}
           </div>
           <p className="text-xs text-muted-foreground">
-            Max 100KB. Will be automatically compressed.
+            Max 50KB. Will be automatically compressed.
           </p>
         </div>
       </div>
