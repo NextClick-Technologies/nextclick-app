@@ -52,6 +52,21 @@ export function renderWithQueryClient(
 }
 
 /**
+ * Creates a wrapper component for renderHook
+ * Use this when testing custom hooks that use React Query
+ */
+export function createWrapper() {
+  return ({ children }: { children: React.ReactNode }) => {
+    const testQueryClient = createTestQueryClient();
+    return (
+      <QueryClientProvider client={testQueryClient}>
+        {children}
+      </QueryClientProvider>
+    );
+  };
+}
+
+/**
  * Wait for React Query to finish all pending queries and mutations
  */
 export async function waitForQueryClient(queryClient: QueryClient) {

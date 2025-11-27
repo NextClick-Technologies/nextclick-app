@@ -5,6 +5,9 @@ import { TextEncoder, TextDecoder } from "util";
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder as any;
 
+// Mock fetch globally for jsdom environment
+global.fetch = jest.fn();
+
 // Mock Next.js navigation
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
