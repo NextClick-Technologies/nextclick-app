@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { AddClientDialog } from "./components/add-client-dialog";
-import { ClientHeader } from "./components/ClientHeader";
 import { ClientMetrics } from "./components/ClientMetrics";
 import { ClientDatabase } from "./components/client-database";
 import { useClients } from "@/hooks/useClient";
@@ -36,9 +35,7 @@ export default function ClientsPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
-        <ClientHeader onAddClick={() => setIsAddDialogOpen(true)} />
-
+      <div className="space-y-4">
         <ClientMetrics
           clients={clients}
           totalClients={totalClients}
@@ -55,6 +52,7 @@ export default function ClientsPage() {
           onStatusChange={setStatusFilter}
           isLoading={isLoading}
           error={error}
+          onAddClick={() => setIsAddDialogOpen(true)}
         />
       </div>
 

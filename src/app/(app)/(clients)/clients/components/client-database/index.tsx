@@ -1,7 +1,8 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2, Plus } from "lucide-react";
 import { Client } from "@/types";
 import { ClientTable } from "./ClientTable";
 import { ClientFilters } from "./ClientFilters";
@@ -16,6 +17,7 @@ interface ClientDatabaseProps {
   onStatusChange: (value: string) => void;
   isLoading: boolean;
   error: Error | null;
+  onAddClick: () => void;
 }
 
 export function ClientDatabase({
@@ -28,19 +30,34 @@ export function ClientDatabase({
   onStatusChange,
   isLoading,
   error,
+  onAddClick,
 }: ClientDatabaseProps) {
   return (
     <Card className="p-4 sm:p-6">
       <div className="space-y-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-lg font-semibold sm:text-xl">Client Database</h2>
-          <ClientFilters
-            searchQuery={searchQuery}
-            onSearchChange={onSearchChange}
-            statusFilter={statusFilter}
-            onStatusChange={onStatusChange}
-          />
+          <div className="flex flex-col gap-2 w-full sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+            <Button
+              onClick={onAddClick}
+              size="sm"
+              className="hidden sm:flex sm:shrink-0"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Add New Client
+            </Button>
+            <ClientFilters
+              searchQuery={searchQuery}
+              onSearchChange={onSearchChange}
+              statusFilter={statusFilter}
+              onStatusChange={onStatusChange}
+            />
+          </div>
         </div>
+        <Button onClick={onAddClick} className="w-full sm:hidden">
+          <Plus className="h-4 w-4 mr-2" />
+          Add New Client
+        </Button>
 
         {error && (
           <div className="text-center py-8 text-destructive">
