@@ -94,6 +94,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return user.role === role;
   };
 
+  // Calculate admin status directly from session to avoid timing issues
+  const userRole = session?.user?.role || user?.role;
+
   return (
     <AuthContext.Provider
       value={{
@@ -105,10 +108,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         can,
         canAccess,
         hasRole,
-        isAdmin: user ? isAdmin(user.role) : false,
-        isManager: user ? user.role === "manager" : false,
-        isEmployee: user ? user.role === "employee" : false,
-        isViewer: user ? user.role === "viewer" : false,
+        isAdmin: userRole ? isAdmin(userRole) : false,
+        isManager: userRole ? userRole === "manager" : false,
+        isEmployee: userRole ? userRole === "employee" : false,
+        isViewer: userRole ? userRole === "viewer" : false,
       }}
     >
       {children}

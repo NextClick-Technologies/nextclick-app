@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,17 +26,62 @@ import Link from "next/link";
 
 export default function CreateUserPage() {
   const router = useRouter();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isLoading: authLoading, user, session } = useAuth();
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  // Redirect if not admin
+  // Debug logging
+  useEffect(() => {
+    console.log("🔍 Auth Debug Info:");
+    console.log("  - authLoading:", authLoading);
+    console.log("  - isAdmin:", isAdmin);
+    console.log("  - user:", user);
+    console.log("  - user.role:", user?.role);
+    console.log("  - session:", session);
+    console.log("  - Will redirect?", !authLoading && !isAdmin);
+  }, [authLoading, isAdmin, user, session]);
+
+  // Redirect if not admin (using useEffect to avoid setState during render)
+  useEffect(() => {
+    console.log("🔄 Redirect useEffect triggered");
+    console.log("  - authLoading:", authLoading);
+    console.log("  - isAdmin:", isAdmin);
+
+    if (!authLoading && !isAdmin) {
+      console.log("⚠️ REDIRECTING to dashboard - user is not admin");
+      router.replace("/dashboard");
+    } else if (!authLoading && isAdmin) {
+      console.log("✅ User is admin - staying on page");
+    } else {
+      console.log("⏳ Still loading or indeterminate state");
+    }
+  }, [authLoading, isAdmin, router]);
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="container mx-auto max-w-2xl py-8 px-4 flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If not admin after loading, show redirecting message
   if (!isAdmin) {
-    router.push("/dashboard");
-    return null;
+    return (
+      <div className="container mx-auto max-w-2xl py-8 px-4 flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-muted-foreground">Redirecting...</p>
+        </div>
+      </div>
+    );
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
