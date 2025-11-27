@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUserByVerificationToken, updateUser, createAuditLog } from "@/lib/supabase/auth-client";
+import {
+  getUserByVerificationToken,
+  updateUser,
+  createAuditLog,
+} from "@/lib/supabase/auth-client";
 import { isTokenExpired } from "@/lib/auth/password";
 
 /**
@@ -19,7 +23,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Find user by verification token
-    const { data: user, error: userError} = await getUserByVerificationToken(token);
+    const { data: user, error: userError } = await getUserByVerificationToken(
+      token
+    );
 
     if (userError || !user) {
       return NextResponse.json(
@@ -37,7 +43,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if token has expired
-    if (isTokenExpired(user.email_verification_expires ? new Date(user.email_verification_expires) : null)) {
+    if (
+      isTokenExpired(
+        user.email_verification_expires
+          ? new Date(user.email_verification_expires)
+          : null
+      )
+    ) {
       return NextResponse.json(
         { error: "Verification token has expired. Please request a new one." },
         { status: 400 }

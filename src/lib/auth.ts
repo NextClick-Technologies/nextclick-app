@@ -19,7 +19,9 @@ export const authConfig: NextAuthConfig = {
         }
 
         // Query user by email from users table
-        const { data: user, error } = await getUserByEmail(credentials.email as string);
+        const { data: user, error } = await getUserByEmail(
+          credentials.email as string
+        );
 
         if (error || !user) {
           throw new Error("Invalid email or password");

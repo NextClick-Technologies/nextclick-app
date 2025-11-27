@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUserByResetToken, updateUser, createAuditLog } from "@/lib/supabase/auth-client";
+import {
+  getUserByResetToken,
+  updateUser,
+  createAuditLog,
+} from "@/lib/supabase/auth-client";
 import {
   hashPassword,
   validatePasswordStrength,
@@ -46,7 +50,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if token has expired
-    if (isTokenExpired(user.password_reset_expires ? new Date(user.password_reset_expires) : null)) {
+    if (
+      isTokenExpired(
+        user.password_reset_expires
+          ? new Date(user.password_reset_expires)
+          : null
+      )
+    ) {
       return NextResponse.json(
         { error: "Reset token has expired. Please request a new one." },
         { status: 400 }

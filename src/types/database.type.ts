@@ -519,5 +519,7 @@ export type UserInsert = Database["public"]["Tables"]["users"]["Insert"];
 export type UserUpdate = Database["public"]["Tables"]["users"]["Update"];
 
 export type AuditLog = Database["public"]["Tables"]["audit_logs"]["Row"];
-export type AuditLogInsert = Database["public"]["Tables"]["audit_logs"]["Insert"];
-export type AuditLogUpdate = Database["public"]["Tables"]["audit_logs"]["Update"];
+export type AuditLogInsert =
+  Database["public"]["Tables"]["audit_logs"]["Insert"];
+export type AuditLogUpdate =
+  Database["public"]["Tables"]["audit_logs"]["Update"];

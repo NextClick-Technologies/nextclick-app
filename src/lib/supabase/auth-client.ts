@@ -4,7 +4,13 @@
  */
 
 import { supabaseAdmin } from "./server";
-import type { UserDB, UserInsert, UserUpdate, AuditLogInsert, ProjectMemberInsert } from "@/types/database.type";
+import type {
+  UserDB,
+  UserInsert,
+  UserUpdate,
+  AuditLogInsert,
+  ProjectMemberInsert,
+} from "@/types/database.type";
 
 /**
  * Get a user by ID
@@ -15,7 +21,7 @@ export async function getUserById(id: string) {
     .select("*")
     .eq("id", id)
     .single();
-  
+
   return { data: data as UserDB | null, error };
 }
 
@@ -28,7 +34,7 @@ export async function getUserByEmail(email: string) {
     .select("*")
     .eq("email", email)
     .maybeSingle();
-  
+
   return { data: data as UserDB | null, error };
 }
 
@@ -41,7 +47,7 @@ export async function getUserByVerificationToken(token: string) {
     .select("*")
     .eq("email_verification_token", token)
     .maybeSingle();
-  
+
   return { data: data as UserDB | null, error };
 }
 
@@ -54,7 +60,7 @@ export async function getUserByResetToken(token: string) {
     .select("*")
     .eq("password_reset_token", token)
     .maybeSingle();
-  
+
   return { data: data as UserDB | null, error };
 }
 
@@ -67,7 +73,7 @@ export async function createUser(user: UserInsert) {
     .insert(user as unknown as never)
     .select("*")
     .single();
-  
+
   return { data: data as UserDB | null, error };
 }
 
@@ -81,7 +87,7 @@ export async function updateUser(id: string, updates: UserUpdate) {
     .eq("id", id)
     .select("*")
     .single();
-  
+
   return { data: data as UserDB | null, error };
 }
 
@@ -92,7 +98,7 @@ export async function createAuditLog(log: AuditLogInsert) {
   const { error } = await supabaseAdmin
     .from("audit_logs")
     .insert(log as unknown as never);
-  
+
   return { error };
 }
 
@@ -105,7 +111,7 @@ export async function createProjectMember(member: ProjectMemberInsert) {
     .insert(member as unknown as never)
     .select("*")
     .single();
-  
+
   return { data, error };
 }
 
@@ -117,6 +123,6 @@ export async function deleteProjectMember(id: string) {
     .from("project_members")
     .delete()
     .eq("id", id);
-  
+
   return { error };
 }

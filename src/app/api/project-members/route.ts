@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase/server";
-import { createProjectMember, deleteProjectMember, createAuditLog } from "@/lib/supabase/auth-client";
+import {
+  createProjectMember,
+  deleteProjectMember,
+  createAuditLog,
+} from "@/lib/supabase/auth-client";
 
 /**
  * GET /api/project-members
@@ -254,9 +258,11 @@ export async function DELETE(request: NextRequest) {
       resource_id: memberId,
       details: {
         project_id: (member as unknown as { project_id: string })?.project_id,
-        project_name: (member as unknown as { projects?: { name: string } })?.projects?.name,
+        project_name: (member as unknown as { projects?: { name: string } })
+          ?.projects?.name,
         removed_user_id: (member as unknown as { user_id: string })?.user_id,
-        removed_user_email: (member as unknown as { users?: { email: string } })?.users?.email,
+        removed_user_email: (member as unknown as { users?: { email: string } })
+          ?.users?.email,
       },
       ip_address:
         request.headers.get("x-forwarded-for") ||

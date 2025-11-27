@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUserByEmail, updateUser, createAuditLog } from "@/lib/supabase/auth-client";
+import {
+  getUserByEmail,
+  updateUser,
+  createAuditLog,
+} from "@/lib/supabase/auth-client";
 import { generateSecureToken, getTokenExpiration } from "@/lib/auth/password";
 import { sendPasswordResetEmail } from "@/lib/email/auth-emails";
 
