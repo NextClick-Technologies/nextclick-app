@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { AddEmployeeDialog } from "./components/add-employee-dialog";
-import { EmployeeHeader } from "./components/EmployeeHeader";
 import { EmployeeMetrics } from "./components/EmployeeMetrics";
 import { EmployeeDatabase } from "./components/employee-database";
 import { useEmployees } from "@/hooks/useEmployee";
@@ -36,9 +35,7 @@ export default function EmployeesPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
-        <EmployeeHeader onAddClick={() => setIsAddDialogOpen(true)} />
-
+      <div className="space-y-4">
         <EmployeeMetrics
           employees={employees}
           totalEmployees={totalEmployees}
@@ -53,6 +50,7 @@ export default function EmployeesPage() {
           onStatusChange={setStatusFilter}
           isLoading={isLoading}
           error={error}
+          onAddClick={() => setIsAddDialogOpen(true)}
         />
       </div>
 

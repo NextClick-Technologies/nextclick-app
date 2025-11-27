@@ -5,7 +5,6 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { useProjects } from "@/hooks/useProject";
 import { AddProjectDialog } from "./components/add-project-dialog";
 import { ProjectDatabase } from "./components/project-database";
-import { ProjectHeader } from "./components/ProjectHeader";
 import { ProjectMetrics } from "./components/ProjectMetrics";
 
 export default function ProjectsPage() {
@@ -34,9 +33,7 @@ export default function ProjectsPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
-        <ProjectHeader onAddClick={() => setIsAddDialogOpen(true)} />
-
+      <div className="space-y-4">
         <ProjectMetrics
           projects={projects}
           totalProjects={totalProjects}
@@ -51,6 +48,7 @@ export default function ProjectsPage() {
           onStatusChange={setStatusFilter}
           isLoading={isLoading}
           error={error}
+          onAddClick={() => setIsAddDialogOpen(true)}
         />
       </div>
 

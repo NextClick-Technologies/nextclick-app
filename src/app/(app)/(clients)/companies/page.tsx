@@ -5,7 +5,6 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { useCompanies } from "@/hooks/useCompany";
 import { AddCompanyDialog } from "./components/add-company-dialog";
 import { CompanyDatabase } from "./components/company-database";
-import { CompanyHeader } from "./components/CompanyHeader";
 import { CompanyMetrics } from "./components/CompanyMetrics";
 
 export default function CompaniesPage() {
@@ -35,9 +34,7 @@ export default function CompaniesPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
-        <CompanyHeader onAddClick={() => setIsAddDialogOpen(true)} />
-
+      <div className="space-y-4">
         <CompanyMetrics
           companies={companies}
           totalCompanies={totalCompanies}
@@ -52,6 +49,7 @@ export default function CompaniesPage() {
           onStatusChange={setStatusFilter}
           isLoading={isLoading}
           error={error}
+          onAddClick={() => setIsAddDialogOpen(true)}
         />
       </div>
 
