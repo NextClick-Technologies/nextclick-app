@@ -12,7 +12,7 @@ interface CompressImageOptions {
 }
 
 const DEFAULT_OPTIONS: Required<CompressImageOptions> = {
-  maxSizeKB: 400,
+  maxSizeKB: 100,
   maxWidth: 1920,
   maxHeight: 1920,
   quality: 0.9,

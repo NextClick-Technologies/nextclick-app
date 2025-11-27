@@ -40,7 +40,7 @@ export function PhotoUpload({
 
       // Compress image
       const compressedFile = await compressImage(file, {
-        maxSizeKB: 400,
+        maxSizeKB: 100,
         maxWidth: 800,
         maxHeight: 800,
         quality: 0.9,
@@ -168,7 +168,7 @@ export function PhotoUpload({
             )}
           </div>
           <p className="text-xs text-muted-foreground">
-            Max 400KB. Will be automatically compressed.
+            Max 100KB. Will be automatically compressed.
           </p>
         </div>
       </div>
