@@ -13,14 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar } from "@/components/ui/avatar";
-import { signOut, useSession } from "next-auth/react";
+import { useAuth } from "@/contexts";
 
 interface UserMenuProps {
   isCollapsed?: boolean;
 }
 
 export function UserMenu({ isCollapsed = false }: UserMenuProps) {
-  const { data: session } = useSession();
+  const { user, signOut } = useAuth();
 
   return (
     <div className="border-t p-3">
@@ -36,16 +36,16 @@ export function UserMenu({ isCollapsed = false }: UserMenuProps) {
             >
               <Avatar className="h-8 w-8 bg-primary/10 flex items-center justify-center">
                 <span className="text-sm font-medium">
-                  {session?.user?.name?.charAt(0) || "U"}
+                  {user?.name?.charAt(0) || "U"}
                 </span>
               </Avatar>
               {!isCollapsed && (
                 <div className="ml-3 flex flex-col items-start overflow-hidden">
                   <p className="text-sm font-medium leading-none truncate w-full">
-                    {session?.user?.name || "User"}
+                    {user?.name || "User"}
                   </p>
                   <p className="text-xs text-muted-foreground truncate w-full mt-1">
-                    {session?.user?.email || ""}
+                    {user?.email || ""}
                   </p>
                 </div>
               )}
@@ -55,17 +55,15 @@ export function UserMenu({ isCollapsed = false }: UserMenuProps) {
             <DropdownMenuLabel>
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">
-                  {session?.user?.name || "User"}
+                  {user?.name || "User"}
                 </p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  {session?.user?.email || ""}
+                  {user?.email || ""}
                 </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => signOut({ callbackUrl: "/auth/signin" })}
-            >
+            <DropdownMenuItem onClick={signOut}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Sign out</span>
             </DropdownMenuItem>

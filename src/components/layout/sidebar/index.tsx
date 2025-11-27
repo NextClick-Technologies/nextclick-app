@@ -22,6 +22,7 @@ import { NavItem } from "./NavItem";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
 import { UserMenu } from "@/components/UserMenu";
+import { useSidebar } from "@/contexts";
 
 interface SectionNavItem {
   name: string;
@@ -67,16 +68,9 @@ const navigation: NavSection[] = [
   },
 ];
 
-interface SidebarProps {
-  isCollapsed?: boolean;
-  onToggleCollapse?: () => void;
-}
-
-export function Sidebar({
-  isCollapsed = false,
-  onToggleCollapse,
-}: SidebarProps) {
+export function Sidebar() {
   const pathname = usePathname();
+  const { isCollapsed } = useSidebar();
 
   return (
     <aside
