@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useProject, useDeleteProject } from "@/hooks/useProject";
 import { ProjectDetailHeader } from "./components/ProjectDetailHeader";
-import { ProjectInformation } from "./components/ProjectInformation";
+import { ProjectInformation } from "./components/project-information";
 import { BudgetInformation } from "./components/BudgetInformation";
 import { ProjectMilestones } from "./components/(milestones)/project-milestones";
-import { MilestoneStats } from "./components/(milestones)/milestone-progress/MilestoneStats";
+import { MilestoneStats } from "./components/(milestones)/milestone-progress";
 import { EditProjectDialog } from "./components/edit-project-dialog";
 import { DeleteProjectDialog } from "./components/DeleteProjectDialog";
 
