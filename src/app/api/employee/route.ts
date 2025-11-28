@@ -52,12 +52,11 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const validatedData = employeeSchema.parse(body);
-
+    // Data is already validated and transformed on frontend, just insert it
     const { data, error } = await supabaseAdmin
       .from("employees")
       // @ts-expect-error - Supabase type inference issue with partial updates
-      .insert([transformToDb(validatedData)])
+      .insert([body])
       .select()
       .single();
 

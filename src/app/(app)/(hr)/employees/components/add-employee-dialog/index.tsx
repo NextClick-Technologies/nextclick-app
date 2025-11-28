@@ -46,7 +46,6 @@ export function AddEmployeeDialog({
   const onSubmit = async (data: EmployeeInput) => {
     try {
       const dbData = transformEmployeeToDb(data);
-
       await createEmployee.mutateAsync(dbData);
       reset();
       setEmployeeName("");
