@@ -5,6 +5,7 @@ import {
   createAuditLog,
 } from "@/lib/supabase/auth-client";
 import { isTokenExpired } from "@/lib/auth/password";
+import { logger } from "@/lib/logger";
 
 /**
  * POST /api/auth/verify-email
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (updateError) {
-      console.error("Error updating user:", updateError);
+      logger.error({ err: updateError, userId: user!.id }, "Error updating user");
       return NextResponse.json(
         { error: "Failed to verify email" },
         { status: 500 }
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in verify-email API:", error);
+    logger.error({ err: error }, "Error in verify-email API");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

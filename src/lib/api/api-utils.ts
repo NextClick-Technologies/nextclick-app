@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { camelizeKeys, decamelizeKeys } from "humps";
+import { logger } from "@/lib/logger";
 
 export interface ApiError {
   error: string;
@@ -35,7 +36,7 @@ export function apiError(
 }
 
 export function handleApiError(error: unknown) {
-  console.error("API Error:", error);
+  logger.error({ err: error }, "API Error");
 
   if (error instanceof ZodError) {
     return apiError("Validation error", 400, error.issues);

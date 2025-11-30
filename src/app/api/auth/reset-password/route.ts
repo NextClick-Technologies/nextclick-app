@@ -10,6 +10,7 @@ import {
   isTokenExpired,
 } from "@/lib/auth/password";
 import { sendPasswordChangedEmail } from "@/lib/email/auth-emails";
+import { logger } from "@/lib/logger";
 
 /**
  * POST /api/auth/reset-password
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (updateError) {
-      console.error("Error updating password:", updateError);
+      logger.error({ err: updateError, userId: user!.id }, "Error updating password");
       return NextResponse.json(
         { error: "Failed to reset password" },
         { status: 500 }
@@ -85,7 +86,7 @@ export async function POST(request: NextRequest) {
     try {
       await sendPasswordChangedEmail(user!.email);
     } catch (emailError) {
-      console.error("Error sending password changed email:", emailError);
+      logger.warn({ err: emailError, email: user!.email }, "Error sending password changed email");
       // Don't fail the request if email fails
     }
 
@@ -113,7 +114,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in reset-password API:", error);
+    logger.error({ err: error }, "Error in reset-password API");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiError, handleApiError } from "@/lib/api/api-utils";
+import { logger } from "@/lib/logger";
 
 export async function DELETE(
   request: NextRequest,
@@ -9,7 +10,7 @@ export async function DELETE(
   try {
     const { id: projectId, employeeId } = await params;
 
-    console.log("Removing member from project:", { projectId, employeeId });
+    logger.info({ projectId, employeeId }, "Removing member from project");
 
     // Get the user_id from the employee
     const { data: employee, error: employeeError } = await supabaseAdmin
@@ -18,10 +19,10 @@ export async function DELETE(
       .eq("id", employeeId)
       .single();
 
-    console.log("Employee lookup result:", { employee, employeeError });
+    logger.debug({ employee, employeeError }, "Employee lookup result");
 
     if (employeeError) {
-      console.error("Employee lookup error:", employeeError);
+      logger.error({ err: employeeError }, "Employee lookup error");
       return apiError("Employee not linked to a user account", 400);
     }
 
@@ -29,12 +30,12 @@ export async function DELETE(
     const employeeResult = employee as unknown as EmployeeResult;
 
     if (!employeeResult || !employeeResult.user_id) {
-      console.error("Employee lookup error or no user_id:", { employee });
+      logger.error({ employee }, "Employee lookup error or no user_id");
       return apiError("Employee not linked to a user account", 400);
     }
 
     const userId = employeeResult.user_id;
-    console.log("Deleting with user_id:", userId);
+    logger.debug({ userId }, "Deleting with user_id");
 
     const { error } = await supabaseAdmin
       .from("project_members")
@@ -43,14 +44,14 @@ export async function DELETE(
       .eq("user_id", userId);
 
     if (error) {
-      console.error("Delete error:", error);
+      logger.error({ err: error }, "Delete error");
       return apiError(error.message, 500);
     }
 
-    console.log("Member removed successfully");
+    logger.info("Member removed successfully");
     return new NextResponse(null, { status: 204 });
   } catch (error) {
-    console.error("Unhandled error in DELETE /members:", error);
+    logger.error({ err: error }, "Unhandled error in DELETE /members");
     return handleApiError(error);
   }
 }

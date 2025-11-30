@@ -6,6 +6,7 @@ import {
   deleteProjectMember,
   createAuditLog,
 } from "@/lib/supabase/auth-client";
+import { logger } from "@/lib/logger";
 
 /**
  * GET /api/project-members
@@ -52,7 +53,7 @@ export async function GET(request: NextRequest) {
     const { data: members, error } = await query;
 
     if (error) {
-      console.error("Error fetching project members:", error);
+      logger.error({ err: error, projectId }, "Error fetching project members");
       return NextResponse.json(
         { error: "Failed to fetch project members" },
         { status: 500 }
@@ -61,7 +62,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ members }, { status: 200 });
   } catch (error) {
-    console.error("Error in project-members GET:", error);
+    logger.error({ err: error }, "Error in project-members GET");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -144,7 +145,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (createError) {
-      console.error("Error creating project member:", createError);
+      logger.error({ err: createError, projectId, userId }, "Error creating project member");
       return NextResponse.json(
         { error: "Failed to assign user to project" },
         { status: 500 }
@@ -179,7 +180,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error in project-members POST:", error);
+    logger.error({ err: error }, "Error in project-members POST");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -243,7 +244,7 @@ export async function DELETE(request: NextRequest) {
     const { error: deleteError } = await deleteProjectMember(memberId);
 
     if (deleteError) {
-      console.error("Error deleting project member:", deleteError);
+      logger.error({ err: deleteError, memberId }, "Error deleting project member");
       return NextResponse.json(
         { error: "Failed to remove user from project" },
         { status: 500 }
@@ -278,7 +279,7 @@ export async function DELETE(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in project-members DELETE:", error);
+    logger.error({ err: error }, "Error in project-members DELETE");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

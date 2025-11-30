@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { logger } from "@/lib/logger";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL = process.env.FROM_EMAIL || "noreply@nextclick.com";
@@ -51,7 +52,7 @@ export async function sendVerificationEmail(
       `,
     });
   } catch (error) {
-    console.error("Failed to send verification email:", error);
+    logger.error({ err: error, email }, "Failed to send verification email");
     throw new Error("Failed to send verification email");
   }
 }
@@ -102,7 +103,7 @@ export async function sendPasswordResetEmail(
       `,
     });
   } catch (error) {
-    console.error("Failed to send password reset email:", error);
+    logger.error({ err: error, email }, "Failed to send password reset email");
     throw new Error("Failed to send password reset email");
   }
 }
@@ -144,7 +145,7 @@ export async function sendPasswordChangedEmail(email: string): Promise<void> {
       `,
     });
   } catch (error) {
-    console.error("Failed to send password changed email:", error);
+    logger.error({ err: error, email }, "Failed to send password changed email");
     // Don't throw - this is just a notification
   }
 }
@@ -198,7 +199,7 @@ export async function sendWelcomeEmail(
       `,
     });
   } catch (error) {
-    console.error("Failed to send welcome email:", error);
+    logger.error({ err: error, email }, "Failed to send welcome email");
     throw new Error("Failed to send welcome email");
   }
 }

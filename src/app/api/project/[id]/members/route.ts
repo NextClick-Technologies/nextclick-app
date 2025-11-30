@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { apiSuccess, apiError, handleApiError } from "@/lib/api/api-utils";
+import { logger } from "@/lib/logger";
 import { z } from "zod";
 import { ProjectMemberInsert } from "@/types/database.type";
 
@@ -19,7 +20,7 @@ export async function POST(
     const body = await request.json();
     const { employeeId, role } = addMemberSchema.parse(body);
 
-    console.log("Adding member to project:", { projectId, employeeId, role });
+    logger.info({ projectId, employeeId, role }, "Adding member to project");
 
     // Get the user_id from the employee
     const { data: employee, error: employeeError } = await supabaseAdmin
@@ -28,10 +29,10 @@ export async function POST(
       .eq("id", employeeId)
       .single();
 
-    console.log("Employee lookup result:", { employee, employeeError });
+    logger.debug({ employee, employeeError }, "Employee lookup result");
 
     if (employeeError) {
-      console.error("Employee lookup error:", employeeError);
+      logger.error({ err: employeeError }, "Employee lookup error");
       return apiError(`Employee lookup failed: ${employeeError.message}`, 400);
     }
 
@@ -39,7 +40,7 @@ export async function POST(
     const employeeResult = employee as unknown as EmployeeResult;
 
     if (!employeeResult || !employeeResult.user_id) {
-      console.error("Employee not linked to user:", employee);
+      logger.error({ employee }, "Employee not linked to user");
       return apiError(
         "Employee not linked to a user account. Please create a user account for this employee first.",
         400
@@ -47,7 +48,7 @@ export async function POST(
     }
 
     const userId = employeeResult.user_id;
-    console.log("Using user_id:", userId);
+    logger.debug({ userId }, "Using user_id");
 
     // Check if member already exists
     const { data: existing } = await supabaseAdmin
@@ -68,7 +69,7 @@ export async function POST(
       role: role || null,
     };
 
-    console.log("Inserting member data:", memberData);
+    logger.info({ memberData }, "Inserting member data");
 
     const { data, error } = await supabaseAdmin
       .from("project_members")
@@ -76,10 +77,10 @@ export async function POST(
       .select("id, role, user_id, users(id, employees(id, name, family_name))")
       .single();
 
-    console.log("Insert result:", { data, error });
+    logger.debug({ data, error }, "Insert result");
 
     if (error) {
-      console.error("Insert error:", error);
+      logger.error({ err: error }, "Insert error");
       return apiError(error.message, 500);
     }
 
@@ -104,10 +105,10 @@ export async function POST(
 
     const memberResponse = data as unknown as MemberResponse;
     const employeeData = memberResponse.users?.employees?.[0];
-    console.log("Employee data from response:", employeeData);
+    logger.debug({ employeeData }, "Employee data from response");
 
     if (!employeeData) {
-      console.error("No employee data in response:", data);
+      logger.error({ data }, "No employee data in response");
       return apiError("User not linked to employee", 500);
     }
 
@@ -118,10 +119,10 @@ export async function POST(
       role: memberResponse.role,
     };
 
-    console.log("Returning transformed data:", transformedData);
+    logger.debug({ transformedData }, "Returning transformed data");
     return apiSuccess({ data: transformedData }, 201);
   } catch (error) {
-    console.error("Unhandled error in POST /members:", error);
+    logger.error({ err: error }, "Unhandled error in POST /members");
     return handleApiError(error);
   }
 }

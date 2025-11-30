@@ -16,6 +16,7 @@ import {
   sendVerificationEmail,
 } from "@/lib/email/auth-emails";
 import type { CreateUserInput } from "@/types/auth.types";
+import { logger } from "@/lib/logger";
 
 /**
  * POST /api/auth/create-user
@@ -23,14 +24,18 @@ import type { CreateUserInput } from "@/types/auth.types";
  */
 export async function POST(request: NextRequest) {
   try {
+    logger.info("CREATE USER REQUEST RECEIVED");
+    
     // Check authentication and admin role
     const session = await auth();
 
     if (!session?.user) {
+      logger.warn("Unauthorized create-user attempt - no session");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     if (session.user.role !== "admin") {
+      logger.warn({ userId: session.user.id, role: session.user.role }, "Forbidden - non-admin tried to create user");
       return NextResponse.json(
         { error: "Forbidden - Admin access required" },
         { status: 403 }
@@ -91,7 +96,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (createError) {
-      console.error("Error creating user:", createError);
+      logger.error({ err: createError, email }, "Error creating user");
       return NextResponse.json(
         { error: "Failed to create user" },
         { status: 500 }
@@ -102,7 +107,7 @@ export async function POST(request: NextRequest) {
     try {
       await sendWelcomeEmail(email, tempPassword);
     } catch (emailError) {
-      console.error("Error sending welcome email:", emailError);
+      logger.warn({ err: emailError, email }, "Error sending welcome email");
       // Don't fail the request if email fails
     }
 
@@ -110,7 +115,7 @@ export async function POST(request: NextRequest) {
     try {
       await sendVerificationEmail(email, verificationToken);
     } catch (emailError) {
-      console.error("Error sending verification email:", emailError);
+      logger.warn({ err: emailError, email }, "Error sending verification email");
       // Don't fail the request if email fails
     }
 
@@ -145,7 +150,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error in create-user API:", error);
+    logger.error({ err: error }, "Error in create-user API");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
