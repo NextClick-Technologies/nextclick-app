@@ -150,7 +150,7 @@ export async function deletePayment(id: string) {
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
     }
 
-    return apiSuccess({ message: "Payment deleted successfully" }, 204);
+    return new Response(null, { status: 204 });
   } catch (error) {
     return handleApiError(error);
   }

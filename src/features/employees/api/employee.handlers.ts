@@ -86,7 +86,7 @@ export async function updateEmployee(id: string, request: NextRequest) {
 export async function deleteEmployee(id: string) {
   try {
     await employeeService.deleteEmployee(id);
-    return apiSuccess({ message: "Employee deleted successfully" }, 204);
+    return new Response(null, { status: 204 });
   } catch (error) {
     if (error instanceof Error && error.message === "Employee not found") {
       return apiError("Employee not found", 404);

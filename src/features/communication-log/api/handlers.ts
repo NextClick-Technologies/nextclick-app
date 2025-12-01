@@ -155,10 +155,7 @@ export async function deleteCommunicationLog(id: string) {
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
     }
 
-    return apiSuccess(
-      { message: "Communication log deleted successfully" },
-      204
-    );
+    return new Response(null, { status: 204 });
   } catch (error) {
     return handleApiError(error);
   }

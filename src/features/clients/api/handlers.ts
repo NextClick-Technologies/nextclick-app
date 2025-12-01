@@ -94,7 +94,7 @@ export async function updateClient(id: string, request: NextRequest) {
 export async function deleteClient(id: string) {
   try {
     await clientService.deleteClient(id);
-    return apiSuccess({ message: "Client deleted successfully" }, 204);
+    return new Response(null, { status: 204 });
   } catch (error) {
     if (error instanceof Error && error.message === "Client not found") {
       return apiError("Client not found", 404);

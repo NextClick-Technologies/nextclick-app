@@ -87,7 +87,7 @@ export async function updateProject(id: string, request: NextRequest) {
 export async function deleteProject(id: string) {
   try {
     await projectService.deleteProject(id);
-    return apiSuccess({ message: "Project deleted successfully" }, 204);
+    return new Response(null, { status: 204 });
   } catch (error) {
     if (error instanceof Error && error.message === "Project not found") {
       return apiError("Project not found", 404);

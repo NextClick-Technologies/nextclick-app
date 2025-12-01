@@ -86,7 +86,7 @@ export async function updateCompany(id: string, request: NextRequest) {
 export async function deleteCompany(id: string) {
   try {
     await companyService.deleteCompany(id);
-    return apiSuccess({ message: "Company deleted successfully" }, 204);
+    return new Response(null, { status: 204 });
   } catch (error) {
     if (error instanceof Error && error.message === "Company not found") {
       return apiError("Company not found", 404);

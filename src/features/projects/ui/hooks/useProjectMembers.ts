@@ -23,7 +23,7 @@ export const useAddProjectMember = () => {
 
   return useMutation({
     mutationFn: async ({ projectId, employeeId, role }: AddMemberData) => {
-      const response = await fetch(`/api/project/${projectId}/members`, {
+      const response = await fetch(`/api/project/${projectId}/teams`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export const useRemoveProjectMember = () => {
   return useMutation({
     mutationFn: async ({ projectId, employeeId }: RemoveMemberData) => {
       const response = await fetch(
-        `/api/project/${projectId}/members/${employeeId}`,
+        `/api/project/${projectId}/teams/${employeeId}`,
         {
           method: "DELETE",
         }
