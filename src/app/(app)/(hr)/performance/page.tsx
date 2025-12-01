@@ -1,3 +1,6 @@
-import { PerformancePage } from "@/features/(hr)/performance/pages";
-
-export default PerformancePage;
+/**
+ * Delegation Page
+ * This file serves as a thin routing layer that delegates to the feature implementation.
+ * All business logic, components, and state management are in the features directory.
+ */
+export { default } from "@/features/(hr)/performance/ui/pages/PerformancePage";

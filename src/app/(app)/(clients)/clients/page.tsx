@@ -1,12 +1,6 @@
-"use client";
-
-import { AppLayout } from "@/shared/components/layout/AppLayout";
-import { ClientsPage } from "@/features/(crm)/clients";
-
-export default function Page() {
-  return (
-    <AppLayout>
-      <ClientsPage />
-    </AppLayout>
-  );
-}
+/**
+ * Delegation Page
+ * This file serves as a thin routing layer that delegates to the feature implementation.
+ * All business logic, components, and state management are in the features directory.
+ */
+export { default } from "@/features/(crm)/clients/ui/pages/ClientsPage";

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { CompanyHeader } from "../components/CompanyHeader";
 import { CompanyMetrics } from "../components/CompanyMetrics";
 import { CompanyDatabase } from "../components/company-database";
 import { AddCompanyDialog } from "../components/add-company-dialog";
 import { useCompanies } from "../hooks";
 import type { Company } from "../../services/types";
+import App from "next/app";
+import { AppLayout } from "@/components/layout/AppLayout";
 
 export default function CompaniesPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -37,27 +38,28 @@ export default function CompaniesPage() {
   }, [companies, searchQuery, statusFilter]);
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
-      <CompanyHeader onAddClick={() => setIsAddDialogOpen(true)} />
-      <CompanyMetrics
-        companies={companies}
-        totalCompanies={totalCompanies}
-        isLoading={isLoading}
-      />
-      <CompanyDatabase
-        companies={filteredCompanies}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        statusFilter={statusFilter}
-        onStatusChange={setStatusFilter}
-        isLoading={isLoading}
-        error={error}
-        onAddClick={() => setIsAddDialogOpen(true)}
-      />
-      <AddCompanyDialog
-        open={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-      />
-    </div>
+    <AppLayout>
+      <div className="space-y-4">
+        <CompanyMetrics
+          companies={companies}
+          totalCompanies={totalCompanies}
+          isLoading={isLoading}
+        />
+        <CompanyDatabase
+          companies={filteredCompanies}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+          isLoading={isLoading}
+          error={error}
+          onAddClick={() => setIsAddDialogOpen(true)}
+        />
+        <AddCompanyDialog
+          open={isAddDialogOpen}
+          onOpenChange={setIsAddDialogOpen}
+        />
+      </div>
+    </AppLayout>
   );
 }

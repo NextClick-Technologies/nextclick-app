@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ProjectHeader } from "../components/ProjectHeader";
 import { ProjectMetrics } from "../components/ProjectMetrics";
 import { ProjectDatabase } from "../components/project-database";
 import { AddProjectDialog } from "../components/add-project-dialog";
 import { useProjects } from "../hooks";
 import type { Project } from "../../services/types";
+import { AppLayout } from "@/shared/components/layout/AppLayout";
 
 export default function ProjectsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -36,27 +36,28 @@ export default function ProjectsPage() {
   }, [projects, searchQuery, statusFilter]);
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
-      <ProjectHeader onAddClick={() => setIsAddDialogOpen(true)} />
-      <ProjectMetrics
-        projects={projects}
-        totalProjects={totalProjects}
-        isLoading={isLoading}
-      />
-      <ProjectDatabase
-        projects={filteredProjects}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        statusFilter={statusFilter}
-        onStatusChange={setStatusFilter}
-        isLoading={isLoading}
-        error={error}
-        onAddClick={() => setIsAddDialogOpen(true)}
-      />
-      <AddProjectDialog
-        open={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-      />
-    </div>
+    <AppLayout>
+      <div className="space-y-4">
+        <ProjectMetrics
+          projects={projects}
+          totalProjects={totalProjects}
+          isLoading={isLoading}
+        />
+        <ProjectDatabase
+          projects={filteredProjects}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+          isLoading={isLoading}
+          error={error}
+          onAddClick={() => setIsAddDialogOpen(true)}
+        />
+        <AddProjectDialog
+          open={isAddDialogOpen}
+          onOpenChange={setIsAddDialogOpen}
+        />
+      </div>
+    </AppLayout>
   );
 }

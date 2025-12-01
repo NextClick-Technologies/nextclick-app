@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { AddClientDialog, ClientMetrics, ClientDatabase } from "../components";
 import { useClients } from "../hooks";
+import { AppLayout } from "@/shared/components/layout/AppLayout";
 
-export function ClientsPage() {
+export default function ClientsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -31,30 +32,32 @@ export function ClientsPage() {
   );
 
   return (
-    <div className="space-y-4">
-      <ClientMetrics
-        clients={clients}
-        totalClients={totalClients}
-        isLoading={isLoading}
-      />
+    <AppLayout>
+      <div className="space-y-4">
+        <ClientMetrics
+          clients={clients}
+          totalClients={totalClients}
+          isLoading={isLoading}
+        />
 
-      <ClientDatabase
-        clients={filteredClients}
-        companies={companies}
-        projectCounts={projectCounts}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        statusFilter={statusFilter}
-        onStatusChange={setStatusFilter}
-        isLoading={isLoading}
-        error={error}
-        onAddClick={() => setIsAddDialogOpen(true)}
-      />
+        <ClientDatabase
+          clients={filteredClients}
+          companies={companies}
+          projectCounts={projectCounts}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+          isLoading={isLoading}
+          error={error}
+          onAddClick={() => setIsAddDialogOpen(true)}
+        />
 
-      <AddClientDialog
-        open={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-      />
-    </div>
+        <AddClientDialog
+          open={isAddDialogOpen}
+          onOpenChange={setIsAddDialogOpen}
+        />
+      </div>
+    </AppLayout>
   );
 }

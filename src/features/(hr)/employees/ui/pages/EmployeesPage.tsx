@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { EmployeeHeader } from "../components/EmployeeHeader";
 import { EmployeeMetrics } from "../components/EmployeeMetrics";
 import { EmployeeDatabase } from "../components/employee-database";
 import { AddEmployeeDialog } from "../components/add-employee-dialog";
 import { useEmployees } from "../hooks";
 import type { Employee } from "../../services/types";
+import { AppLayout } from "@/shared/components/layout/AppLayout";
 
 export default function EmployeesPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -38,27 +38,28 @@ export default function EmployeesPage() {
   }, [employees, searchQuery, statusFilter]);
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
-      <EmployeeHeader onAddClick={() => setIsAddDialogOpen(true)} />
-      <EmployeeMetrics
-        employees={employees}
-        totalEmployees={totalEmployees}
-        isLoading={isLoading}
-      />
-      <EmployeeDatabase
-        employees={filteredEmployees}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        statusFilter={statusFilter}
-        onStatusChange={setStatusFilter}
-        isLoading={isLoading}
-        error={error}
-        onAddClick={() => setIsAddDialogOpen(true)}
-      />
-      <AddEmployeeDialog
-        open={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-      />
-    </div>
+    <AppLayout>
+      <div className="space-y-4">
+        <EmployeeMetrics
+          employees={employees}
+          totalEmployees={totalEmployees}
+          isLoading={isLoading}
+        />
+        <EmployeeDatabase
+          employees={filteredEmployees}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+          isLoading={isLoading}
+          error={error}
+          onAddClick={() => setIsAddDialogOpen(true)}
+        />
+        <AddEmployeeDialog
+          open={isAddDialogOpen}
+          onOpenChange={setIsAddDialogOpen}
+        />
+      </div>
+    </AppLayout>
   );
 }
