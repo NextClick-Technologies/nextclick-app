@@ -1,4 +1,7 @@
-import { Employee, EmployeeStatus } from "@/features/(hr)/employees/services/types";
+import {
+  Employee,
+  EmployeeStatus,
+} from "@/features/(hr)/employees/services/types";
 import { Title, Gender } from "@/features/(crm)/clients/services/types";
 import type {
   Employee as DbEmployee,
@@ -95,6 +98,35 @@ export const mockDbEmployee: DbEmployee = {
   updated_at: "2024-01-15T10:00:00.000Z",
 };
 
+export const mockDbEmployee2: DbEmployee = {
+  id: "550e8400-e29b-41d4-a716-446655440302",
+  title: Title.MS,
+  name: "Sarah",
+  family_name: "Johnson",
+  preferred_name: null,
+  gender: Gender.FEMALE,
+  phone_number: "+1234567892",
+  email: "sarah.johnson@company.com",
+  photo: null,
+  user_id: null,
+  status: EmployeeStatus.ACTIVE,
+  department: "Marketing",
+  position: "Marketing Manager",
+  join_date: "2024-02-01",
+  salary: 75000,
+  emergency_contact: "Mike Johnson",
+  emergency_phone: "+1234567893",
+  address: "456 Business Ave",
+  city: "New York",
+  state: "NY",
+  zip_code: "10001",
+  country: "USA",
+  created_at: "2024-02-01T10:00:00.000Z",
+  updated_at: "2024-02-01T10:00:00.000Z",
+};
+
+export const mockDbEmployees: DbEmployee[] = [mockDbEmployee, mockDbEmployee2];
+
 /**
  * Mock Employee insert data
  */
@@ -120,4 +152,29 @@ export const mockEmployeeUpdate: DbEmployeeUpdate = {
   position: "Lead Developer",
   salary: 90000,
   updated_at: new Date().toISOString(),
+};
+
+/**
+ * Mock Employee form input (camelCase)
+ */
+export const mockEmployeeInput = {
+  title: Title.MR,
+  name: "John",
+  familyName: "Smith",
+  preferredName: "Johnny",
+  gender: Gender.MALE,
+  phoneNumber: "+1234567890",
+  email: "john.smith@company.com",
+  status: EmployeeStatus.ACTIVE,
+  department: "Engineering",
+  position: "Senior Developer",
+  joinDate: "2024-01-15",
+  salary: 85000,
+  emergencyContact: "Jane Smith",
+  emergencyPhone: "+1234567891",
+  address: "123 Tech Street",
+  city: "San Francisco",
+  state: "CA",
+  zipCode: "94102",
+  country: "USA",
 };

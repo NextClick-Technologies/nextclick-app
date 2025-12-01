@@ -6,6 +6,7 @@
 export * from "./client.fixtures";
 export * from "./company.fixtures";
 export * from "./project.fixtures";
+export * from "./employee.fixtures";
 
 // Helper function to create paginated response
 export function createPaginatedResponse<T>(

@@ -5,6 +5,23 @@ import { TextEncoder, TextDecoder } from "util";
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder as any;
 
+// Polyfill for Request/Response/Headers (needed for Next.js server components)
+if (typeof Request === "undefined") {
+  global.Request = class Request {
+    constructor(public url: string, public init?: any) {}
+  } as any;
+}
+if (typeof Response === "undefined") {
+  global.Response = class Response {
+    constructor(public body?: any, public init?: any) {}
+  } as any;
+}
+if (typeof Headers === "undefined") {
+  global.Headers = class Headers {
+    constructor(public init?: any) {}
+  } as any;
+}
+
 // Mock fetch globally for jsdom environment
 global.fetch = jest.fn();
 

@@ -137,11 +137,11 @@ export const mockProjectInput = {
   type: "Backend Development",
   startDate: "2024-03-01",
   finishDate: "2024-05-01",
-  budget: "75000",
+  budget: 75000,
   paymentTerms: PaymentTerms.NET_30D,
   status: ProjectStatus.ACTIVE,
   priority: ProjectPriority.MEDIUM,
   description: "RESTful API development with authentication",
   clientId: "550e8400-e29b-41d4-a716-446655440001",
-  projectManager: "Tom Developer",
+  projectManager: null,
 };

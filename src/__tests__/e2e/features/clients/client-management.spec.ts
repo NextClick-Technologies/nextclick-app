@@ -1,5 +1,5 @@
-import { test, expect } from "./fixtures/auth.fixture";
-import { createTestClient, waitForApiResponse } from "./helpers/test-data";
+import { test, expect } from "../../../fixtures/auth.fixture";
+import { createTestClient, waitForApiResponse } from "../../../utils/test-data";
 
 test.describe("Client Management", () => {
   test("should display clients list page", async ({ authenticatedPage }) => {

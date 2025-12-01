@@ -7,9 +7,15 @@ export const projectSchema = z.object({
   startDate: z.string().optional().nullable(),
   finishDate: z.string().optional().nullable(),
   budget: z.number().optional(),
-  paymentTerms: z.nativeEnum(PaymentTerms).default(PaymentTerms.NET_30D),
-  status: z.nativeEnum(ProjectStatus).default(ProjectStatus.ACTIVE),
-  priority: z.nativeEnum(ProjectPriority).default(ProjectPriority.MEDIUM),
+  paymentTerms: z
+    .nativeEnum(PaymentTerms)
+    .optional()
+    .default(PaymentTerms.NET_30D),
+  status: z.nativeEnum(ProjectStatus).optional().default(ProjectStatus.ACTIVE),
+  priority: z
+    .nativeEnum(ProjectPriority)
+    .optional()
+    .default(ProjectPriority.MEDIUM),
   description: z.string().optional(),
   completionDate: z.string().optional().nullable(),
   clientId: z.string().uuid("Please select a client"),
@@ -18,5 +24,5 @@ export const projectSchema = z.object({
 
 export const updateProjectSchema = projectSchema.partial();
 
-export type ProjectInput = z.infer<typeof projectSchema>;
+export type ProjectInput = z.input<typeof projectSchema>;
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;

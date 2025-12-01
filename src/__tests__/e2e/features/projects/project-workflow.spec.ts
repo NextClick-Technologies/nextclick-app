@@ -1,5 +1,8 @@
-import { test, expect } from "./fixtures/auth.fixture";
-import { createTestProject, waitForApiResponse } from "./helpers/test-data";
+import { test, expect } from "../../../fixtures/auth.fixture";
+import {
+  createTestProject,
+  waitForApiResponse,
+} from "../../../utils/test-data";
 
 test.describe("Project Workflow", () => {
   test("should display projects list page", async ({ authenticatedPage }) => {
