@@ -5,7 +5,7 @@ import { EmployeeMetrics } from "../components/EmployeeMetrics";
 import { EmployeeDatabase } from "../components/employee-database";
 import { AddEmployeeDialog } from "../components/add-employee-dialog";
 import { useEmployees } from "../hooks/useEmployee";
-import type { Employee } from "../../services/types/employee.type";
+import type { Employee } from "../../domain/types/employee.type";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
 
 export default function EmployeesPage() {

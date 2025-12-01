@@ -52,7 +52,7 @@ src/
 │   ├── clients/               # Client feature (vertical slice)
 │   │   ├── api/               # API handlers (business logic)
 │   │   │   └── handlers.ts    # GET/POST/PUT/DELETE logic
-│   │   ├── services/          # Business logic layer
+│   │   ├── domain/          # Business logic layer
 │   │   │   ├── repository.ts  # Database queries
 │   │   │   ├── service.ts     # Business operations
 │   │   │   ├── schemas/       # Zod validation
@@ -118,7 +118,7 @@ Each feature is a complete vertical slice from UI to database:
 ```
 features/clients/
 ├── ui/           # What users see
-├── services/     # Business logic
+├── domain/     # Business logic
 └── api/          # API endpoints
 ```
 
@@ -194,7 +194,7 @@ Every feature follows the same structure. Let's use `clients` as an example:
 features/clients/
 ├── api/                          # Backend logic
 │   └── handlers.ts               # API endpoint handlers
-├── services/                     # Business logic
+├── domain/                     # Business logic
 │   ├── repository.ts             # Database queries
 │   ├── service.ts                # Business operations
 │   ├── schemas/                  # Zod validation
@@ -231,7 +231,7 @@ touch src/features/clients/ui/components/ClientCard.tsx
 
 import { Card } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
-import { Client } from "../../services/types/client.type";
+import { Client } from "../../domain/types/client.type";
 
 interface ClientCardProps {
   client: Client;
@@ -285,8 +285,8 @@ import {
   updateApi,
   deleteApi,
 } from "@/shared/lib/api/client";
-import type { Client } from "../../services/types/client.type";
-import type { CreateClientInput } from "../../services/schemas/client.schema";
+import type { Client } from "../../domain/types/client.type";
+import type { CreateClientInput } from "../../domain/schemas/client.schema";
 
 // Fetch all clients
 export function useClients() {
@@ -357,7 +357,7 @@ mkdir -p src/features/tasks/{api,services/{schemas,types},ui/{components,hooks,p
 **2. Create types:**
 
 ```typescript
-// features/tasks/services/types/task.type.ts
+// features/tasks/domain/types/task.type.ts
 export interface Task {
   id: string;
   title: string;
@@ -372,7 +372,7 @@ export interface Task {
 **3. Create schemas:**
 
 ```typescript
-// features/tasks/services/schemas/task.schema.ts
+// features/tasks/domain/schemas/task.schema.ts
 import { z } from "zod";
 
 export const taskSchema = z.object({
@@ -388,7 +388,7 @@ export type CreateTaskInput = z.infer<typeof taskSchema>;
 **4. Create repository:**
 
 ```typescript
-// features/tasks/services/repository.ts
+// features/tasks/domain/repository.ts
 import { supabaseAdmin } from "@/shared/lib/supabase/server";
 
 export async function findAllTasks() {
@@ -416,7 +416,7 @@ export async function createTask(task: any) {
 **5. Create service:**
 
 ```typescript
-// features/tasks/services/service.ts
+// features/tasks/domain/service.ts
 import { transformFromDb, transformToDb } from "@/shared/lib/api/api-utils";
 import { taskSchema } from "./schemas/task.schema";
 import * as taskRepository from "./repository";
@@ -439,7 +439,7 @@ export async function createTask(input: unknown) {
 // features/tasks/api/handlers.ts
 import { NextRequest } from "next/server";
 import { apiSuccess, handleApiError } from "@/shared/lib/api/api-utils";
-import * as taskService from "../services/service";
+import * as taskService from "../domain/service";
 
 export async function getTasks(request: NextRequest) {
   try {
@@ -477,7 +477,7 @@ export const POST = createTask;
 // features/tasks/ui/hooks/useTask.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchApi, createApi } from "@/shared/lib/api/client";
-import type { Task } from "../../services/types/task.type";
+import type { Task } from "../../domain/types/task.type";
 
 export function useTasks() {
   return useQuery({
@@ -506,7 +506,7 @@ export function useCreateTask() {
 
 import { Card } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
-import { Task } from "../../services/types/task.type";
+import { Task } from "../../domain/types/task.type";
 
 export function TaskCard({ task }: { task: Task }) {
   return (

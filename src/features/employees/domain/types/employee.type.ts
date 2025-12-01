@@ -6,7 +6,7 @@
 import type {
   Title,
   Gender,
-} from "@/features/clients/services/types/client.type";
+} from "@/features/clients/domain/types/client.type";
 
 // Employee Status enum
 export const EmployeeStatus = {

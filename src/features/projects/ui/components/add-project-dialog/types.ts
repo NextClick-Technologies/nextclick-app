@@ -2,7 +2,7 @@ import {
   PaymentTerms,
   ProjectStatus,
   ProjectPriority,
-} from "@/features/projects/services/types/project.type";
+} from "@/features/projects/domain/types/project.type";
 
 export interface ProjectFormData {
   name: string;

@@ -2,7 +2,7 @@
 
 import { Card } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
-import { EmployeeStatus } from "@/features/employees/services/types/employee.type";
+import { EmployeeStatus } from "@/features/employees/domain/types/employee.type";
 
 interface EmploymentInformationProps {
   status: EmployeeStatus;

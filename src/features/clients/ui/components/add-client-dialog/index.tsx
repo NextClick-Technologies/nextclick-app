@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   clientSchema,
   type ClientInput,
-} from "../../../services/schemas/client.schema";
+} from "../../../domain/schemas/client.schema";
 import { FormField } from "./FormField";
 import { ClientSelectFields } from "./ClientSelectFields";
 import { CompanySelect } from "./CompanySelect";

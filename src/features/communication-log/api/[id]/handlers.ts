@@ -7,7 +7,7 @@ import {
   transformToDb,
   transformFromDb,
 } from "@/shared/lib/api/api-utils";
-import { updateCommunicationLogSchema } from "../../services/schemas";
+import { updateCommunicationLogSchema } from "../../domain/schemas";
 
 /**
  * GET /api/communication-log/[id] - Get a specific communication log

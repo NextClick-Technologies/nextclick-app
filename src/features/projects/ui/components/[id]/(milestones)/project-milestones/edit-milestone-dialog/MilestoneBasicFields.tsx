@@ -4,7 +4,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
-import { UpdateMilestoneInput } from "@/features/milestone/services/schemas";
+import { UpdateMilestoneInput } from "@/features/milestone/domain/schemas";
 
 interface MilestoneBasicFieldsProps {
   register: UseFormRegister<UpdateMilestoneInput>;

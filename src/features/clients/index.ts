@@ -1,8 +1,8 @@
 // Clients Feature - Main Index
 
 // Backend (Domain + Data)
-export * from "./services/types/client.type";
-export * from "./services/schemas/client.schema";
+export * from "./domain/types/client.type";
+export * from "./domain/schemas/client.schema";
 
 // Frontend (UI)
 export * from "./ui/components";

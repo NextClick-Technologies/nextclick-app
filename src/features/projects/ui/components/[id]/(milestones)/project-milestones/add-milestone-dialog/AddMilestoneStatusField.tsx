@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import { MilestoneInput } from "@/features/milestone/services/schemas";
+import { MilestoneInput } from "@/features/milestone/domain/schemas";
 
 interface AddMilestoneStatusFieldProps {
   status: MilestoneInput["status"];

@@ -4,11 +4,34 @@
 
 Manages communication logs between clients and employees, tracking channels, summaries, and follow-up requirements.
 
-## Structure
+## Directory Structure
 
-- `api/` - API endpoints for communication logs
-- `services/schemas/` - Zod validation schemas
-- `ui/` - UI components (to be added)
+```
+communication-log/
+├── api/                    # API Layer
+│   ├── handlers.ts         # List and create handlers
+│   └── [id]/handlers.ts    # Get, update, delete handlers
+├── domain/                 # Domain/Business Logic Layer
+│   ├── schemas/            # Zod validation schemas
+│   │   └── index.ts        # Communication log schemas export
+│   └── types/              # TypeScript type definitions
+│       └── communication-log.type.ts
+└── ui/                     # UI Layer (Frontend)
+    ├── components/         # Communication log UI components
+    └── hooks/              # React Query hooks
+        └── useCommunicationLog.ts
+```
+
+### Layer Responsibilities
+
+**API Layer (`api/`)**: Thin HTTP handlers that parse requests and delegate to business logic.
+
+**Domain Layer (`domain/`)**: Core business logic including:
+
+- `schemas/` - Input validation schemas using Zod
+- `types/` - TypeScript interfaces for communication logs (CommunicationChannel)
+
+**UI Layer (`ui/`)**: Communication log components and data fetching hooks.
 
 ## API Endpoints
 
@@ -26,4 +49,12 @@ Manages communication logs between clients and employees, tracking channels, sum
 
 ## Testing
 
-Tests to be added in `__tests__/` directory.
+```bash
+# Run unit tests
+npm test features/communication-log
+
+# Run integration tests
+npm test -- --grep "communication-log"
+```
+
+Tests are located in `__tests__/` directory.

@@ -7,7 +7,7 @@ import {
 import {
   generateSecureToken,
   getTokenExpiration,
-} from "../../services/password";
+} from "../../domain/password";
 import { sendPasswordResetEmail } from "@/shared/lib/email/auth-emails";
 import { logger } from "@/shared/lib/logger";
 

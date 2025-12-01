@@ -1,7 +1,7 @@
 "use client";
 
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { UpdateProjectInput } from "@/features/projects/services/schemas/project.schema";
+import { UpdateProjectInput } from "@/features/projects/domain/schemas/project.schema";
 import { Label } from "@/shared/components/ui/label";
 import { Button } from "@/shared/components/ui/button";
 import {

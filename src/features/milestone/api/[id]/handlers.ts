@@ -7,7 +7,7 @@ import {
   transformToDb,
   transformFromDb,
 } from "@/shared/lib/api/api-utils";
-import { updateMilestoneSchema } from "../../services/schemas";
+import { updateMilestoneSchema } from "../../domain/schemas";
 
 /**
  * GET /api/milestone/[id] - Get a specific milestone

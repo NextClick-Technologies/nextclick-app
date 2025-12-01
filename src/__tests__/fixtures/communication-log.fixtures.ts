@@ -1,7 +1,7 @@
 import {
   CommunicationLog,
   CommunicationChannel,
-} from "@/features/communication-log/services/types/communication-log.type";
+} from "@/features/communication-log/domain/types/communication-log.type";
 import type {
   CommunicationLog as DbCommunicationLog,
   CommunicationLogInsert as DbCommunicationLogInsert,

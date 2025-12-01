@@ -2,7 +2,7 @@
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Card } from "@/shared/components/ui/card";
-import { Client, ClientStatus } from "../../services/types/client.type";
+import { Client, ClientStatus } from "../../domain/types/client.type";
 
 interface ClientMetricsProps {
   clients: Client[];

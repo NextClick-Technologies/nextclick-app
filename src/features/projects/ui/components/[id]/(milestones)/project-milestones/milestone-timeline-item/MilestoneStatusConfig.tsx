@@ -1,4 +1,4 @@
-import { Milestone } from "@/features/milestone/services/types/milestone.type";
+import { Milestone } from "@/features/milestone/domain/types/milestone.type";
 import { CheckCircle2, Circle, XCircle, Clock, LucideIcon } from "lucide-react";
 
 export interface StatusConfig {

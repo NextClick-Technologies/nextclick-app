@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { CommunicationLog } from "@/features/communication-log/services/types/communication-log.type";
+import type { CommunicationLog } from "@/features/communication-log/domain/types/communication-log.type";
 import type {
   DbCommunicationLogInsert,
   DbCommunicationLogUpdate,

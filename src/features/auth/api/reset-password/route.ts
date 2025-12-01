@@ -8,7 +8,7 @@ import {
   hashPassword,
   validatePasswordStrength,
   isTokenExpired,
-} from "../../services/password";
+} from "../../domain/password";
 import { sendPasswordChangedEmail } from "@/shared/lib/email/auth-emails";
 import { logger } from "@/shared/lib/logger";
 

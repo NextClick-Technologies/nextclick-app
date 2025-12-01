@@ -16,13 +16,13 @@ import {
 import type {
   MilestoneInput,
   UpdateMilestoneInput,
-} from "@/features/milestone/services/schemas";
+} from "@/features/milestone/domain/schemas";
 import {
   mockMilestone,
   mockMilestones,
   mockMilestoneUpdate,
 } from "@/__tests__/fixtures/milestone.fixtures";
-import { MilestoneStatus } from "@/features/milestone/services/types/milestone.type";
+import { MilestoneStatus } from "@/features/milestone/domain/types/milestone.type";
 
 // Frontend-style (camelCase) milestone input for testing
 const mockMilestoneInput: MilestoneInput = {

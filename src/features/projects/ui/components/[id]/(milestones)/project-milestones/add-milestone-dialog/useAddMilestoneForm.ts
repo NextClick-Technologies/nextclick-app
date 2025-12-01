@@ -5,7 +5,7 @@ import { useCreateMilestone } from "@/features/milestone/ui/hooks/useMilestone";
 import {
   milestoneSchema,
   type MilestoneInput,
-} from "@/features/milestone/services/schemas";
+} from "@/features/milestone/domain/schemas";
 import { toast } from "sonner";
 
 // Clean milestone data by converting empty strings to null

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/shared/utils/cn";
-import { Milestone } from "@/features/milestone/services/types/milestone.type";
+import { Milestone } from "@/features/milestone/domain/types/milestone.type";
 import { StatusConfig } from "./MilestoneStatusConfig";
 
 interface TimelineConnectorProps {

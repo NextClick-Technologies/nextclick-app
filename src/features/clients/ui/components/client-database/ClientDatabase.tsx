@@ -3,7 +3,7 @@
 import { Card } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { Loader2, Plus } from "lucide-react";
-import { Client } from "../../../services/types/client.type";
+import { Client } from "../../../domain/types/client.type";
 import { ClientTable } from "./ClientTable";
 import { ClientFilters } from "./ClientFilters";
 

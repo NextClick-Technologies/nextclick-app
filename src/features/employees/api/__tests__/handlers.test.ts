@@ -11,7 +11,7 @@ import {
   transformToDb,
   transformColumnName,
 } from "@/shared/lib/api/api-utils";
-import { employeeSchema } from "@/features/employees/services/schemas/employee.schema";
+import { employeeSchema } from "@/features/employees/domain/schemas/employee.schema";
 import {
   mockDbEmployee,
   mockDbEmployees,

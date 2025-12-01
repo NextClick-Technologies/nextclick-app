@@ -18,7 +18,7 @@ import {
 import {
   communicationLogSchema,
   updateCommunicationLogSchema,
-} from "../services/schemas";
+} from "../domain/schemas";
 
 /**
  * GET /api/communication-log - Get all communication logs with pagination

@@ -10,7 +10,7 @@ import {
   generateRandomPassword,
   generateSecureToken,
   getTokenExpiration,
-} from "../../services/password";
+} from "../../domain/password";
 import {
   sendWelcomeEmail,
   sendVerificationEmail,

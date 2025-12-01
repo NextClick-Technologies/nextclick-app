@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import { ClientStatus } from "../../../services/types/client.type";
-import type { ClientInput } from "../../../services/schemas/client.schema";
+import { ClientStatus } from "../../../domain/types/client.type";
+import type { ClientInput } from "../../../domain/schemas/client.schema";
 
 interface StatusSelectProps {
   control: Control<ClientInput>;

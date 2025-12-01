@@ -12,8 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   employeeSchema,
   type EmployeeInput,
-} from "@/features/employees/services/schemas/employee.schema";
-import { Employee } from "@/features/employees/services/types/employee.type";
+} from "@/features/employees/domain/schemas/employee.schema";
+import { Employee } from "@/features/employees/domain/types/employee.type";
 import { useState } from "react";
 import { EmployeeFormFields } from "./EmployeeFormFields";
 import { FormActions } from "./FormActions";

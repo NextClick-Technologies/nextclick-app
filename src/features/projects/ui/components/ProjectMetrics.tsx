@@ -2,7 +2,7 @@
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Card } from "@/shared/components/ui/card";
-import { Project, ProjectStatus } from "../../services/types/project.type";
+import { Project, ProjectStatus } from "../../domain/types/project.type";
 
 interface ProjectMetricsProps {
   projects: Project[];

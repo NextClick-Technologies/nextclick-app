@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/shared/lib/auth";
 import { createAuditLog } from "@/shared/lib/supabase/auth-client";
 import { logger } from "@/shared/lib/logger";
-import * as projectMembersService from "../services/project-members.service";
+import * as projectMembersService from "../domain/project-members.service";
 
 /**
  * GET /api/project/project-members

@@ -9,11 +9,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/ui/dialog";
-import { Project } from "@/features/projects/services/types/project.type";
+import { Project } from "@/features/projects/domain/types/project.type";
 import {
   updateProjectSchema,
   UpdateProjectInput,
-} from "@/features/projects/services/schemas/project.schema";
+} from "@/features/projects/domain/schemas/project.schema";
 import { useUpdateProject } from "@/features/projects/ui/hooks/useProject";
 import { EditProjectForm } from "./EditProjectForm";
 import { FormActions } from "./FormActions";

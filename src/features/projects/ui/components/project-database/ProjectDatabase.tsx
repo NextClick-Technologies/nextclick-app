@@ -3,7 +3,7 @@
 import { Card } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { Loader2, Plus } from "lucide-react";
-import { Project } from "@/features/projects/services/types/project.type";
+import { Project } from "@/features/projects/domain/types/project.type";
 import { ProjectTable } from "./ProjectTable";
 import { ProjectFilters } from "./ProjectFilters";
 

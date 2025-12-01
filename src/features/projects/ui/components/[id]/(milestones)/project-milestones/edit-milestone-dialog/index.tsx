@@ -9,8 +9,8 @@ import {
   DialogTitle,
 } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
-import { Milestone } from "@/features/milestone/services/types/milestone.type";
-import { UpdateMilestoneInput } from "@/features/milestone/services/schemas";
+import { Milestone } from "@/features/milestone/domain/types/milestone.type";
+import { UpdateMilestoneInput } from "@/features/milestone/domain/schemas";
 import { useEditMilestoneForm } from "./useEditMilestoneForm";
 import { MilestoneBasicFields } from "./MilestoneBasicFields";
 import { MilestoneDateFields } from "./MilestoneDateFields";

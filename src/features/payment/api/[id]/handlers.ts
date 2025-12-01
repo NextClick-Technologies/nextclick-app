@@ -7,7 +7,7 @@ import {
   transformToDb,
   transformFromDb,
 } from "@/shared/lib/api/api-utils";
-import { updatePaymentSchema } from "../../services/schemas";
+import { updatePaymentSchema } from "../../domain/schemas";
 
 /**
  * GET /api/payment/[id] - Get a specific payment

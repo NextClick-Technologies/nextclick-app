@@ -4,7 +4,7 @@ import {
   updatePaymentSchema,
   type PaymentInput,
   type UpdatePaymentInput,
-} from "@/features/payment/services/schemas";
+} from "@/features/payment/domain/schemas";
 import { ZodError } from "zod";
 
 describe("paymentSchema", () => {

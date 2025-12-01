@@ -5,7 +5,7 @@ import { ProjectMetrics } from "../components/ProjectMetrics";
 import { ProjectDatabase } from "../components/project-database";
 import { AddProjectDialog } from "../components/add-project-dialog";
 import { useProjects } from "../hooks/useProject";
-import type { Project } from "../../services/types/project.type";
+import type { Project } from "../../domain/types/project.type";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
 
 export default function ProjectsPage() {

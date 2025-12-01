@@ -15,7 +15,7 @@ import {
   transformFromDb,
   transformColumnName,
 } from "@/shared/lib/api/api-utils";
-import { milestoneSchema, updateMilestoneSchema } from "../services/schemas";
+import { milestoneSchema, updateMilestoneSchema } from "../domain/schemas";
 
 /**
  * GET /api/milestone - Get all milestones with pagination

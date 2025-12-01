@@ -1,6 +1,6 @@
 "use client";
 
-import { Milestone } from "@/features/milestone/services/types/milestone.type";
+import { Milestone } from "@/features/milestone/domain/types/milestone.type";
 import { Badge } from "@/shared/components/ui/badge";
 import { Card } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";

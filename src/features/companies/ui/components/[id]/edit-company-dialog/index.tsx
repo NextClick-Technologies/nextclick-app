@@ -9,8 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/ui/dialog";
-import { Company } from "@/features/companies/services/types/company.type";
-import { updateCompanySchema, UpdateCompanyInput } from "@/features/companies/services/schemas/company.schema";
+import { Company } from "@/features/companies/domain/types/company.type";
+import { updateCompanySchema, UpdateCompanyInput } from "@/features/companies/domain/schemas/company.schema";
 import { useUpdateCompany } from "@/features/companies/ui/hooks/useCompany";
 import { EditCompanyForm } from "./EditCompanyForm";
 import { FormActions } from "./FormActions";

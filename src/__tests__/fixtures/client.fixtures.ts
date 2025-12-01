@@ -3,7 +3,7 @@ import {
   Title,
   Gender,
   ClientStatus,
-} from "@/features/clients/services/types/client.type";
+} from "@/features/clients/domain/types/client.type";
 import type {
   Client as DbClient,
   ClientInsert as DbClientInsert,

@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   Title,
   Gender,
-} from "@/features/clients/services/types/client.type";
+} from "@/features/clients/domain/types/client.type";
 import { EmployeeStatus } from "../types/employee.type";
 
 export const employeeSchema = z.object({

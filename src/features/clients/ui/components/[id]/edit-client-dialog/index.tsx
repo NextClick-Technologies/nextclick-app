@@ -13,8 +13,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   updateClientSchema,
   type UpdateClientInput,
-} from "../../../../services/schemas/client.schema";
-import { Client } from "../../../../services/types/client.type";
+} from "../../../../domain/schemas/client.schema";
+import { Client } from "../../../../domain/types/client.type";
 import { useEffect } from "react";
 import { EditClientForm } from "./EditClientForm";
 import { FormActions } from "./FormActions";

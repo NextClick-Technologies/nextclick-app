@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Company } from "@/features/companies/services/types/company.type";
+import { Company } from "@/features/companies/domain/types/company.type";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Building2 } from "lucide-react";

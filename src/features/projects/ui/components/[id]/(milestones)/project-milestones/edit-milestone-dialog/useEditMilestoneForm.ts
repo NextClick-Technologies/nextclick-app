@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUpdateMilestone } from "@/features/milestone/ui/hooks/useMilestone";
-import { Milestone } from "@/features/milestone/services/types/milestone.type";
+import { Milestone } from "@/features/milestone/domain/types/milestone.type";
 import {
   updateMilestoneSchema,
   type UpdateMilestoneInput,
-} from "@/features/milestone/services/schemas";
+} from "@/features/milestone/domain/schemas";
 import { toast } from "sonner";
 import { formatDateForInput, cleanMilestoneData } from "./MilestoneFormUtils";
 

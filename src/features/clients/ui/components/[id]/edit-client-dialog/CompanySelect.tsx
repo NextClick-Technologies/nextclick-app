@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import type { UpdateClientInput } from "../../../../services/schemas/client.schema";
-import type { Company } from "@/features/companies/services/types/company.type";
+import type { UpdateClientInput } from "../../../../domain/schemas/client.schema";
+import type { Company } from "@/features/companies/domain/types/company.type";
 
 interface CompanySelectProps {
   control: Control<UpdateClientInput>;

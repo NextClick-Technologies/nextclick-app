@@ -5,7 +5,7 @@ import { CompanyMetrics } from "../components/CompanyMetrics";
 import { CompanyDatabase } from "../components/company-database";
 import { AddCompanyDialog } from "../components/add-company-dialog";
 import { useCompanies } from "../hooks/useCompany";
-import type { Company } from "../../services/types/company.type";
+import type { Company } from "../../domain/types/company.type";
 import App from "next/app";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
 

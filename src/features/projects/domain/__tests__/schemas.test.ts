@@ -4,7 +4,7 @@ import {
   updateProjectSchema,
   type ProjectInput,
   type UpdateProjectInput,
-} from "@/features/projects/services/schemas/project.schema";
+} from "@/features/projects/domain/schemas/project.schema";
 import { ZodError } from "zod";
 
 describe("projectSchema", () => {

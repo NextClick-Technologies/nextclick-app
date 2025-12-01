@@ -3,7 +3,7 @@
 import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { UseFormRegister } from "react-hook-form";
-import { UpdateMilestoneInput } from "@/features/milestone/services/schemas";
+import { UpdateMilestoneInput } from "@/features/milestone/domain/schemas";
 
 interface MilestoneRemarksFieldProps {
   register: UseFormRegister<UpdateMilestoneInput>;

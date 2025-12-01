@@ -15,7 +15,7 @@ import {
   transformFromDb,
   transformColumnName,
 } from "@/shared/lib/api/api-utils";
-import { paymentSchema, updatePaymentSchema } from "../services/schemas";
+import { paymentSchema, updatePaymentSchema } from "../domain/schemas";
 
 /**
  * GET /api/payment - Get all payments with pagination

@@ -3,7 +3,7 @@
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
-import { MilestoneInput } from "@/features/milestone/services/schemas";
+import { MilestoneInput } from "@/features/milestone/domain/schemas";
 
 interface AddMilestoneDateFieldsProps {
   register: UseFormRegister<MilestoneInput>;

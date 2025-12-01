@@ -1,4 +1,4 @@
-import { Milestone, MilestoneStatus } from "@/features/milestone/services/types/milestone.type";
+import { Milestone, MilestoneStatus } from "@/features/milestone/domain/types/milestone.type";
 import type {
   Milestone as DbMilestone,
   MilestoneInsert as DbMilestoneInsert,

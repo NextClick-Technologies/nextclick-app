@@ -1,6 +1,6 @@
 "use client";
 
-import { Milestone } from "@/features/milestone/services/types/milestone.type";
+import { Milestone } from "@/features/milestone/domain/types/milestone.type";
 import { Button } from "@/shared/components/ui/button";
 import { MilestoneTimelineItem } from "./milestone-timeline-item";
 import { CalendarClock, Plus } from "lucide-react";

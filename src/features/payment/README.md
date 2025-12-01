@@ -4,11 +4,34 @@
 
 Manages project payments, tracking amounts, methods, and completion status.
 
-## Structure
+## Directory Structure
 
-- `api/` - API endpoints for payments
-- `services/schemas/` - Zod validation schemas
-- `ui/` - UI components (to be added)
+```
+payment/
+├── api/                    # API Layer
+│   ├── handlers.ts         # List and create handlers
+│   └── [id]/handlers.ts    # Get, update, delete handlers
+├── domain/                 # Domain/Business Logic Layer
+│   ├── schemas/            # Zod validation schemas
+│   │   └── index.ts        # Payment schemas export
+│   └── types/              # TypeScript type definitions
+│       └── payment.type.ts
+└── ui/                     # UI Layer (Frontend)
+    ├── components/         # Payment UI components
+    └── hooks/              # React Query hooks
+        └── usePayment.ts
+```
+
+### Layer Responsibilities
+
+**API Layer (`api/`)**: Thin HTTP handlers that parse requests and delegate to business logic.
+
+**Domain Layer (`domain/`)**: Core business logic including:
+
+- `schemas/` - Input validation schemas using Zod
+- `types/` - TypeScript interfaces for payments (PaymentStatus, PaymentMethod)
+
+**UI Layer (`ui/`)**: Payment components and data fetching hooks.
 
 ## API Endpoints
 
@@ -26,4 +49,12 @@ Manages project payments, tracking amounts, methods, and completion status.
 
 ## Testing
 
-Tests to be added in `__tests__/` directory.
+```bash
+# Run unit tests
+npm test features/payment
+
+# Run integration tests
+npm test -- --grep "payment"
+```
+
+Tests are located in `__tests__/` directory.

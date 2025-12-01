@@ -14,7 +14,7 @@ import { AddMilestoneBasicFields } from "./AddMilestoneBasicFields";
 import { AddMilestoneDateFields } from "./AddMilestoneDateFields";
 import { AddMilestoneStatusField } from "./AddMilestoneStatusField";
 import { AddMilestoneRemarksField } from "./AddMilestoneRemarksField";
-import { type MilestoneInput } from "@/features/milestone/services/schemas";
+import { type MilestoneInput } from "@/features/milestone/domain/schemas";
 
 interface AddMilestoneDialogProps {
   projectId: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
-import { UpdateCompanyInput } from "@/features/companies/services/schemas/company.schema";
+import { UpdateCompanyInput } from "@/features/companies/domain/schemas/company.schema";
 import { Label } from "@/shared/components/ui/label";
 import { Input } from "@/shared/components/ui/input";
 import { StatusSelect } from "./StatusSelect";

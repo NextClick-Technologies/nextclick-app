@@ -1,6 +1,6 @@
 "use client";
 
-import { Client, ClientStatus } from "../../../services/types/client.type";
+import { Client, ClientStatus } from "../../../domain/types/client.type";
 import { Badge } from "@/shared/components/ui/badge";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { useRouter } from "next/navigation";
