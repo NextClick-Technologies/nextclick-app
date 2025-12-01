@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Project } from "../../domain/types/project.type";
+import type { Project } from "../../domain/types";
 import type { DbProjectInsert, DbProjectUpdate } from "@/shared/types";
 import {
   fetchApi,

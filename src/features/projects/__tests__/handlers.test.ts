@@ -11,7 +11,7 @@ import {
   transformToDb,
   transformColumnName,
 } from "@/shared/lib/api/api-utils";
-import { projectSchema } from "@/features/projects/domain/schemas/project.schema";
+import { projectSchema } from "@/features/projects/domain/schemas";
 import {
   mockDbProject,
   mockDbProjects,

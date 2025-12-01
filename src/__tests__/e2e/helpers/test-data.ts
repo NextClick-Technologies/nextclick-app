@@ -1,14 +1,10 @@
 import type { Client, Company, Project, Employee } from "@/shared/types";
-import {
-  Title,
-  Gender,
-  ClientStatus,
-} from "@/features/clients/domain/types";
+import { Title, Gender, ClientStatus } from "@/features/clients/domain/types";
 import {
   ProjectStatus,
   PaymentTerms,
   ProjectPriority,
-} from "@/features/projects/domain/types/project.type";
+} from "@/features/projects/domain/types";
 import { EmployeeStatus } from "@/features/employees/domain/types";
 
 /**

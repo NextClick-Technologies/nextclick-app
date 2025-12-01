@@ -4,7 +4,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import {
   ProjectStatus,
   ProjectPriority,
-} from "@/features/projects/domain/types/project.type";
+} from "@/features/projects/domain/types";
 import { getStatusVariant, getPriorityVariant } from "./projectInfoUtils";
 
 interface ProjectBasicInfoProps {

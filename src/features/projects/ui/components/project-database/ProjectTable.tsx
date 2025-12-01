@@ -5,7 +5,7 @@ import {
   Project,
   ProjectStatus,
   ProjectPriority,
-} from "@/features/projects/domain/types/project.type";
+} from "@/features/projects/domain/types";
 import { Badge } from "@/shared/components/ui/badge";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { FolderKanban } from "lucide-react";

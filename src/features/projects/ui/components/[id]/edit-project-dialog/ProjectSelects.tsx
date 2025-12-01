@@ -6,7 +6,7 @@ import {
   FieldErrors,
   UseFormRegister,
 } from "react-hook-form";
-import { UpdateProjectInput } from "@/features/projects/domain/schemas/project.schema";
+import { UpdateProjectInput } from "@/features/projects/domain/schemas";
 import { Label } from "@/shared/components/ui/label";
 import { Input } from "@/shared/components/ui/input";
 import {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { transformToDb, transformFromDb } from "@/shared/lib/api/api-utils";
-import { projectSchema, updateProjectSchema } from "./schemas/project.schema";
+import { projectSchema, updateProjectSchema } from "../schemas";
 import * as projectRepository from "./projects.repository";
 import type { ProjectQueryOptions } from "./projects.repository";
 

@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   projectSchema,
   type ProjectInput,
-} from "@/features/projects/domain/schemas/project.schema";
+} from "@/features/projects/domain/schemas";
 import { FormField } from "./FormField";
 import { ClientSelect } from "./ClientSelect";
 import { ProjectManagerSelect } from "./ProjectManagerSelect";
@@ -32,7 +32,7 @@ import {
 import {
   ProjectStatus,
   ProjectPriority,
-} from "@/features/projects/domain/types/project.type";
+} from "@/features/projects/domain/types";
 
 interface AddProjectDialogProps {
   open: boolean;

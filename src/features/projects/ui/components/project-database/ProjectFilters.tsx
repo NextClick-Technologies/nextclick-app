@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import { Search } from "lucide-react";
-import { ProjectStatus } from "@/features/projects/domain/types/project.type";
+import { ProjectStatus } from "@/features/projects/domain/types";
 
 interface ProjectFiltersProps {
   searchQuery: string;

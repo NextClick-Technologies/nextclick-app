@@ -3,7 +3,7 @@ import {
   PaymentTerms,
   ProjectStatus,
   ProjectPriority,
-} from "@/features/projects/domain/types/project.type";
+} from "@/features/projects/domain/types";
 import type {
   Project as DbProject,
   ProjectInsert as DbProjectInsert,

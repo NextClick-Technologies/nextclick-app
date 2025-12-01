@@ -5,7 +5,7 @@ import { Card } from "@/shared/components/ui/card";
 import {
   ProjectStatus,
   ProjectPriority,
-} from "@/features/projects/domain/types/project.type";
+} from "@/features/projects/domain/types";
 import { ManageTeamDialog } from "./ManageTeamDialog";
 import { ProjectInfoHeader } from "./ProjectInfoHeader";
 import { ProjectBasicInfo } from "./ProjectBasicInfo";

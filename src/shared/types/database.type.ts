@@ -1,9 +1,9 @@
 import type { Title } from "@/features/clients/domain/types";
 import type { Gender } from "@/features/clients/domain/types";
 import type { EmployeeStatus } from "@/features/employees/domain/types";
-import type { PaymentTerms } from "@/features/projects/domain/types/project.type";
-import type { ProjectStatus } from "@/features/projects/domain/types/project.type";
-import type { ProjectPriority } from "@/features/projects/domain/types/project.type";
+import type { PaymentTerms } from "@/features/projects/domain/types";
+import type { ProjectStatus } from "@/features/projects/domain/types";
+import type { ProjectPriority } from "@/features/projects/domain/types";
 import type { MilestoneStatus } from "@/features/milestone/domain/types";
 import type { PaymentStatus } from "@/features/payment/domain/types";
 import type { PaymentMethod } from "@/features/payment/domain/types";
