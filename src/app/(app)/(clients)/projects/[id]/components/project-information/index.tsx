@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { ProjectStatus, ProjectPriority } from "@/types";
+import {
+  ProjectStatus,
+  ProjectPriority,
+} from "@/features/(crm)/projects/services/types";
 import { ManageTeamDialog } from "./ManageTeamDialog";
 import { ProjectInfoHeader } from "./ProjectInfoHeader";
 import { ProjectBasicInfo } from "./ProjectBasicInfo";

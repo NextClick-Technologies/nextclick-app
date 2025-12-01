@@ -11,7 +11,7 @@ import {
   transformToDb,
   transformColumnName,
 } from "@/lib/api/api-utils";
-import { clientSchema } from "@/schemas/client.schema";
+import { clientSchema } from "@/features/(crm)/clients/services/schemas";
 import {
   mockDbClient,
   mockDbClients,

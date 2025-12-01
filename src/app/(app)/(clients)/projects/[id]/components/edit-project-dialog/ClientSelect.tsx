@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/utils/cn";
-import { useClients } from "@/hooks/useClient";
+import { useClients } from "@/features/(crm)/clients/ui/hooks";
 import { useState } from "react";
 
 interface ClientSelectProps {

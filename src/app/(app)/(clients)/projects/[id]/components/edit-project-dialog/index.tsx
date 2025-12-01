@@ -9,9 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Project } from "@/types";
+import { Project } from "@/features/(crm)/projects/services/types";
 import { updateProjectSchema, UpdateProjectInput } from "@/schemas";
-import { useUpdateProject } from "@/hooks/useProject";
+import { useUpdateProject } from "@/features/(crm)/projects/ui/hooks";
 import { EditProjectForm } from "./EditProjectForm";
 import { FormActions } from "./FormActions";
 

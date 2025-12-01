@@ -6,11 +6,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useCreateEmployee } from "@/hooks/useEmployee";
+import { useCreateEmployee } from "@/features/(hr)/employees/ui/hooks";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { employeeSchema, type EmployeeInput } from "@/schemas/employee.schema";
-import { EmployeeStatus } from "@/types";
+import {
+  employeeSchema,
+  type EmployeeInput,
+} from "@/features/(hr)/employees/services/schemas";
+import { EmployeeStatus } from "@/features/(hr)/employees/services/types";
 import { useState } from "react";
 import { EmployeeFormFields } from "./EmployeeFormFields";
 import { FormActions } from "./FormActions";

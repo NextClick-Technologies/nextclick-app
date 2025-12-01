@@ -10,7 +10,7 @@ import {
   PaymentTerms,
   ProjectStatus,
   ProjectPriority,
-} from "@/types/project.type";
+} from "@/features/(crm)/projects/services/types";
 import {
   Control,
   Controller,
@@ -18,7 +18,7 @@ import {
   FieldErrors,
 } from "react-hook-form";
 import { FormField } from "./FormField";
-import type { ProjectInput } from "@/schemas/project.schema";
+import type { ProjectInput } from "@/features/(crm)/projects/services/schemas";
 
 interface ProjectSelectFieldsProps {
   control: Control<any>;

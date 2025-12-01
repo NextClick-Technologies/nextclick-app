@@ -1,11 +1,11 @@
 import type { Client, Company, Project, Employee } from "@/types";
-import { Title, Gender, ClientStatus } from "@/types/client.type";
+import { Title, Gender, ClientStatus } from "@/features/(crm)/clients/services/types";
 import {
   ProjectStatus,
   PaymentTerms,
   ProjectPriority,
-} from "@/types/project.type";
-import { EmployeeStatus } from "@/types/employee.type";
+} from "@/features/(crm)/projects/services/types";
+import { EmployeeStatus } from "@/features/(hr)/employees/services/types";
 
 /**
  * E2E test data generators

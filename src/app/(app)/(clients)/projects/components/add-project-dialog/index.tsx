@@ -7,13 +7,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useCreateProject } from "@/hooks/useProject";
-import { useClients } from "@/hooks/useClient";
-import { useEmployees } from "@/hooks/useEmployee";
+import { useCreateProject } from "@/features/(crm)/projects/ui/hooks";
+import { useClients } from "@/features/(crm)/clients/ui/hooks";
+import { useEmployees } from "@/features/(hr)/employees/ui/hooks";
 import { Loader2 } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { projectSchema, type ProjectInput } from "@/schemas/project.schema";
+import {
+  projectSchema,
+  type ProjectInput,
+} from "@/features/(crm)/projects/services/schemas";
 import { FormField } from "./FormField";
 import { ClientSelect } from "./ClientSelect";
 import { ProjectManagerSelect } from "./ProjectManagerSelect";
@@ -26,7 +29,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ProjectStatus, ProjectPriority } from "@/types/project.type";
+import {
+  ProjectStatus,
+  ProjectPriority,
+} from "@/features/(crm)/projects/services/types";
 
 interface AddProjectDialogProps {
   open: boolean;

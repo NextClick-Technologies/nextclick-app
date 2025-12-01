@@ -1,4 +1,9 @@
-import { Client, Title, Gender, ClientStatus } from "@/types/client.type";
+import {
+  Client,
+  Title,
+  Gender,
+  ClientStatus,
+} from "@/features/(crm)/clients/services/types";
 import type {
   Client as DbClient,
   ClientInsert as DbClientInsert,

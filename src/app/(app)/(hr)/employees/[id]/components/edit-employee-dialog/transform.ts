@@ -1,4 +1,4 @@
-import { EmployeeInput } from "@/schemas/employee.schema";
+import { EmployeeInput } from "@/features/(hr)/employees/services/schemas";
 
 export function transformEmployeeToDb(data: EmployeeInput) {
   return {

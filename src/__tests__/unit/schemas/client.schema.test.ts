@@ -1,5 +1,8 @@
-import { clientSchema, updateClientSchema } from "@/schemas/client.schema";
-import { Title, Gender, ClientStatus } from "@/types";
+import {
+  clientSchema,
+  updateClientSchema,
+} from "@/features/(crm)/clients/services/schemas";
+import { Title, Gender, ClientStatus } from "@/features/(crm)/clients/services/types";
 
 describe("Client Schema", () => {
   describe("clientSchema", () => {

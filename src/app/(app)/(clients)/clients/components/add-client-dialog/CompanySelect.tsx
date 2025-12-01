@@ -17,8 +17,8 @@ import {
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { useState } from "react";
-import type { ClientInput } from "@/schemas/client.schema";
-import type { Company } from "@/types";
+import type { ClientInput } from "@/features/(crm)/clients/services/schemas";
+import type { Company } from "@/features/(crm)/companies/services/types";
 
 interface CompanySelectProps {
   control: Control<ClientInput>;

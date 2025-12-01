@@ -9,9 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Company } from "@/types";
+import { Company } from "@/features/(crm)/companies/services/types";
 import { updateCompanySchema, UpdateCompanyInput } from "@/schemas";
-import { useUpdateCompany } from "@/hooks/useCompany";
+import { useUpdateCompany } from "@/features/(crm)/companies/ui/hooks";
 import { EditCompanyForm } from "./EditCompanyForm";
 import { FormActions } from "./FormActions";
 

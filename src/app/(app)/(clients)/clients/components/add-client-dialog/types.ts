@@ -1,4 +1,4 @@
-import { Title, Gender } from "@/types/client.type";
+import { Title, Gender } from "@/features/(crm)/clients/services/types";
 
 export interface ClientFormData {
   title: (typeof Title)[keyof typeof Title];

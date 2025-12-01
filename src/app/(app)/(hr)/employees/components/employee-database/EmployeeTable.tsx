@@ -1,6 +1,6 @@
 "use client";
 
-import { Employee, EmployeeStatus } from "@/types";
+import { Employee, EmployeeStatus } from "@/features/(hr)/employees/services/types";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";

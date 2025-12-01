@@ -1,7 +1,10 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { ProjectStatus, ProjectPriority } from "@/types";
+import {
+  ProjectStatus,
+  ProjectPriority,
+} from "@/features/(crm)/projects/services/types";
 import { getStatusVariant, getPriorityVariant } from "./projectInfoUtils";
 
 interface ProjectBasicInfoProps {

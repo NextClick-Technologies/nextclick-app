@@ -6,15 +6,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useUpdateClient } from "@/hooks/useClient";
-import { useCompanies } from "@/hooks/useCompany";
+import { useUpdateClient } from "@/features/(crm)/clients/ui/hooks";
+import { useCompanies } from "@/features/(crm)/companies/ui/hooks";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   updateClientSchema,
   type UpdateClientInput,
-} from "@/schemas/client.schema";
-import { Client } from "@/types";
+} from "@/features/(crm)/clients/services/schemas";
+import { Client } from "@/features/(crm)/clients/services/types";
 import { useEffect } from "react";
 import { EditClientForm } from "./EditClientForm";
 import { FormActions } from "./FormActions";

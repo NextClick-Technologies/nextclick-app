@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { AppLayout } from "@/components/layout/AppLayout";
+import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { useClient, useDeleteClient } from "@/hooks/useClient";
+import { useClient, useDeleteClient } from "@/features/(crm)/clients/ui/hooks";
 import { ClientDetailHeader } from "./components/ClientDetailHeader";
 import { ContactInformation } from "./components/ContactInformation";
 import { FinancialInformation } from "./components/FinancialInformation";

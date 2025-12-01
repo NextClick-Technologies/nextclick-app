@@ -1,10 +1,11 @@
 // Frontend types (camelCase - post API transformation)
-export * from "./client.type";
-export * from "./company.type";
-export * from "./project.type";
+// Re-export from features
+export * from "@/features/(crm)/clients/services/types";
+export * from "@/features/(crm)/companies/services/types";
+export * from "@/features/(crm)/projects/services/types";
 export * from "./milestone.type";
 export * from "./payment.type";
-export * from "./employee.type";
+export * from "@/features/(hr)/employees/services/types";
 export * from "./communication-log.type";
 export * from "./user.type";
 

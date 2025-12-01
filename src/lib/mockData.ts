@@ -1,4 +1,4 @@
-import type { Client } from "@/types/client.type";
+import type { Client } from "@/features/(crm)/clients/services/types";
 import type { TeamMember } from "@/types/team-member.type";
 import type { Activity } from "@/types/activity.type";
 import type { AIInsight } from "@/types/ai-insight.type";

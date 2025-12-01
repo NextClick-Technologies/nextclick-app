@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Employee, EmployeeStatus } from "@/types";
+import { Employee, EmployeeStatus } from "@/features/(hr)/employees/services/types";
 
 interface EmployeeMetricsProps {
   employees: Employee[];

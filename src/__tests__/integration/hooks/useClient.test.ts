@@ -17,7 +17,7 @@ import {
   useCreateClient,
   useUpdateClient,
   useDeleteClient,
-} from "@/hooks/useClient";
+} from "@/features/(crm)/clients/ui/hooks";
 import {
   mockClient,
   mockClients,

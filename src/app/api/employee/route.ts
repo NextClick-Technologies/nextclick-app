@@ -1,71 +1,17 @@
+/**
+ * API Route: /api/employee
+ * Delegates to feature-based handlers in features/(hr)/employees/api/handlers.ts
+ */
 import { NextRequest } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/server";
 import {
-  apiSuccess,
-  apiError,
-  handleApiError,
-  parsePagination,
-  parseOrderBy,
-  buildPaginatedResponse,
-  transformToDb,
-  transformFromDb,
-  transformColumnName,
-} from "@/lib/api/api-utils";
-import { employeeSchema } from "@/schemas/employee.schema";
+  getEmployees,
+  createEmployee,
+} from "@/features/(hr)/employees/api/handlers";
 
 export async function GET(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const { page, pageSize } = parsePagination(searchParams);
-    const orderByParam = searchParams.get("orderBy");
-
-    let query = supabaseAdmin.from("employees").select("*", { count: "exact" });
-
-    const orderByRules = parseOrderBy(orderByParam);
-    orderByRules.forEach(({ column, ascending }) => {
-      query = query.order(transformColumnName(column), { ascending });
-    });
-
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize - 1;
-    query = query.range(from, to);
-
-    const { data, error, count } = await query;
-
-    if (error) {
-      return apiError(error.message, 500);
-    }
-
-    return apiSuccess(
-      buildPaginatedResponse(
-        transformFromDb<unknown[]>(data || []),
-        page,
-        pageSize,
-        count || 0
-      )
-    );
-  } catch (error) {
-    return handleApiError(error);
-  }
+  return getEmployees(request);
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    // Data is already validated and transformed on frontend, just insert it
-    const { data, error } = await supabaseAdmin
-      .from("employees")
-      // @ts-expect-error - Supabase type inference issue with partial updates
-      .insert([body])
-      .select()
-      .single();
-
-    if (error) {
-      return apiError(error.message, 500);
-    }
-
-    return apiSuccess(transformFromDb(data), 201);
-  } catch (error) {
-    return handleApiError(error);
-  }
+  return createEmployee(request);
 }

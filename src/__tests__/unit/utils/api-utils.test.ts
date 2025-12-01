@@ -178,7 +178,12 @@ describe("API Utils", () => {
       const error = new Error("Test error");
       handleApiError(error);
 
-      expect(console.error).toHaveBeenCalledWith("API Error:", error);
+      // Logger uses Pino format: logger.error({ err: error }, "API Error")
+      expect(console.error).toHaveBeenCalledWith(
+        "[ERROR]",
+        { err: error },
+        "API Error"
+      );
     });
   });
 

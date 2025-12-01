@@ -1,4 +1,4 @@
-import { Company } from "@/types/company.type";
+import { Company } from "@/features/(crm)/companies/services/types";
 import type {
   Company as DbCompany,
   CompanyInsert as DbCompanyInsert,

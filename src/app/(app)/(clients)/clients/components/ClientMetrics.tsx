@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Client, ClientStatus } from "@/types";
+import { Client, ClientStatus } from "@/features/(crm)/clients/services/types";
 
 interface ClientMetricsProps {
   clients: Client[];

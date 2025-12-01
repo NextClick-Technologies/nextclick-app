@@ -4,8 +4,9 @@ import {
   updateEmployeeSchema,
   type EmployeeInput,
   type UpdateEmployeeInput,
-} from "@/schemas/employee.schema";
-import { Title, Gender, EmployeeStatus } from "@/types";
+} from "@/features/(hr)/employees/services/schemas";
+import { Title, Gender } from "@/features/(crm)/clients/services/types";
+import { EmployeeStatus } from "@/features/(hr)/employees/services/types";
 import { ZodError } from "zod";
 
 describe("employeeSchema", () => {
@@ -18,6 +19,7 @@ describe("employeeSchema", () => {
         phoneNumber: "1234567890",
         email: "john@example.com",
         title: Title.MR,
+        status: EmployeeStatus.ACTIVE,
       };
       const result = employeeSchema.parse(data);
       expect(result.title).toBe(Title.MR);
@@ -31,6 +33,7 @@ describe("employeeSchema", () => {
         phoneNumber: "1234567890",
         email: "john@example.com",
         title: null,
+        status: EmployeeStatus.ACTIVE,
       };
       const result = employeeSchema.parse(data);
       expect(result.title).toBeNull();
@@ -43,6 +46,7 @@ describe("employeeSchema", () => {
         gender: Gender.MALE,
         phoneNumber: "1234567890",
         email: "john@example.com",
+        status: EmployeeStatus.ACTIVE,
       };
       const result = employeeSchema.parse(data);
       expect(result.title).toBeUndefined();

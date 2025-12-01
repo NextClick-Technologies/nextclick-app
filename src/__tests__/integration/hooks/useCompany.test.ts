@@ -17,7 +17,7 @@ import {
   useCreateCompany,
   useUpdateCompany,
   useDeleteCompany,
-} from "@/hooks/useCompany";
+} from "@/features/(crm)/companies/ui/hooks";
 import {
   mockCompany,
   mockCompanies,

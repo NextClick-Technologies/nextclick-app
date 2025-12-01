@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { ClientStatus } from "@/types/client.type";
+import { ClientStatus } from "@/features/(crm)/clients/services/types";
 
 interface ClientFiltersProps {
   searchQuery: string;

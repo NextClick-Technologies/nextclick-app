@@ -1,9 +1,9 @@
-import type { Title } from "./client.type";
-import type { Gender } from "./client.type";
-import type { EmployeeStatus } from "./employee.type";
-import type { PaymentTerms } from "./project.type";
-import type { ProjectStatus } from "./project.type";
-import type { ProjectPriority } from "./project.type";
+import type { Title } from "@/features/(crm)/clients/services/types";
+import type { Gender } from "@/features/(crm)/clients/services/types";
+import type { EmployeeStatus } from "@/features/(hr)/employees/services/types";
+import type { PaymentTerms } from "@/features/(crm)/projects/services/types";
+import type { ProjectStatus } from "@/features/(crm)/projects/services/types";
+import type { ProjectPriority } from "@/features/(crm)/projects/services/types";
 import type { MilestoneStatus } from "./milestone.type";
 import type { PaymentStatus } from "./payment.type";
 import type { PaymentMethod } from "./payment.type";

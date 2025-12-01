@@ -1,7 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Project, ProjectStatus, ProjectPriority } from "@/types";
+import {
+  Project,
+  ProjectStatus,
+  ProjectPriority,
+} from "@/features/(crm)/projects/services/types";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { FolderKanban } from "lucide-react";

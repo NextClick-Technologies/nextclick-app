@@ -1,4 +1,7 @@
-import { ProjectStatus, ProjectPriority } from "@/types";
+import {
+  ProjectStatus,
+  ProjectPriority,
+} from "@/features/(crm)/projects/services/types";
 
 export const getStatusVariant = (
   status: ProjectStatus

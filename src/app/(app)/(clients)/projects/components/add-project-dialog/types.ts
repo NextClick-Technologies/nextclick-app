@@ -2,7 +2,7 @@ import {
   PaymentTerms,
   ProjectStatus,
   ProjectPriority,
-} from "@/types/project.type";
+} from "@/features/(crm)/projects/services/types";
 
 export interface ProjectFormData {
   name: string;

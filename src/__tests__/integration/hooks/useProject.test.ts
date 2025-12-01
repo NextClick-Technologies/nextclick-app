@@ -17,7 +17,7 @@ import {
   useCreateProject,
   useUpdateProject,
   useDeleteProject,
-} from "@/hooks/useProject";
+} from "@/features/(crm)/projects/ui/hooks";
 import {
   mockProject,
   mockProjects,

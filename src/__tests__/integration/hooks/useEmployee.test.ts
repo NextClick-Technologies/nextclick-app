@@ -12,7 +12,7 @@ import {
   useCreateEmployee,
   useUpdateEmployee,
   useDeleteEmployee,
-} from "@/hooks/useEmployee";
+} from "@/features/(hr)/employees/ui/hooks";
 import {
   mockEmployee,
   mockEmployees,

@@ -7,12 +7,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useCreateClient } from "@/hooks/useClient";
-import { useCompanies } from "@/hooks/useCompany";
+import { useCreateClient } from "@/features/(crm)/clients/ui/hooks";
+import { useCompanies } from "@/features/(crm)/companies/ui/hooks";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { clientSchema, type ClientInput } from "@/schemas/client.schema";
+import {
+  clientSchema,
+  type ClientInput,
+} from "@/features/(crm)/clients/services/schemas";
 import { FormField } from "./FormField";
 import { ClientSelectFields } from "./ClientSelectFields";
 import { CompanySelect } from "./CompanySelect";

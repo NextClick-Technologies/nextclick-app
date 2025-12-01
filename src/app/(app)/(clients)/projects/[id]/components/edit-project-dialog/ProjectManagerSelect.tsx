@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/utils/cn";
-import { useEmployees } from "@/hooks/useEmployee";
+import { useEmployees } from "@/features/(hr)/employees/ui/hooks";
 import { useState } from "react";
 
 interface ProjectManagerSelectProps {

@@ -4,7 +4,7 @@ import {
   updateProjectSchema,
   type ProjectInput,
   type UpdateProjectInput,
-} from "@/schemas/project.schema";
+} from "@/features/(crm)/projects/services/schemas";
 import { ZodError } from "zod";
 
 describe("projectSchema", () => {
@@ -104,14 +104,13 @@ describe("projectSchema", () => {
       expect(result.budget).toBe(50000);
     });
 
-    it("should coerce budget from string to number", () => {
+    it("should reject budget as string", () => {
       const data = {
         name: "Website Redesign",
         budget: "75000" as any,
         clientId: "550e8400-e29b-41d4-a716-446655440000",
       };
-      const result = projectSchema.parse(data);
-      expect(result.budget).toBe(75000);
+      expect(() => projectSchema.parse(data)).toThrow(ZodError);
     });
 
     it("should accept undefined budget", () => {

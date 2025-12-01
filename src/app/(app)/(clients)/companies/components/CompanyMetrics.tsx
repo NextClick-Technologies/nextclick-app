@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Company } from "@/types";
+import { Company } from "@/features/(crm)/companies/services/types";
 
 interface CompanyMetricsProps {
   companies: Company[];

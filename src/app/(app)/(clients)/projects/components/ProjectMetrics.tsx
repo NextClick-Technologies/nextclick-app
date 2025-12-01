@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Project, ProjectStatus } from "@/types";
+import { Project, ProjectStatus } from "@/features/(crm)/projects/services/types";
 
 interface ProjectMetricsProps {
   projects: Project[];

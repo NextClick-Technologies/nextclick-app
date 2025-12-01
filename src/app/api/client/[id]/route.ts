@@ -1,85 +1,34 @@
+/**
+ * API Route: /api/client/[id]
+ * Delegates to feature-based handlers in features/(crm)/clients/api/handlers.ts
+ */
 import { NextRequest } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/server";
 import {
-  apiSuccess,
-  apiError,
-  handleApiError,
-  transformToDb,
-  transformFromDb,
-} from "@/lib/api/api-utils";
-import { updateClientSchema } from "@/schemas/client.schema";
+  getClientById,
+  updateClient,
+  deleteClient,
+} from "@/features/(crm)/clients/api/handlers";
 
-// GET /api/client/[id] - Get a single client
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
-
-    const { data, error } = await supabaseAdmin
-      .from("clients")
-      .select("*, company:companies(id, name)")
-      .eq("id", id)
-      .single();
-
-    if (error) {
-      return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
-    }
-
-    return apiSuccess({ data: transformFromDb(data) });
-  } catch (error) {
-    return handleApiError(error);
-  }
+  const { id } = await params;
+  return getClientById(id);
 }
 
-// PATCH /api/client/[id] - Update a client
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
-    const body = await request.json();
-    const validatedData = updateClientSchema.parse(body);
-
-    const { data, error } = await supabaseAdmin
-      .from("clients")
-      // @ts-expect-error - Supabase type inference issue with partial updates
-      .update({
-        ...transformToDb(validatedData),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", id)
-      .select()
-      .single();
-
-    if (error) {
-      return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
-    }
-
-    return apiSuccess({ data: transformFromDb(data) });
-  } catch (error) {
-    return handleApiError(error);
-  }
+  const { id } = await params;
+  return updateClient(id, request);
 }
 
-// DELETE /api/client/[id] - Delete a client
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
-
-    const { error } = await supabaseAdmin.from("clients").delete().eq("id", id);
-
-    if (error) {
-      return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
-    }
-
-    return apiSuccess({ message: "Client deleted successfully" }, 204);
-  } catch (error) {
-    return handleApiError(error);
-  }
+  const { id } = await params;
+  return deleteClient(id);
 }

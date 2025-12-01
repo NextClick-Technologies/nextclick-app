@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Title, Gender } from "@/types/client.type";
+import { Title, Gender } from "@/features/(crm)/clients/services/types";
 import { Control, Controller } from "react-hook-form";
 
 interface ClientSelectFieldsProps {

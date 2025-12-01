@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { AppLayout } from "@/components/layout/AppLayout";
+import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { useCompany, useDeleteCompany } from "@/hooks/useCompany";
+import { useCompany, useDeleteCompany } from "@/features/(crm)/companies/ui/hooks";
 import { CompanyDetailHeader } from "./components/CompanyDetailHeader";
 import { CompanyInformation } from "./components/CompanyInformation";
 import { ClientsSummary } from "./components/ClientsSummary";

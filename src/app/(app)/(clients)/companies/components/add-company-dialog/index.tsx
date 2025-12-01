@@ -7,11 +7,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useCreateCompany } from "@/hooks/useCompany";
+import { useCreateCompany } from "@/features/(crm)/companies/ui/hooks";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { companySchema, type CompanyInput } from "@/schemas/company.schema";
+import {
+  companySchema,
+  type CompanyInput,
+} from "@/features/(crm)/companies/services/schemas";
 import { FormField } from "./FormField";
 
 interface AddCompanyDialogProps {

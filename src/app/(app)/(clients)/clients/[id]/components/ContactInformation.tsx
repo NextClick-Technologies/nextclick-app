@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ClientStatus } from "@/types";
+import { ClientStatus } from "@/features/(crm)/clients/services/types";
 
 interface ContactInformationProps {
   email: string | null;

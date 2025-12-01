@@ -1,5 +1,5 @@
-import { Employee, EmployeeStatus } from "@/types/employee.type";
-import { Title, Gender } from "@/types/client.type";
+import { Employee, EmployeeStatus } from "@/features/(hr)/employees/services/types";
+import { Title, Gender } from "@/features/(crm)/clients/services/types";
 import type {
   Employee as DbEmployee,
   EmployeeInsert as DbEmployeeInsert,

@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, Plus } from "lucide-react";
-import { Employee } from "@/types";
+import { Employee } from "@/features/(hr)/employees/services/types";
 import { EmployeeTable } from "./EmployeeTable";
 import { EmployeeFilters } from "./EmployeeFilters";
 

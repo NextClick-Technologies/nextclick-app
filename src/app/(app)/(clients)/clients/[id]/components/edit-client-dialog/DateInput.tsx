@@ -1,7 +1,7 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import type { UpdateClientInput } from "@/schemas/client.schema";
+import type { UpdateClientInput } from "@/features/(crm)/clients/services/schemas";
 
 interface DateInputProps {
   register: UseFormRegister<UpdateClientInput>;

@@ -1,6 +1,6 @@
 "use client";
 
-import { Client, ClientStatus } from "@/types";
+import { Client, ClientStatus } from "@/features/(crm)/clients/services/types";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
