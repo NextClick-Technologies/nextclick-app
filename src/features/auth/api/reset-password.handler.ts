@@ -1,3 +1,7 @@
+/**
+ * Reset Password Handler
+ * Reset password using reset token
+ */
 import { NextRequest, NextResponse } from "next/server";
 import {
   getUserByResetToken,
@@ -8,7 +12,7 @@ import {
   hashPassword,
   validatePasswordStrength,
   isTokenExpired,
-} from "../../domain/password";
+} from "../domain/password";
 import { sendPasswordChangedEmail } from "@/shared/lib/email/auth-emails";
 import { logger } from "@/shared/lib/logger";
 
@@ -16,7 +20,7 @@ import { logger } from "@/shared/lib/logger";
  * POST /api/auth/reset-password
  * Reset password using reset token
  */
-export async function POST(request: NextRequest) {
+export async function resetPasswordHandler(request: NextRequest) {
   try {
     const body = await request.json();
     const { token, newPassword } = body;
@@ -114,8 +118,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message:
-          "Password reset successfully. You can now log in with your new password.",
+        message: "Password reset successfully. You can now log in.",
       },
       { status: 200 }
     );

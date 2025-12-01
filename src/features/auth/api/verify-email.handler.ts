@@ -1,17 +1,21 @@
+/**
+ * Verify Email Handler
+ * Verify user email address using token
+ */
 import { NextRequest, NextResponse } from "next/server";
 import {
   getUserByVerificationToken,
   updateUser,
   createAuditLog,
 } from "@/shared/lib/supabase/auth-client";
-import { isTokenExpired } from "@/shared/lib/auth/password";
+import { isTokenExpired } from "../domain/password";
 import { logger } from "@/shared/lib/logger";
 
 /**
  * POST /api/auth/verify-email
  * Verify user email address using token
  */
-export async function POST(request: NextRequest) {
+export async function verifyEmailHandler(request: NextRequest) {
   try {
     const body = await request.json();
     const { token } = body;
@@ -65,7 +69,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (updateError) {
-      logger.error({ err: updateError, userId: user!.id }, "Error updating user");
+      logger.error(
+        { err: updateError, userId: user!.id },
+        "Error updating user"
+      );
       return NextResponse.json(
         { error: "Failed to verify email" },
         { status: 500 }

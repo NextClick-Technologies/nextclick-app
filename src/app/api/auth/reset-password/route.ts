@@ -1,2 +1,4 @@
-// Delegate to auth feature
-export { POST } from "@/features/auth/api/reset-password/route";
+// Delegate to auth feature handlers
+import { resetPasswordHandler } from "@/features/auth/api/reset-password.handler";
+
+export const POST = resetPasswordHandler;

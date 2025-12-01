@@ -1,3 +1,7 @@
+/**
+ * Create User Handler
+ * Admin-only endpoint to create new users
+ */
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/shared/lib/auth";
 import {
@@ -10,7 +14,7 @@ import {
   generateRandomPassword,
   generateSecureToken,
   getTokenExpiration,
-} from "../../domain/password";
+} from "../domain/password";
 import {
   sendWelcomeEmail,
   sendVerificationEmail,
@@ -22,7 +26,7 @@ import { logger } from "@/shared/lib/logger";
  * POST /api/auth/create-user
  * Create a new user (Admin only)
  */
-export async function POST(request: NextRequest) {
+export async function createUserHandler(request: NextRequest) {
   try {
     logger.info("CREATE USER REQUEST RECEIVED");
 
@@ -98,31 +102,24 @@ export async function POST(request: NextRequest) {
       email_verification_expires: verificationExpires.toISOString(),
     });
 
-    if (createError) {
-      logger.error({ err: createError, email }, "Error creating user");
+    if (createError || !newUser) {
+      logger.error({ err: createError }, "Error creating user in database");
       return NextResponse.json(
         { error: "Failed to create user" },
         { status: 500 }
       );
     }
 
-    // Send welcome email with temporary password
+    // Send welcome email with temporary password and verification link
     try {
       await sendWelcomeEmail(email, tempPassword);
-    } catch (emailError) {
-      logger.warn({ err: emailError, email }, "Error sending welcome email");
-      // Don't fail the request if email fails
-    }
-
-    // Send verification email
-    try {
       await sendVerificationEmail(email, verificationToken);
     } catch (emailError) {
       logger.warn(
         { err: emailError, email },
-        "Error sending verification email"
+        "Error sending welcome/verification emails"
       );
-      // Don't fail the request if email fails
+      // Don't fail the request if email fails - user was created
     }
 
     // Log audit trail
@@ -130,7 +127,7 @@ export async function POST(request: NextRequest) {
       user_id: session.user.id,
       action: "create_user",
       resource_type: "user",
-      resource_id: newUser!.id,
+      resource_id: newUser.id,
       details: {
         created_user_email: email,
         created_user_role: role,
@@ -141,16 +138,20 @@ export async function POST(request: NextRequest) {
       user_agent: request.headers.get("user-agent"),
     });
 
+    logger.info(
+      { userId: newUser.id, email, role },
+      "User created successfully"
+    );
+
     return NextResponse.json(
       {
         success: true,
         message:
-          "User created successfully. Welcome email sent with temporary password.",
+          "User created successfully. Welcome and verification emails sent.",
         user: {
-          id: newUser!.id,
-          email: newUser!.email,
-          role: newUser!.role,
-          createdAt: newUser!.created_at,
+          id: newUser.id,
+          email: newUser.email,
+          role: newUser.role,
         },
       },
       { status: 201 }

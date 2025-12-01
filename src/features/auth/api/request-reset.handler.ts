@@ -1,13 +1,14 @@
+/**
+ * Request Reset Handler
+ * Request password reset link
+ */
 import { NextRequest, NextResponse } from "next/server";
 import {
   getUserByEmail,
   updateUser,
   createAuditLog,
 } from "@/shared/lib/supabase/auth-client";
-import {
-  generateSecureToken,
-  getTokenExpiration,
-} from "../../domain/password";
+import { generateSecureToken, getTokenExpiration } from "../domain/password";
 import { sendPasswordResetEmail } from "@/shared/lib/email/auth-emails";
 import { logger } from "@/shared/lib/logger";
 
@@ -15,7 +16,7 @@ import { logger } from "@/shared/lib/logger";
  * POST /api/auth/request-reset
  * Request password reset link
  */
-export async function POST(request: NextRequest) {
+export async function requestResetHandler(request: NextRequest) {
   try {
     const body = await request.json();
     const { email } = body;

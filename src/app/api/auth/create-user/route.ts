@@ -1,2 +1,4 @@
-// Delegate to auth feature
-export { POST } from "@/features/auth/api/create-user/route";
+// Delegate to auth feature handlers
+import { createUserHandler } from "@/features/auth/api/create-user.handler";
+
+export const POST = createUserHandler;

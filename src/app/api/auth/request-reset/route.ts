@@ -1,2 +1,4 @@
-// Delegate to auth feature
-export { POST } from "@/features/auth/api/request-reset/route";
+// Delegate to auth feature handlers
+import { requestResetHandler } from "@/features/auth/api/request-reset.handler";
+
+export const POST = requestResetHandler;
