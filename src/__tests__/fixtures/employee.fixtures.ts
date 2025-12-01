@@ -1,13 +1,16 @@
 import {
   Employee,
   EmployeeStatus,
-} from "@/features/(hr)/employees/services/types";
-import { Title, Gender } from "@/features/(crm)/clients/services/types";
+} from "@/features/employees/services/types/employee.type";
+import {
+  Title,
+  Gender,
+} from "@/features/clients/services/types/client.type";
 import type {
   Employee as DbEmployee,
   EmployeeInsert as DbEmployeeInsert,
   EmployeeUpdate as DbEmployeeUpdate,
-} from "@/types/database.type";
+} from "@/shared/types/database.type";
 
 /**
  * Mock Employee data (frontend - camelCase)

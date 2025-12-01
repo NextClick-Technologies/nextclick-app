@@ -10,19 +10,19 @@ import {
   useMilestones,
   useMilestone,
   useCreateMilestone,
-  useUpdateMilestone,
+  useCreateMilestone,
   useDeleteMilestone,
-} from "@/hooks/useMilestone";
+} from "@/features/milestone/ui/hooks/useMilestone";
 import type {
   MilestoneInput,
   UpdateMilestoneInput,
-} from "@/schemas/milestone.schema";
+} from "@/features/milestone/services/schemas";
 import {
   mockMilestone,
   mockMilestones,
   mockMilestoneUpdate,
 } from "@/__tests__/fixtures/milestone.fixtures";
-import { MilestoneStatus } from "@/types/milestone.type";
+import { MilestoneStatus } from "@/features/milestone/services/types/milestone.type";
 
 // Frontend-style (camelCase) milestone input for testing
 const mockMilestoneInput: MilestoneInput = {

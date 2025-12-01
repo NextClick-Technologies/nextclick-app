@@ -7,7 +7,7 @@ import {
   getProjectById,
   updateProject,
   deleteProject,
-} from "@/features/(crm)/projects/api/handlers";
+} from "@/features/projects/api/projects.handlers";
 
 export async function GET(
   request: NextRequest,

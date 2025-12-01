@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 import {
   getPayments,
   createPayment,
-} from "@/features/(finance)/payment/api/handlers";
+} from "@/features/payment/api/handlers";
 
 export async function GET(request: NextRequest) {
   return getPayments(request);

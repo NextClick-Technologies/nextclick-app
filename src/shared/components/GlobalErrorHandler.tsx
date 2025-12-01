@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { captureError } from '@/lib/error-monitoring';
+import { useEffect } from "react";
+import { captureError } from "@/shared/lib/error-monitoring";
 
 /**
  * Global error handler component
@@ -11,9 +11,9 @@ export function GlobalErrorHandler() {
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
       event.preventDefault();
-      
+
       captureError(event.error || new Error(event.message), {
-        source: 'client',
+        source: "client",
         url: window.location.href,
         metadata: {
           filename: event.filename,
@@ -25,13 +25,14 @@ export function GlobalErrorHandler() {
 
     const handleRejection = (event: PromiseRejectionEvent) => {
       event.preventDefault();
-      
-      const error = event.reason instanceof Error 
-        ? event.reason 
-        : new Error(String(event.reason));
-      
+
+      const error =
+        event.reason instanceof Error
+          ? event.reason
+          : new Error(String(event.reason));
+
       captureError(error, {
-        source: 'client',
+        source: "client",
         url: window.location.href,
         metadata: {
           promiseRejection: true,
@@ -39,12 +40,12 @@ export function GlobalErrorHandler() {
       });
     };
 
-    window.addEventListener('error', handleError);
-    window.addEventListener('unhandledrejection', handleRejection);
+    window.addEventListener("error", handleError);
+    window.addEventListener("unhandledrejection", handleRejection);
 
     return () => {
-      window.removeEventListener('error', handleError);
-      window.removeEventListener('unhandledrejection', handleRejection);
+      window.removeEventListener("error", handleError);
+      window.removeEventListener("unhandledrejection", handleRejection);
     };
   }, []);
 

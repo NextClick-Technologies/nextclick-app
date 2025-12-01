@@ -7,7 +7,7 @@ import {
   getCompanyById,
   updateCompany,
   deleteCompany,
-} from "@/features/(crm)/companies/api/handlers";
+} from "@/features/companies/api/company.handlers";
 
 export async function GET(
   request: NextRequest,

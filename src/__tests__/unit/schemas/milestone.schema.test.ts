@@ -4,7 +4,7 @@ import {
   updateMilestoneSchema,
   type MilestoneInput,
   type UpdateMilestoneInput,
-} from "@/schemas/milestone.schema";
+} from "@/features/milestone/services/schemas";
 import { ZodError } from "zod";
 
 describe("milestoneSchema", () => {

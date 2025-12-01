@@ -3,12 +3,12 @@ import {
   Title,
   Gender,
   ClientStatus,
-} from "@/features/(crm)/clients/services/types";
+} from "@/features/clients/services/types/client.type";
 import type {
   Client as DbClient,
   ClientInsert as DbClientInsert,
   ClientUpdate as DbClientUpdate,
-} from "@/types/database.type";
+} from "@/shared/types/database.type";
 
 /**
  * Mock Client data (frontend - camelCase)

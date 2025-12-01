@@ -1,4 +1,4 @@
-import { cn } from "@/utils/cn";
+import { cn } from "@/shared/utils/cn";
 
 describe("cn utility", () => {
   it("should merge single className", () => {

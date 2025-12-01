@@ -10,7 +10,7 @@ import {
   transformToDb,
   transformFromDb,
   transformColumnName,
-} from "@/lib/api/api-utils";
+} from "@/shared/lib/api/api-utils";
 
 // Mock NextResponse.json
 jest.mock("next/server", () => ({

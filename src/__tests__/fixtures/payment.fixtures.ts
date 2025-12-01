@@ -1,9 +1,9 @@
-import { Payment, PaymentStatus, PaymentMethod } from "@/types/payment.type";
+import { Payment, PaymentStatus, PaymentMethod } from "@/features/payment/services/types/payment.type";
 import type {
   Payment as DbPayment,
   PaymentInsert as DbPaymentInsert,
   PaymentUpdate as DbPaymentUpdate,
-} from "@/types/database.type";
+} from "@/shared/types/database.type";
 
 /**
  * Mock Payment data (frontend - camelCase)

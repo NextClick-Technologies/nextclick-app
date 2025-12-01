@@ -7,7 +7,7 @@ import {
   getCommunicationLog,
   updateCommunicationLog,
   deleteCommunicationLog,
-} from "@/features/(crm)/communication-log/api/handlers";
+} from "@/features/communication-log/api/handlers";
 
 export async function GET(
   request: NextRequest,

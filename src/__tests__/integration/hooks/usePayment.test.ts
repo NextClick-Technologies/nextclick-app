@@ -12,7 +12,7 @@ import {
   useCreatePayment,
   useUpdatePayment,
   useDeletePayment,
-} from "@/hooks/usePayment";
+} from "@/features/payment/ui/hooks/usePayment";
 import {
   mockPayment,
   mockPayments,

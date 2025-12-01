@@ -1,9 +1,9 @@
-import { Milestone, MilestoneStatus } from "@/types/milestone.type";
+import { Milestone, MilestoneStatus } from "@/features/milestone/services/types/milestone.type";
 import type {
   Milestone as DbMilestone,
   MilestoneInsert as DbMilestoneInsert,
   MilestoneUpdate as DbMilestoneUpdate,
-} from "@/types/database.type";
+} from "@/shared/types/database.type";
 
 /**
  * Mock Milestone data (frontend - camelCase)

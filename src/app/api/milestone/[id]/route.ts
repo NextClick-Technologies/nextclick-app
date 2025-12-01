@@ -7,7 +7,7 @@ import {
   getMilestone,
   updateMilestone,
   deleteMilestone,
-} from "@/features/(crm)/milestone/api/handlers";
+} from "@/features/milestone/api/handlers";
 
 export async function GET(
   request: NextRequest,

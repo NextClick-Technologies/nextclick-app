@@ -4,7 +4,7 @@ import {
   updateCommunicationLogSchema,
   type CommunicationLogInput,
   type UpdateCommunicationLogInput,
-} from "@/schemas/communication-log.schema";
+} from "@/features/communication-log/services/schemas";
 import { ZodError } from "zod";
 
 describe("communicationLogSchema", () => {

@@ -7,7 +7,7 @@ import {
   getClientById,
   updateClient,
   deleteClient,
-} from "@/features/(crm)/clients/api/handlers";
+} from "@/features/clients/api/handlers";
 
 export async function GET(
   request: NextRequest,

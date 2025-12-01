@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 import {
   getCommunicationLogs,
   createCommunicationLog,
-} from "@/features/(crm)/communication-log/api/handlers";
+} from "@/features/communication-log/api/handlers";
 
 export async function GET(request: NextRequest) {
   return getCommunicationLogs(request);

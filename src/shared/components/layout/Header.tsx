@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { Input } from "@/shared/components/ui/input";
 import {
   Bell,
   MessageSquare,
@@ -9,9 +9,9 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { useSidebar } from "@/contexts";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
+import { useSidebar } from "@/shared/contexts";
 
 export function Header() {
   const { isCollapsed, toggleCollapse, toggleMobile } = useSidebar();

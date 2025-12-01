@@ -2,10 +2,10 @@
 
 import { Sidebar } from "./sidebar";
 import { Header } from "./Header";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
-import { cn } from "@/utils/cn";
+import { Sheet, SheetContent, SheetTitle } from "@/shared/components/ui/sheet";
+import { cn } from "@/shared/utils/cn";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useSidebar } from "@/contexts";
+import { useSidebar } from "@/shared/contexts";
 
 interface AppLayoutProps {
   children: React.ReactNode;

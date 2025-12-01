@@ -10,7 +10,7 @@ import type {
   UserUpdate,
   AuditLogInsert,
   ProjectMemberInsert,
-} from "@/types/database.type";
+} from "@/shared/types/database.type";
 
 /**
  * Get a user by ID

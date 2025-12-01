@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 import {
   getProjects,
   createProject,
-} from "@/features/(crm)/projects/api/handlers";
+} from "@/features/projects/api/projects.handlers";
 
 export async function GET(request: NextRequest) {
   return getProjects(request);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { withErrorMonitoring } from "@/lib/error-monitoring/api-wrapper";
+import { withErrorMonitoring } from "@/shared/lib/error-monitoring/api-wrapper";
 
 /**
  * Test endpoint for error monitoring system

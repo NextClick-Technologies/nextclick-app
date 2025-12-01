@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 import {
   getMilestones,
   createMilestone,
-} from "@/features/(crm)/milestone/api/handlers";
+} from "@/features/milestone/api/handlers";
 
 export async function GET(request: NextRequest) {
   return getMilestones(request);

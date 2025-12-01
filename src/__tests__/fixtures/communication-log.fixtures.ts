@@ -1,12 +1,12 @@
 import {
   CommunicationLog,
   CommunicationChannel,
-} from "@/types/communication-log.type";
+} from "@/features/communication-log/services/types/communication-log.type";
 import type {
   CommunicationLog as DbCommunicationLog,
   CommunicationLogInsert as DbCommunicationLogInsert,
   CommunicationLogUpdate as DbCommunicationLogUpdate,
-} from "@/types/database.type";
+} from "@/shared/types/database.type";
 
 /**
  * Mock Communication Log data (frontend - camelCase)

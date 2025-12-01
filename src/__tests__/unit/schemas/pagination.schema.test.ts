@@ -1,4 +1,4 @@
-import { paginationSchema } from "@/schemas/pagination.schema";
+import { paginationSchema } from "@/shared/schemas/pagination.schema";
 
 describe("Pagination Schema", () => {
   describe("paginationSchema", () => {

@@ -19,10 +19,10 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { NavItem } from "./NavItem";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/utils/cn";
-import { UserMenu } from "@/components/UserMenu";
-import { useSidebar } from "@/contexts";
+import { Button } from "@/shared/components/ui/button";
+import { cn } from "@/shared/utils/cn";
+import { UserMenu } from "@/shared/components/UserMenu";
+import { useSidebar } from "@/shared/contexts";
 
 interface SectionNavItem {
   name: string;

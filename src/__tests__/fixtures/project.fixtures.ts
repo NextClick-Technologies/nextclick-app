@@ -3,12 +3,12 @@ import {
   PaymentTerms,
   ProjectStatus,
   ProjectPriority,
-} from "@/features/(crm)/projects/services/types";
+} from "@/features/projects/services/types/project.type";
 import type {
   Project as DbProject,
   ProjectInsert as DbProjectInsert,
   ProjectUpdate as DbProjectUpdate,
-} from "@/types/database.type";
+} from "@/shared/types/database.type";
 
 /**
  * Mock Project data (frontend - camelCase)

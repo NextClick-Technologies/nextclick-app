@@ -11,7 +11,7 @@ import {
   useCommunicationLog,
   useCreateCommunicationLog,
   useUpdateCommunicationLog,
-} from "@/hooks/useCommunicationLog";
+} from "@/features/communication-log/ui/hooks/useCommunicationLog";
 import {
   mockCommunicationLog,
   mockCommunicationLogs,

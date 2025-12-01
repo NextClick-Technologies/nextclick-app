@@ -1,9 +1,9 @@
-import { Company } from "@/features/(crm)/companies/services/types";
+import { Company } from "@/features/companies/services/types/company.type";
 import type {
   Company as DbCompany,
   CompanyInsert as DbCompanyInsert,
   CompanyUpdate as DbCompanyUpdate,
-} from "@/types/database.type";
+} from "@/shared/types/database.type";
 
 /**
  * Mock Company data (frontend - camelCase)

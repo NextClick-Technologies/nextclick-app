@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 import {
   getClients,
   createClient,
-} from "@/features/(crm)/clients/api/handlers";
+} from "@/features/clients/api/handlers";
 
 export async function GET(request: NextRequest) {
   return getClients(request);

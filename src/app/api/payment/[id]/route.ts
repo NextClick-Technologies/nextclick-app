@@ -7,7 +7,7 @@ import {
   getPayment,
   updatePayment,
   deletePayment,
-} from "@/features/(finance)/payment/api/handlers";
+} from "@/features/payment/api/handlers";
 
 export async function GET(
   request: NextRequest,

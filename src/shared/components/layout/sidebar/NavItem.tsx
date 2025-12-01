@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { cn } from "@/utils/cn";
+import { cn } from "@/shared/utils/cn";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useSidebar } from "@/contexts";
+} from "@/shared/components/ui/tooltip";
+import { useSidebar } from "@/shared/contexts";
 
 interface NavItemProps {
   name: string;
