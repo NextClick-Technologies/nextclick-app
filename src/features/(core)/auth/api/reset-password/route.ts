@@ -75,7 +75,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (updateError) {
-      logger.error({ err: updateError, userId: user!.id }, "Error updating password");
+      logger.error(
+        { err: updateError, userId: user!.id },
+        "Error updating password"
+      );
       return NextResponse.json(
         { error: "Failed to reset password" },
         { status: 500 }
@@ -86,7 +89,10 @@ export async function POST(request: NextRequest) {
     try {
       await sendPasswordChangedEmail(user!.email);
     } catch (emailError) {
-      logger.warn({ err: emailError, email: user!.email }, "Error sending password changed email");
+      logger.warn(
+        { err: emailError, email: user!.email },
+        "Error sending password changed email"
+      );
       // Don't fail the request if email fails
     }
 

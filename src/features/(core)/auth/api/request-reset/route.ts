@@ -4,7 +4,10 @@ import {
   updateUser,
   createAuditLog,
 } from "@/lib/supabase/auth-client";
-import { generateSecureToken, getTokenExpiration } from "../../services/password";
+import {
+  generateSecureToken,
+  getTokenExpiration,
+} from "../../services/password";
 import { sendPasswordResetEmail } from "@/lib/email/auth-emails";
 import { logger } from "@/lib/logger";
 
@@ -61,7 +64,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (updateError) {
-      logger.error({ err: updateError, userId: user!.id }, "Error updating user with reset token");
+      logger.error(
+        { err: updateError, userId: user!.id },
+        "Error updating user with reset token"
+      );
       return NextResponse.json(
         { error: "Failed to process password reset request" },
         { status: 500 }
@@ -72,7 +78,10 @@ export async function POST(request: NextRequest) {
     try {
       await sendPasswordResetEmail(email, resetToken);
     } catch (emailError) {
-      logger.warn({ err: emailError, email }, "Error sending password reset email");
+      logger.warn(
+        { err: emailError, email },
+        "Error sending password reset email"
+      );
       // Don't reveal email sending failure to user
     }
 

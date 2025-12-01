@@ -25,7 +25,7 @@ import { logger } from "@/lib/logger";
 export async function POST(request: NextRequest) {
   try {
     logger.info("CREATE USER REQUEST RECEIVED");
-    
+
     // Check authentication and admin role
     const session = await auth();
 
@@ -35,7 +35,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (session.user.role !== "admin") {
-      logger.warn({ userId: session.user.id, role: session.user.role }, "Forbidden - non-admin tried to create user");
+      logger.warn(
+        { userId: session.user.id, role: session.user.role },
+        "Forbidden - non-admin tried to create user"
+      );
       return NextResponse.json(
         { error: "Forbidden - Admin access required" },
         { status: 403 }
@@ -115,7 +118,10 @@ export async function POST(request: NextRequest) {
     try {
       await sendVerificationEmail(email, verificationToken);
     } catch (emailError) {
-      logger.warn({ err: emailError, email }, "Error sending verification email");
+      logger.warn(
+        { err: emailError, email },
+        "Error sending verification email"
+      );
       // Don't fail the request if email fails
     }
 
