@@ -19,7 +19,7 @@ import {
 } from "@/__tests__/fixtures";
 
 // Mock Supabase admin client
-jest.mock("@/lib/supabase/server", () => ({
+jest.mock("@/shared/lib/supabase/server", () => ({
   supabaseAdmin: {
     from: jest.fn(),
   },

@@ -25,7 +25,7 @@ We use a **feature-based architecture** where all code related to a feature live
 ```
 src/
 ├── app/                        # Next.js App Router (minimal routing layer)
-│   ├── (features)/            # Route group for all features
+│   ├── (pages)/            # Route group for all features
 │   │   ├── auth/              # Auth pages
 │   │   │   ├── signin/page.tsx
 │   │   │   ├── signout/page.tsx
@@ -162,7 +162,7 @@ import { ClientCard } from "@/features/clients/ui/components/ClientCard";
 
 ### Page vs Component
 
-**Pages** (in `app/(features)/`):
+**Pages** (in `app/(pages)/`):
 
 - Thin wrappers that delegate to feature pages
 - Handle routing only
@@ -545,7 +545,7 @@ export function TasksPage() {
 **11. Add app route:**
 
 ```typescript
-// app/(features)/tasks/page.tsx
+// app/(pages)/tasks/page.tsx
 import { TasksPage } from "@/features/tasks/ui/pages/TasksPage";
 
 export default TasksPage;
