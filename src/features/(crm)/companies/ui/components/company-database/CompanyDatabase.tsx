@@ -78,3 +78,5 @@ export function CompanyDatabase({
     </Card>
   );
 }
+
+export default CompanyDatabase;

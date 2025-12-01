@@ -1,13 +1,13 @@
 "use client";
 
-import { Input } from "@/shared/components/ui/input";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/components/ui/select";
+} from "@/components/ui/select";
 import { Search } from "lucide-react";
 
 interface CompanyFiltersProps {
@@ -48,3 +48,5 @@ export function CompanyFilters({
     </div>
   );
 }
+
+export default CompanyFilters;

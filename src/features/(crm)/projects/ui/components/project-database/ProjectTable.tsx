@@ -1,9 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Project, ProjectStatus, ProjectPriority } from "../../../services/types";
-import { Badge } from "@/shared/components/ui/badge";
-import { Avatar } from "@/shared/components/ui/avatar";
+import {
+  Project,
+  ProjectStatus,
+  ProjectPriority,
+} from "@/features/(crm)/projects/services/types";
+import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
 import { FolderKanban } from "lucide-react";
 
 interface ProjectTableProps {
@@ -12,6 +16,15 @@ interface ProjectTableProps {
 
 export function ProjectTable({ projects }: ProjectTableProps) {
   const router = useRouter();
+
+  const formatDate = (date: string | null) => {
+    if (!date) return "-";
+    return new Date(date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
 
   const getStatusVariant = (
     status: ProjectStatus
@@ -177,3 +190,6 @@ export function ProjectTable({ projects }: ProjectTableProps) {
     </>
   );
 }
+
+
+export default ProjectTable;

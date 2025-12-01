@@ -1,6 +1,3 @@
-// Simplified AddEmployeeDialog - Full implementation with all form fields would go here
-// For now, creating a placeholder that can be enhanced with all fields later
-
 "use client";
 
 import {
@@ -8,9 +5,19 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/shared/components/ui/dialog";
-import { Button } from "@/shared/components/ui/button";
-import { Loader2 } from "lucide-react";
+} from "@/components/ui/dialog";
+import { useCreateEmployee } from "@/features/(hr)/employees/ui/hooks";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  employeeSchema,
+  type EmployeeInput,
+} from "@/features/(hr)/employees/services/schemas";
+import { EmployeeStatus } from "@/features/(hr)/employees/services/types";
+import { useState } from "react";
+import { EmployeeFormFields } from "./EmployeeFormFields";
+import { FormActions } from "./FormActions";
+import { transformEmployeeToDb } from "./transform";
 
 interface AddEmployeeDialogProps {
   open: boolean;
@@ -21,31 +28,66 @@ export function AddEmployeeDialog({
   open,
   onOpenChange,
 }: AddEmployeeDialogProps) {
+  const createEmployee = useCreateEmployee();
+  const [employeeName, setEmployeeName] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<EmployeeInput>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(employeeSchema) as any,
+    defaultValues: {
+      status: EmployeeStatus.ACTIVE,
+      joinDate: new Date().toISOString().split("T")[0],
+    },
+  });
+
+  const onSubmit = async (data: EmployeeInput) => {
+    try {
+      const dbData = transformEmployeeToDb(data);
+      await createEmployee.mutateAsync(dbData);
+      reset();
+      setEmployeeName("");
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Failed to create employee:", error);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col p-0">
+        <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle>Add New Employee</DialogTitle>
         </DialogHeader>
-        <div className="py-8 text-center text-muted-foreground">
-          <p>Employee creation form</p>
-          <p className="text-sm mt-2">
-            Full form implementation with all fields coming soon
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="flex-1"
-            onClick={() => onOpenChange(false)}
-          >
-            Cancel
-          </Button>
-          <Button className="flex-1" disabled>
-            <Loader2 className="mr-2 h-4 w-4" />
-            Add Employee
-          </Button>
-        </div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col flex-1 min-h-0"
+        >
+          <div className="flex-1 overflow-y-auto px-6 space-y-4 pb-4">
+            <EmployeeFormFields
+              register={register}
+              control={control}
+              errors={errors}
+              employeeName={employeeName}
+              setEmployeeName={setEmployeeName}
+            />
+          </div>
+
+          <FormActions
+            isSubmitting={isSubmitting}
+            isPending={createEmployee.isPending}
+            onCancel={() => {
+              reset();
+              onOpenChange(false);
+            }}
+            submitLabel="Add Employee"
+          />
+        </form>
       </DialogContent>
     </Dialog>
   );

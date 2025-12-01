@@ -5,34 +5,34 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/shared/components/ui/dialog";
-import { Button } from "@/shared/components/ui/button";
-import { Label } from "@/shared/components/ui/label";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useCreateProject } from "@/features/(crm)/projects/ui/hooks";
+import { useClients } from "@/features/(crm)/clients/ui/hooks";
+import { useEmployees } from "@/features/(hr)/employees/ui/hooks";
+import { Loader2 } from "lucide-react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  projectSchema,
+  type ProjectInput,
+} from "@/features/(crm)/projects/services/schemas";
+import { FormField } from "./FormField";
+import { ClientSelect } from "./ClientSelect";
+import { ProjectManagerSelect } from "./ProjectManagerSelect";
+import { DescriptionField } from "./DescriptionField";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/components/ui/select";
-import { Loader2 } from "lucide-react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateProject } from "../../hooks";
-import { useClients } from "@/features/(crm)/clients/ui/hooks";
-import { projectSchema, type ProjectInput } from "../../../services/schemas";
-import { ProjectStatus, ProjectPriority, PaymentTerms } from "../../../services/types";
-import { FormField } from "./FormField";
-import { ClientSelect } from "./ClientSelect";
-import { ProjectManagerSelect } from "./ProjectManagerSelect";
-import { DescriptionField } from "./DescriptionField";
-
-// TODO: Import from employees feature when migrated
-interface Employee {
-  id: string;
-  name: string;
-  familyName: string;
-}
+} from "@/components/ui/select";
+import {
+  ProjectStatus,
+  ProjectPriority,
+} from "@/features/(crm)/projects/services/types";
 
 interface AddProjectDialogProps {
   open: boolean;
@@ -46,9 +46,8 @@ export function AddProjectDialog({
   const createProject = useCreateProject();
   const { data: clientsData } = useClients({ pageSize: 100 });
   const clients = clientsData?.data || [];
-
-  // TODO: Replace with useEmployees hook when employees feature is migrated
-  const employees: Employee[] = [];
+  const { data: employeesData } = useEmployees({ pageSize: 100 });
+  const employees = employeesData?.data || [];
 
   const {
     register,
@@ -58,11 +57,6 @@ export function AddProjectDialog({
     formState: { errors, isSubmitting },
   } = useForm<ProjectInput>({
     resolver: zodResolver(projectSchema),
-    defaultValues: {
-      paymentTerms: PaymentTerms.NET_30D,
-      status: ProjectStatus.ACTIVE,
-      priority: ProjectPriority.MEDIUM,
-    },
   });
 
   const onSubmit = async (data: ProjectInput) => {

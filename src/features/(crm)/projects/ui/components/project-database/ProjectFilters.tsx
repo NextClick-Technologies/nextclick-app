@@ -1,15 +1,15 @@
 "use client";
 
-import { Input } from "@/shared/components/ui/input";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/components/ui/select";
+} from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { ProjectStatus } from "../../../services/types";
+import { ProjectStatus } from "@/features/(crm)/projects/services/types";
 
 interface ProjectFiltersProps {
   searchQuery: string;
@@ -50,3 +50,6 @@ export function ProjectFilters({
     </div>
   );
 }
+
+
+export default ProjectFilters;

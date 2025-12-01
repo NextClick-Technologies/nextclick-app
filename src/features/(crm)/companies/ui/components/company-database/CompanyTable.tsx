@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Company } from "../../../services/types";
-import { Avatar } from "@/shared/components/ui/avatar";
-import { Badge } from "@/shared/components/ui/badge";
+import { Company } from "@/features/(crm)/companies/services/types";
+import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Building2 } from "lucide-react";
 
 interface CompanyTableProps {
@@ -155,3 +155,6 @@ export function CompanyTable({ companies }: CompanyTableProps) {
     </>
   );
 }
+
+
+export default CompanyTable;

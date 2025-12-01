@@ -1,85 +1,34 @@
+/**
+ * API Route: /api/payment/[id]
+ * Delegates to feature-based handlers in features/(finance)/payment/api/handlers.ts
+ */
 import { NextRequest } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/server";
 import {
-  apiSuccess,
-  apiError,
-  handleApiError,
-  transformToDb,
-  transformFromDb,
-} from "@/lib/api/api-utils";
-import { updatePaymentSchema } from "@/schemas/payment.schema";
+  getPayment,
+  updatePayment,
+  deletePayment,
+} from "@/features/(finance)/payment/api/handlers";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
-
-    const { data, error } = await supabaseAdmin
-      .from("payments")
-      .select("*")
-      .eq("id", id)
-      .single();
-
-    if (error) {
-      return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
-    }
-
-    return apiSuccess(transformFromDb(data));
-  } catch (error) {
-    return handleApiError(error);
-  }
+  const { id } = await params;
+  return getPayment(id);
 }
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
-    const body = await request.json();
-    const validatedData = updatePaymentSchema.parse(body);
-
-    const { data, error } = await supabaseAdmin
-      .from("payments")
-      // @ts-expect-error - Supabase type inference issue with partial updates
-      .update({
-        ...transformToDb(validatedData),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", id)
-      .select()
-      .single();
-
-    if (error) {
-      return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
-    }
-
-    return apiSuccess(transformFromDb(data));
-  } catch (error) {
-    return handleApiError(error);
-  }
+  const { id } = await params;
+  return updatePayment(id, request);
 }
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
-
-    const { error } = await supabaseAdmin
-      .from("payments")
-      .delete()
-      .eq("id", id);
-
-    if (error) {
-      return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
-    }
-
-    return apiSuccess({ message: "Payment deleted successfully" }, 204);
-  } catch (error) {
-    return handleApiError(error);
-  }
+  const { id } = await params;
+  return deletePayment(id);
 }

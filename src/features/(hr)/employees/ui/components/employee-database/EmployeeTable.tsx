@@ -202,3 +202,6 @@ export function EmployeeTable({ employees }: EmployeeTableProps) {
     </>
   );
 }
+
+
+export default EmployeeTable;

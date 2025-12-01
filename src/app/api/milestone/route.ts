@@ -1,79 +1,17 @@
+/**
+ * API Route: /api/milestone
+ * Delegates to feature-based handlers in features/(crm)/milestone/api/handlers.ts
+ */
 import { NextRequest } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/server";
 import {
-  apiSuccess,
-  apiError,
-  handleApiError,
-  parsePagination,
-  parseOrderBy,
-  buildPaginatedResponse,
-  transformToDb,
-  transformFromDb,
-  transformColumnName,
-} from "@/lib/api/api-utils";
-import { milestoneSchema } from "@/schemas/milestone.schema";
+  getMilestones,
+  createMilestone,
+} from "@/features/(crm)/milestone/api/handlers";
 
 export async function GET(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const { page, pageSize } = parsePagination(searchParams);
-    const orderByParam = searchParams.get("orderBy");
-    const projectId = searchParams.get("projectId");
-
-    let query = supabaseAdmin
-      .from("milestones")
-      .select("*", { count: "exact" });
-
-    if (projectId) {
-      query = query.eq(transformColumnName("projectId"), projectId);
-    }
-
-    const orderByRules = parseOrderBy(orderByParam);
-    orderByRules.forEach(({ column, ascending }) => {
-      query = query.order(transformColumnName(column), { ascending });
-    });
-
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize - 1;
-    query = query.range(from, to);
-
-    const { data, error, count } = await query;
-
-    if (error) {
-      return apiError(error.message, 500);
-    }
-
-    return apiSuccess(
-      buildPaginatedResponse(
-        transformFromDb<unknown[]>(data || []),
-        page,
-        pageSize,
-        count || 0
-      )
-    );
-  } catch (error) {
-    return handleApiError(error);
-  }
+  return getMilestones(request);
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const validatedData = milestoneSchema.parse(body);
-
-    const { data, error } = await supabaseAdmin
-      .from("milestones")
-      // @ts-expect-error - Supabase type inference issue with partial updates
-      .insert([transformToDb(validatedData)])
-      .select()
-      .single();
-
-    if (error) {
-      return apiError(error.message, 500);
-    }
-
-    return apiSuccess(transformFromDb(data), 201);
-  } catch (error) {
-    return handleApiError(error);
-  }
+  return createMilestone(request);
 }

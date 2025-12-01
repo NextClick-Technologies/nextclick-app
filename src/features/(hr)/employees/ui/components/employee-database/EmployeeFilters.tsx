@@ -50,3 +50,6 @@ export function EmployeeFilters({
     </div>
   );
 }
+
+
+export default EmployeeFilters;
