@@ -3,13 +3,13 @@ import {
   Title,
   Gender,
   ClientStatus,
-} from "@/features/clients/domain/types/client.type";
+} from "@/features/clients/domain/types";
 import {
   ProjectStatus,
   PaymentTerms,
   ProjectPriority,
 } from "@/features/projects/domain/types/project.type";
-import { EmployeeStatus } from "@/features/employees/domain/types/employee.type";
+import { EmployeeStatus } from "@/features/employees/domain/types";
 
 /**
  * E2E test data generators

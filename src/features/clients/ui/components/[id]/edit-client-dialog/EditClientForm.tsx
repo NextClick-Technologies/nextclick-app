@@ -1,6 +1,6 @@
 import { UseFormRegister, Control, FieldErrors } from "react-hook-form";
-import type { UpdateClientInput } from "../../../../domain/schemas/client.schema";
-import type { Company } from "@/features/companies/domain/types/company.type";
+import type { UpdateClientInput } from "../../../../domain/schemas";
+import type { Company } from "@/features/companies/domain/types";
 import { FormField } from "../../../components/add-client-dialog/FormField";
 import { ClientSelectFields } from "../../../components/add-client-dialog/ClientSelectFields";
 import { ContractValueInput } from "./ContractValueInput";

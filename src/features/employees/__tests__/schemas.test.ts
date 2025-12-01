@@ -4,12 +4,12 @@ import {
   updateEmployeeSchema,
   type EmployeeInput,
   type UpdateEmployeeInput,
-} from "@/features/employees/domain/schemas/employee.schema";
+} from "@/features/employees/domain/schemas";
 import {
   Title,
   Gender,
-} from "@/features/clients/domain/types/client.type";
-import { EmployeeStatus } from "@/features/employees/domain/types/employee.type";
+} from "@/features/clients/domain/types";
+import { EmployeeStatus } from "@/features/employees/domain/types";
 import { ZodError } from "zod";
 
 describe("employeeSchema", () => {

@@ -1,5 +1,5 @@
 /**
- * Integration tests for Company API Business Logic
+ * Integration tests for Employee API Business Logic
  * Tests data transformation, validation, and database interactions
  */
 
@@ -11,11 +11,11 @@ import {
   transformToDb,
   transformColumnName,
 } from "@/shared/lib/api/api-utils";
-import { companySchema } from "@/features/companies/domain/schemas/company.schema";
+import { employeeSchema } from "@/features/employees/domain/schemas";
 import {
-  mockDbCompany,
-  mockDbCompanies,
-  mockCompanyInput,
+  mockDbEmployee,
+  mockDbEmployees,
+  mockEmployeeInput,
 } from "@/__tests__/fixtures";
 
 // Mock Supabase admin client
@@ -25,33 +25,48 @@ jest.mock("@/shared/lib/supabase/server", () => ({
   },
 }));
 
-describe("Company API Business Logic", () => {
+describe("Employee API Business Logic", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   describe("Data Transformation", () => {
     it("should transform database results from snake_case to camelCase", () => {
-      const transformed = transformFromDb<any[]>(mockDbCompanies);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const transformed = transformFromDb<any[]>(mockDbEmployees);
 
+      expect(transformed[0]).toHaveProperty("familyName");
+      expect(transformed[0]).toHaveProperty("preferredName");
       expect(transformed[0]).toHaveProperty("phoneNumber");
-      expect(transformed[0]).toHaveProperty("contactPerson");
+      expect(transformed[0]).toHaveProperty("userId");
+      expect(transformed[0]).toHaveProperty("joinDate");
+      expect(transformed[0]).toHaveProperty("emergencyContact");
+      expect(transformed[0]).toHaveProperty("emergencyPhone");
+      expect(transformed[0]).toHaveProperty("zipCode");
+      expect(transformed[0]).not.toHaveProperty("family_name");
+      expect(transformed[0]).not.toHaveProperty("preferred_name");
       expect(transformed[0]).not.toHaveProperty("phone_number");
-      expect(transformed[0]).not.toHaveProperty("contact_person");
     });
 
     it("should transform input from camelCase to snake_case for database", () => {
-      const transformed = transformToDb(mockCompanyInput);
+      const transformed = transformToDb(mockEmployeeInput);
 
+      expect(transformed).toHaveProperty("family_name");
+      expect(transformed).toHaveProperty("preferred_name");
       expect(transformed).toHaveProperty("phone_number");
-      expect(transformed).toHaveProperty("contact_person");
+      expect(transformed).toHaveProperty("join_date");
+      expect(transformed).toHaveProperty("emergency_contact");
+      expect(transformed).toHaveProperty("emergency_phone");
+      expect(transformed).toHaveProperty("zip_code");
+      expect(transformed).not.toHaveProperty("familyName");
+      expect(transformed).not.toHaveProperty("preferredName");
       expect(transformed).not.toHaveProperty("phoneNumber");
-      expect(transformed).not.toHaveProperty("contactPerson");
     });
 
     it("should transform column names for orderBy", () => {
       expect(transformColumnName("createdAt")).toBe("created_at");
-      expect(transformColumnName("phoneNumber")).toBe("phone_number");
+      expect(transformColumnName("familyName")).toBe("family_name");
+      expect(transformColumnName("joinDate")).toBe("join_date");
       expect(transformColumnName("name")).toBe("name");
     });
   });
@@ -98,19 +113,19 @@ describe("Company API Business Logic", () => {
   });
 
   describe("Validation Logic", () => {
-    it("should validate correct company data", () => {
-      const result = companySchema.safeParse(mockCompanyInput);
+    it("should validate correct employee data", () => {
+      const result = employeeSchema.safeParse(mockEmployeeInput);
 
       expect(result.success).toBe(true);
     });
 
-    it("should reject company with name too short", () => {
+    it("should reject employee with name too short", () => {
       const invalidData = {
-        ...mockCompanyInput,
-        name: "A",
+        ...mockEmployeeInput,
+        name: "",
       };
 
-      const result = companySchema.safeParse(invalidData);
+      const result = employeeSchema.safeParse(invalidData);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -119,26 +134,60 @@ describe("Company API Business Logic", () => {
       }
     });
 
-    it("should reject company with invalid email", () => {
+    it("should reject employee with invalid email", () => {
       const invalidData = {
-        ...mockCompanyInput,
+        ...mockEmployeeInput,
         email: "not-an-email",
       };
 
-      const result = companySchema.safeParse(invalidData);
+      const result = employeeSchema.safeParse(invalidData);
+
+      expect(result.success).toBe(false);
+    });
+
+    it("should reject employee with invalid title", () => {
+      const invalidData = {
+        ...mockEmployeeInput,
+        title: "invalid-title",
+      };
+
+      const result = employeeSchema.safeParse(invalidData);
+
+      expect(result.success).toBe(false);
+    });
+
+    it("should reject employee with invalid gender", () => {
+      const invalidData = {
+        ...mockEmployeeInput,
+        gender: "invalid-gender",
+      };
+
+      const result = employeeSchema.safeParse(invalidData);
+
+      expect(result.success).toBe(false);
+    });
+
+    it("should reject employee with invalid status", () => {
+      const invalidData = {
+        ...mockEmployeeInput,
+        status: "invalid-status",
+      };
+
+      const result = employeeSchema.safeParse(invalidData);
 
       expect(result.success).toBe(false);
     });
 
     it("should apply default values", () => {
       const minimalData = {
-        name: "Acme Corp",
-        email: "contact@acme.com",
-        address: "123 Business St",
+        name: "John",
+        familyName: "Doe",
+        gender: "male",
         phoneNumber: "+1234567890",
+        email: "john.doe@company.com",
       };
 
-      const result = companySchema.safeParse(minimalData);
+      const result = employeeSchema.safeParse(minimalData);
 
       expect(result.success).toBe(true);
       if (result.success) {
@@ -146,29 +195,66 @@ describe("Company API Business Logic", () => {
       }
     });
 
-    it("should accept valid status values", () => {
-      const statuses = ["active", "inactive"];
+    it("should accept valid title values", () => {
+      const titles = ["mr", "mrs", "ms", "dr", "prof", "sr", null];
 
-      statuses.forEach((status) => {
+      titles.forEach((title) => {
         const data = {
-          ...mockCompanyInput,
-          status,
+          ...mockEmployeeInput,
+          title,
         };
 
-        const result = companySchema.safeParse(data);
+        const result = employeeSchema.safeParse(data);
         expect(result.success).toBe(true);
       });
     });
 
-    it("should reject invalid status values", () => {
-      const invalidData = {
-        ...mockCompanyInput,
-        status: 123, // Not a string
+    it("should accept valid gender values", () => {
+      const genders = ["male", "female", "other"];
+
+      genders.forEach((gender) => {
+        const data = {
+          ...mockEmployeeInput,
+          gender,
+        };
+
+        const result = employeeSchema.safeParse(data);
+        expect(result.success).toBe(true);
+      });
+    });
+
+    it("should accept valid status values", () => {
+      const statuses = ["active", "inactive", "on_leave", "terminated"];
+
+      statuses.forEach((status) => {
+        const data = {
+          ...mockEmployeeInput,
+          status,
+        };
+
+        const result = employeeSchema.safeParse(data);
+        expect(result.success).toBe(true);
+      });
+    });
+
+    it("should accept optional fields as null or undefined", () => {
+      const dataWithNulls = {
+        ...mockEmployeeInput,
+        preferredName: null,
+        photo: null,
+        userId: null,
+        salary: null,
+        emergencyContact: null,
+        emergencyPhone: null,
+        address: null,
+        city: null,
+        state: null,
+        zipCode: null,
+        country: null,
       };
 
-      const result = companySchema.safeParse(invalidData);
-
-      expect(result.success).toBe(false);
+      const result = employeeSchema.safeParse(dataWithNulls);
+      expect(result.success).toBe(true);
     });
   });
 
@@ -177,7 +263,7 @@ describe("Company API Business Logic", () => {
       const mockSelect = jest.fn().mockReturnThis();
       const mockOrder = jest.fn().mockReturnThis();
       const mockRange = jest.fn().mockResolvedValue({
-        data: mockDbCompanies,
+        data: mockDbEmployees,
         error: null,
         count: 2,
       });

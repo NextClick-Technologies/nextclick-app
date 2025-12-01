@@ -44,21 +44,21 @@ src/
 │   ├── clients/
 │   │   ├── api/              # API handlers (business logic)
 │   │   │   └── handlers.ts   # Actual GET/POST/PUT/DELETE implementation
-│   │   └── domain/         # Business logic layer
-│   │       ├── repository.ts # Database queries (Supabase)
-│   │       ├── service.ts    # Business operations
-│   │       ├── schemas/      # Zod validation schemas
-│   │       │   └── client.schema.ts
-│   │       └── types/        # TypeScript types
-│   │           └── client.type.ts
+│   │   └── domain/           # Business logic layer
+│   │       ├── schemas.ts    # Zod validation schemas (flattened)
+│   │       ├── types.ts      # TypeScript types (flattened)
+│   │       └── services/     # Service layer
+│   │           ├── repository.ts # Database queries (Supabase)
+│   │           └── service.ts    # Business operations
 │   │
 │   ├── projects/             # Project feature (same structure)
 │   │   ├── api/handlers.ts
 │   │   └── domain/
-│   │       ├── repository.ts
-│   │       ├── service.ts
-│   │       ├── schemas/
-│   │       └── types/
+│   │       ├── schemas.ts
+│   │       ├── types.ts
+│   │       └── services/
+│   │           ├── repository.ts
+│   │           └── service.ts
 │   │
 │   ├── employees/            # Employee feature (same structure)
 │   ├── companies/            # Company feature (same structure)
@@ -116,7 +116,7 @@ import {
   apiError,
   handleApiError,
 } from "@/shared/lib/api/api-utils";
-import * as clientService from "../domain/service";
+import * as clientService from "../domain/services/service";
 
 export async function getClients(request: NextRequest) {
   try {
@@ -185,7 +185,7 @@ export async function findAllClients(options: QueryOptions) {
 }
 
 // Layer 2: Service (Business Logic)
-// features/clients/domain/service.ts
+// features/clients/domain/services/service.ts
 export async function getAllClients(options: QueryOptions) {
   // Validate input
   const validated = querySchema.parse(options);
@@ -216,8 +216,13 @@ Features are self-contained vertical slices:
 
 ```
 features/clients/
-├── api/           # HTTP layer
-├── domain/      # Business logic
+├── api/             # HTTP layer
+├── domain/          # Business logic
+│   ├── schemas.ts   # Validation schemas
+│   ├── types.ts     # TypeScript types
+│   └── services/    # Service layer
+│       ├── repository.ts
+│       └── service.ts
 │   ├── repository.ts  # Data access
 │   ├── service.ts     # Business operations
 │   ├── schemas/       # Validation
@@ -233,7 +238,7 @@ import { supabaseAdmin } from "@/shared/lib/supabase/server";
 import { apiSuccess } from "@/shared/lib/api/api-utils";
 
 // ✅ ALLOWED: Feature imports its own code
-import * as clientService from "../domain/service";
+import * as clientService from "../domain/services/service";
 import { clientSchema } from "../domain/schemas";
 
 // ❌ NOT ALLOWED: Feature imports from another feature
@@ -275,13 +280,12 @@ Every feature follows a three-layer architecture. Let's use `clients` as an exam
 features/clients/
 ├── api/                          # Layer 1: HTTP/API Layer
 │   └── handlers.ts               # Request handling, response formatting
-├── domain/                     # Layer 2 & 3: Business + Data Layer
-│   ├── service.ts                # Business logic, validation
-│   ├── repository.ts             # Database queries (Supabase)
-│   ├── schemas/                  # Zod validation schemas
-│   │   └── client.schema.ts
-│   └── types/                    # TypeScript types
-│       └── client.type.ts
+├── domain/                       # Layer 2 & 3: Business + Data Layer
+│   ├── schemas.ts                # Zod validation schemas (flattened)
+│   ├── types.ts                  # TypeScript types (flattened)
+│   └── services/                 # Service layer
+│       ├── repository.ts         # Database queries (Supabase)
+│       └── service.ts            # Business logic, validation
 └── ui/                           # Frontend (if applicable)
 ```
 
@@ -308,7 +312,7 @@ import {
   apiError,
   handleApiError,
 } from "@/shared/lib/api/api-utils";
-import * as clientService from "../domain/service";
+import * as clientService from "../domain/services/service";
 
 export async function getClients(request: NextRequest) {
   try {
@@ -625,13 +629,13 @@ Let's create a "Tasks" feature step-by-step:
 **1. Create feature structure:**
 
 ```bash
-mkdir -p src/features/tasks/{api,domain/{schemas,types}}
+mkdir -p src/features/tasks/{api,domain/services}
 ```
 
 **2. Define types:**
 
 ```typescript
-// features/tasks/domain/types/task.type.ts
+// features/tasks/domain/types.ts
 export interface Task {
   id: string;
   title: string;
@@ -646,7 +650,7 @@ export interface Task {
 **3. Create validation schemas:**
 
 ```typescript
-// features/tasks/domain/schemas/task.schema.ts
+// features/tasks/domain/schemas.ts
 import { z } from "zod";
 
 export const taskSchema = z.object({
@@ -665,7 +669,7 @@ export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
 **4. Create repository:**
 
 ```typescript
-// features/tasks/domain/repository.ts
+// features/tasks/domain/services/repository.ts
 import { supabaseAdmin } from "@/shared/lib/supabase/server";
 
 export async function findAllTasks() {
@@ -722,7 +726,7 @@ export async function deleteTask(id: string) {
 **5. Create service:**
 
 ```typescript
-// features/tasks/domain/service.ts
+// features/tasks/domain/services/service.ts
 import { transformFromDb, transformToDb } from "@/shared/lib/api/api-utils";
 import { taskSchema, updateTaskSchema } from "./schemas/task.schema";
 import * as taskRepository from "./repository";
@@ -777,7 +781,7 @@ import {
   apiError,
   handleApiError,
 } from "@/shared/lib/api/api-utils";
-import * as taskService from "../domain/service";
+import * as taskService from "../domain/services/service";
 
 export async function getTasks(request: NextRequest) {
   try {

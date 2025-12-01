@@ -2,7 +2,7 @@
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Card } from "@/shared/components/ui/card";
-import { Company } from "../../domain/types/company.type";
+import { Company } from "../../domain/types";
 
 interface CompanyMetricsProps {
   companies: Company[];

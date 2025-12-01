@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   companySchema,
   type CompanyInput,
-} from "@/features/companies/domain/schemas/company.schema";
+} from "@/features/companies/domain/schemas";
 import { FormField } from "./FormField";
 
 interface AddCompanyDialogProps {

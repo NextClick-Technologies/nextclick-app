@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Employee } from "../../domain/types/employee.type";
+import type { Employee } from "../../domain/types";
 import type { DbEmployeeInsert, DbEmployeeUpdate } from "@/shared/types";
 import {
   fetchApi,

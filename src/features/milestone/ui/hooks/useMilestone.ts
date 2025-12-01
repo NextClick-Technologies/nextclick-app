@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Milestone } from "@/features/milestone/domain/types/milestone.type";
+import type { Milestone } from "@/features/milestone/domain/types";
 import type {
   MilestoneInput,
   UpdateMilestoneInput,

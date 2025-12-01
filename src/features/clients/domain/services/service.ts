@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { transformToDb, transformFromDb } from "@/shared/lib/api/api-utils";
-import { clientSchema, updateClientSchema } from "./schemas/client.schema";
+import { clientSchema, updateClientSchema } from "../schemas";
 import * as clientRepository from "./repository";
 import type { ClientQueryOptions } from "./repository";
 

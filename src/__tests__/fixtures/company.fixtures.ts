@@ -1,4 +1,4 @@
-import { Company } from "@/features/companies/domain/types/company.type";
+import { Company } from "@/features/companies/domain/types";
 import type {
   Company as DbCompany,
   CompanyInsert as DbCompanyInsert,

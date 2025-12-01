@@ -1,4 +1,4 @@
-import { Payment, PaymentStatus, PaymentMethod } from "@/features/payment/domain/types/payment.type";
+import { Payment, PaymentStatus, PaymentMethod } from "@/features/payment/domain/types";
 import type {
   Payment as DbPayment,
   PaymentInsert as DbPaymentInsert,

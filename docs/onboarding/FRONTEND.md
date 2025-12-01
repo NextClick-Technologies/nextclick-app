@@ -231,7 +231,7 @@ touch src/features/clients/ui/components/ClientCard.tsx
 
 import { Card } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
-import { Client } from "../../domain/types/client.type";
+import { Client } from "../../domain/types";
 
 interface ClientCardProps {
   client: Client;
@@ -285,8 +285,8 @@ import {
   updateApi,
   deleteApi,
 } from "@/shared/lib/api/client";
-import type { Client } from "../../domain/types/client.type";
-import type { CreateClientInput } from "../../domain/schemas/client.schema";
+import type { Client } from "../../domain/types";
+import type { CreateClientInput } from "../../domain/schemas";
 
 // Fetch all clients
 export function useClients() {
@@ -357,7 +357,7 @@ mkdir -p src/features/tasks/{api,services/{schemas,types},ui/{components,hooks,p
 **2. Create types:**
 
 ```typescript
-// features/tasks/domain/types/task.type.ts
+// features/tasks/domain/types.ts
 export interface Task {
   id: string;
   title: string;
@@ -372,7 +372,7 @@ export interface Task {
 **3. Create schemas:**
 
 ```typescript
-// features/tasks/domain/schemas/task.schema.ts
+// features/tasks/domain/schemas.ts
 import { z } from "zod";
 
 export const taskSchema = z.object({
@@ -477,7 +477,7 @@ export const POST = createTask;
 // features/tasks/ui/hooks/useTask.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchApi, createApi } from "@/shared/lib/api/client";
-import type { Task } from "../../domain/types/task.type";
+import type { Task } from "../../domain/types";
 
 export function useTasks() {
   return useQuery({
@@ -506,7 +506,7 @@ export function useCreateTask() {
 
 import { Card } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
-import { Task } from "../../domain/types/task.type";
+import { Task } from "../../domain/types";
 
 export function TaskCard({ task }: { task: Task }) {
   return (

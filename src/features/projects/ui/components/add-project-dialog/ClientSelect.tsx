@@ -16,7 +16,7 @@ import {
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { useState } from "react";
-import type { Client } from "@/features/clients/domain/types/client.type";
+import type { Client } from "@/features/clients/domain/types";
 
 interface ClientSelectProps {
   value?: string;

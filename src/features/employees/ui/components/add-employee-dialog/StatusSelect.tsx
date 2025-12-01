@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import { EmployeeStatus } from "@/features/employees/domain/types/employee.type";
+import { EmployeeStatus } from "@/features/employees/domain/types";
 import { Control, Controller, FieldError } from "react-hook-form";
 
 interface StatusSelectProps {

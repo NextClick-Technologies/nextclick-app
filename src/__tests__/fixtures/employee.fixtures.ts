@@ -1,11 +1,11 @@
 import {
   Employee,
   EmployeeStatus,
-} from "@/features/employees/domain/types/employee.type";
+} from "@/features/employees/domain/types";
 import {
   Title,
   Gender,
-} from "@/features/clients/domain/types/client.type";
+} from "@/features/clients/domain/types";
 import type {
   Employee as DbEmployee,
   EmployeeInsert as DbEmployeeInsert,

@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import { Search } from "lucide-react";
-import { EmployeeStatus } from "../../../domain/types/employee.type";
+import { EmployeeStatus } from "../../../domain/types";
 
 interface EmployeeFiltersProps {
   searchQuery: string;

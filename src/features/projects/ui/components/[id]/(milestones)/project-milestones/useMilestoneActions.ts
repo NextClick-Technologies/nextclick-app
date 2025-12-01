@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Milestone } from "@/features/milestone/domain/types/milestone.type";
+import { Milestone } from "@/features/milestone/domain/types";
 import { useDeleteMilestone } from "@/features/milestone/ui/hooks/useMilestone";
 import { toast } from "sonner";
 

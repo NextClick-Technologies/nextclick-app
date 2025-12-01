@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { transformToDb, transformFromDb } from "@/shared/lib/api/api-utils";
-import { companySchema, updateCompanySchema } from "./schemas/company.schema";
+import { companySchema, updateCompanySchema } from "../schemas";
 import * as companyRepository from "./repository";
 import type { CompanyQueryOptions } from "./repository";
 

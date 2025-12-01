@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
-import { Milestone } from "@/features/milestone/domain/types/milestone.type";
+import { Milestone } from "@/features/milestone/domain/types";
 import { UpdateMilestoneInput } from "@/features/milestone/domain/schemas";
 import { useEditMilestoneForm } from "./useEditMilestoneForm";
 import { MilestoneBasicFields } from "./MilestoneBasicFields";

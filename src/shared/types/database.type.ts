@@ -1,13 +1,13 @@
-import type { Title } from "@/features/clients/domain/types/client.type";
-import type { Gender } from "@/features/clients/domain/types/client.type";
-import type { EmployeeStatus } from "@/features/employees/domain/types/employee.type";
+import type { Title } from "@/features/clients/domain/types";
+import type { Gender } from "@/features/clients/domain/types";
+import type { EmployeeStatus } from "@/features/employees/domain/types";
 import type { PaymentTerms } from "@/features/projects/domain/types/project.type";
 import type { ProjectStatus } from "@/features/projects/domain/types/project.type";
 import type { ProjectPriority } from "@/features/projects/domain/types/project.type";
-import type { MilestoneStatus } from "@/features/milestone/domain/types/milestone.type";
-import type { PaymentStatus } from "@/features/payment/domain/types/payment.type";
-import type { PaymentMethod } from "@/features/payment/domain/types/payment.type";
-import type { CommunicationChannel } from "@/features/communication-log/domain/types/communication-log.type";
+import type { MilestoneStatus } from "@/features/milestone/domain/types";
+import type { PaymentStatus } from "@/features/payment/domain/types";
+import type { PaymentMethod } from "@/features/payment/domain/types";
+import type { CommunicationChannel } from "@/features/communication-log/domain/types";
 import type { UserRole } from "./auth.types";
 
 export type Json =

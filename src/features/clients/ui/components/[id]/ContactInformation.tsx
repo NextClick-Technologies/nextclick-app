@@ -2,7 +2,7 @@
 
 import { Card } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
-import { ClientStatus } from "@/features/clients/domain/types/client.type";
+import { ClientStatus } from "@/features/clients/domain/types";
 import Link from "next/link";
 
 interface ContactInformationProps {

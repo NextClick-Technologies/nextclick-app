@@ -4,7 +4,7 @@ import {
   updateCompanySchema,
   type CompanyInput,
   type UpdateCompanyInput,
-} from "@/features/companies/domain/schemas/company.schema";
+} from "@/features/companies/domain/schemas";
 import { ZodError } from "zod";
 
 describe("companySchema", () => {

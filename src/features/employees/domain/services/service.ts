@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { transformToDb, transformFromDb } from "@/shared/lib/api/api-utils";
-import { updateEmployeeSchema } from "./schemas/employee.schema";
+import { updateEmployeeSchema } from "../schemas";
 import * as employeeRepository from "./repository";
 import type { EmployeeQueryOptions } from "./repository";
 

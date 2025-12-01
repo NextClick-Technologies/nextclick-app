@@ -22,7 +22,7 @@ import {
   mockMilestones,
   mockMilestoneUpdate,
 } from "@/__tests__/fixtures/milestone.fixtures";
-import { MilestoneStatus } from "@/features/milestone/domain/types/milestone.type";
+import { MilestoneStatus } from "@/features/milestone/domain/types";
 
 // Frontend-style (camelCase) milestone input for testing
 const mockMilestoneInput: MilestoneInput = {

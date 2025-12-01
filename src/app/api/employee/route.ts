@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 import {
   getEmployees,
   createEmployee,
-} from "@/features/employees/api/employee.handlers";
+} from "@/features/employees/api/handlers";
 
 export async function GET(request: NextRequest) {
   return getEmployees(request);

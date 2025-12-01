@@ -1,7 +1,7 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { Label } from "@/shared/components/ui/label";
 import { Input } from "@/shared/components/ui/input";
-import type { ClientInput } from "../../../domain/schemas/client.schema";
+import type { ClientInput } from "../../../domain/schemas";
 
 interface JoinDateInputProps {
   register: UseFormRegister<ClientInput>;

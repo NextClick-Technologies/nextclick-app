@@ -1,12 +1,12 @@
 import {
   clientSchema,
   updateClientSchema,
-} from "@/features/clients/domain/schemas/client.schema";
+} from "@/features/clients/domain/schemas";
 import {
   Title,
   Gender,
   ClientStatus,
-} from "@/features/clients/domain/types/client.type";
+} from "@/features/clients/domain/types";
 
 describe("Client Schema", () => {
   describe("clientSchema", () => {

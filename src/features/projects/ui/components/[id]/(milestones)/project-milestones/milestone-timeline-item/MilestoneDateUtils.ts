@@ -1,4 +1,4 @@
-import { Milestone } from "@/features/milestone/domain/types/milestone.type";
+import { Milestone } from "@/features/milestone/domain/types";
 import { format, isPast } from "date-fns";
 
 export function formatDate(dateString: string): string {

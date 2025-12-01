@@ -1,9 +1,6 @@
 import { z } from "zod";
-import {
-  Title,
-  Gender,
-} from "@/features/clients/domain/types/client.type";
-import { EmployeeStatus } from "../types/employee.type";
+import { Title, Gender } from "@/features/clients/domain/types";
+import { EmployeeStatus } from "./types";
 
 export const employeeSchema = z.object({
   title: z.nativeEnum(Title).optional().nullable(),

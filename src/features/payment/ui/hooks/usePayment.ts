@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Payment } from "@/features/payment/domain/types/payment.type";
+import type { Payment } from "@/features/payment/domain/types";
 import type { DbPaymentInsert, DbPaymentUpdate } from "@/shared/types";
 import {
   fetchApi,

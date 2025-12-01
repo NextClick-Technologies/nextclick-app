@@ -3,7 +3,7 @@
 import {
   Employee,
   EmployeeStatus,
-} from "../../../domain/types/employee.type";
+} from "../../../domain/types";
 import { Badge } from "@/shared/components/ui/badge";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { useRouter } from "next/navigation";

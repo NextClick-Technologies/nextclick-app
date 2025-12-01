@@ -7,7 +7,7 @@ import {
   getCompanyById,
   updateCompany,
   deleteCompany,
-} from "@/features/companies/api/company.handlers";
+} from "@/features/companies/api/handlers";
 
 export async function GET(
   request: NextRequest,

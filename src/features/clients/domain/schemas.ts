@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Title, Gender, ClientStatus } from "../types/client.type";
+import { Title, Gender, ClientStatus } from "./types";
 
 export const clientSchema = z.object({
   title: z.nativeEnum(Title).default(Title.MR),

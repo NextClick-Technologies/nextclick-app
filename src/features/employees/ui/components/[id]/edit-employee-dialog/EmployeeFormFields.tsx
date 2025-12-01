@@ -2,7 +2,7 @@
 
 import { Control, UseFormRegister, FieldErrors } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import { EmployeeInput } from "@/features/employees/domain/schemas/employee.schema";
+import { EmployeeInput } from "@/features/employees/domain/schemas";
 import { FormField } from "../../../components/add-employee-dialog/FormField";
 import { EmployeeSelectFields } from "../../../components/add-employee-dialog/EmployeeSelectFields";
 import { StatusSelect } from "../../../components/add-employee-dialog/StatusSelect";

@@ -7,7 +7,7 @@ import {
   getEmployeeById,
   updateEmployee,
   deleteEmployee,
-} from "@/features/employees/api/employee.handlers";
+} from "@/features/employees/api/handlers";
 
 export async function GET(
   request: NextRequest,

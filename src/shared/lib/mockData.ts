@@ -1,4 +1,4 @@
-import type { Client } from "@/features/clients/domain/types/client.type";
+import type { Client } from "@/features/clients/domain/types";
 import type { TeamMember } from "@/shared/types/team-member.type";
 import type { Activity } from "@/shared/types/activity.type";
 import type { AIInsight } from "@/shared/types/ai-insight.type";
