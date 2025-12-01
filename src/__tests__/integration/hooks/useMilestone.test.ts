@@ -10,7 +10,7 @@ import {
   useMilestones,
   useMilestone,
   useCreateMilestone,
-  useCreateMilestone,
+  useUpdateMilestone,
   useDeleteMilestone,
 } from "@/features/milestone/ui/hooks/useMilestone";
 import type {
