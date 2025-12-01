@@ -238,6 +238,8 @@ src/
   - [General Guide](docs/onboarding/README.md) - For everyone
   - [Frontend Guide](docs/onboarding/FRONTEND.md) - For frontend developers
   - [Backend Guide](docs/onboarding/BACKEND.md) - For backend developers
+- **[Security Audit](docs/SECURITY_AUDIT.md)** - Security assessment and findings 🔒
+- **[Security Implementation](docs/SECURITY_IMPLEMENTATION.md)** - Security hardening guide 🔒
 - [Error Monitoring Guide](docs/ERROR_MONITORING.md) - Error monitoring setup
 - [Error Monitoring Testing](docs/ERROR_MONITORING_TESTING.md) - Testing guide
 - [Logging Guide](docs/LOGGING.md) - Structured logging with Pino
