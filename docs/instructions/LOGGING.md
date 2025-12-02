@@ -1,22 +1,18 @@
-# Logging System Documentation
+# Logging
 
-This project uses `pino` for structured, high-performance logging. This ensures that logs are machine-parsable in production while remaining readable in development.
+## Stack
+
+- **Library**: `pino` (structured, high-performance)
+- **Dev**: `pino-pretty` (human-readable)
+- **Production**: JSON output (for log aggregation)
 
 ## Quick Start
 
-Simply run the development server - **pretty logs and type checking are enabled by default**:
-
 ```bash
-npm run dev
+npm run dev          # Pretty logs + TypeScript watch
+npm run dev:next-only # Pretty logs only
+npm run dev:simple   # No pretty logs, no type check
 ```
-
-This runs two processes concurrently:
-- **[next]** - Next.js dev server with pino-pretty log formatting (cyan prefix)
-- **[tsc]** - TypeScript type checker in watch mode (magenta prefix)
-
-**Alternative commands:**
-- `npm run dev:next-only` - Just Next.js with pretty logs (no type checker)
-- `npm run dev:simple` - Plain Next.js dev server (no pretty logs, no type checker)
 
 ## Usage
 
@@ -76,6 +72,7 @@ The logger is configured in `src/lib/logger.ts`.
 Sensitive keys are automatically redacted from logs. Do not log sensitive information in the message string; put it in the object.
 
 **Redacted Keys:**
+
 - `password`
 - `token`
 - `secret`
@@ -97,7 +94,8 @@ Sensitive keys are automatically redacted from logs. Do not log sensitive inform
 
 ## Build Notes
 
-### Turbopack Compatibility  
+### Turbopack Compatibility
+
 The logger uses `eval('require')` to dynamically load pino at runtime, which prevents Turbopack from analyzing it during the build process. This is necessary because pino uses Node.js worker_threads which Turbopack cannot bundle.
 
 A postinstall script automatically removes test files from pino packages to keep the build clean.

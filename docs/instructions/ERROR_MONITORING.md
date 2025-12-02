@@ -1,28 +1,37 @@
-# Error Monitoring & Automated Ticketing
+# Error Monitoring
 
-This document explains the error monitoring system using **Vercel + Jira + Discord + Supabase**.
+## Stack
 
-> [!IMPORTANT]
-> All services in this stack are **100% free** for our use case.
+- **Monitoring**: Vercel (deployment)
+- **Notifications**: Discord webhooks
+- **Ticketing**: Jira (free tier)
+- **Storage**: Supabase (`error_logs` table)
 
-## Quick Overview
+> **Note**: All services free for our use case.
 
-Our error monitoring system automatically:
-- ✅ Captures errors from API, client, and database
-- ✅ Classifies severity (CRITICAL → NOISE)
-- ✅ Filters out bot traffic and duplicate errors
-- ✅ Sends Discord notifications for critical/high errors
-- ✅ Creates Jira tickets for new error patterns
-- ✅ Stores all errors in Supabase for analysis
+## Error Flow
+
+```
+Error → Classify → Dedupe → Log (Supabase) → Notify (Discord) → Ticket (Jira)
+```
+
+**Features**:
+
+- Auto-classify severity (CRITICAL → NOISE)
+- Filter bot traffic and duplicates
+- Discord alerts for CRITICAL/HIGH
+- Auto-create Jira tickets for new patterns
 
 ## Stack Components
 
 ### 🚀 Vercel
+
 - **Purpose**: Deployment monitoring
 - **Integration**: Sends build/deploy failures to Discord
 - **Setup**: Project Settings → Integrations → Discord
 
 ### 💬 Discord
+
 - **Purpose**: Real-time error notifications
 - **Free Tier**: Unlimited messages and webhooks
 - **Channels**:
@@ -32,6 +41,7 @@ Our error monitoring system automatically:
   - `#deployment-logs` - Vercel deployment status
 
 ### 🎫 Jira
+
 - **Purpose**: Error tracking and ticketing
 - **Free Tier**: Up to 10 users, 2GB storage
 - **Project**: "Error Monitoring" (EM)
@@ -42,6 +52,7 @@ Our error monitoring system automatically:
   - Workflow automation
 
 ### 🗄️ Supabase
+
 - **Purpose**: Error log storage and analytics
 - **Free Tier**: 500MB database
 - **Table**: `error_logs` (see migration file)
@@ -59,19 +70,20 @@ Our error monitoring system automatically:
 
 ## Severity Levels
 
-| Level | Description | Action |
-|-------|-------------|--------|
-| **CRITICAL** | Production down, database connection lost | Discord + Jira + Immediate attention |
-| **HIGH** | Feature broken, 5xx errors, auth/payment issues | Discord + Jira |
-| **MEDIUM** | Performance degraded, 4xx errors | Jira only |
-| **LOW** | Minor issues, edge cases | Log only |
-| **NOISE** | Bots, single 404s, expected errors | Ignore |
+| Level        | Description                                     | Action                               |
+| ------------ | ----------------------------------------------- | ------------------------------------ |
+| **CRITICAL** | Production down, database connection lost       | Discord + Jira + Immediate attention |
+| **HIGH**     | Feature broken, 5xx errors, auth/payment issues | Discord + Jira                       |
+| **MEDIUM**   | Performance degraded, 4xx errors                | Jira only                            |
+| **LOW**      | Minor issues, edge cases                        | Log only                             |
+| **NOISE**    | Bots, single 404s, expected errors              | Ignore                               |
 
 ## Setup Guide
 
 ### 1. Discord Setup
 
 **Create Server and Channels:**
+
 ```bash
 1. Create Discord server (or use existing)
 2. Create channels:
@@ -82,6 +94,7 @@ Our error monitoring system automatically:
 ```
 
 **Create Webhooks:**
+
 ```bash
 # For each channel:
 1. Channel Settings → Integrations → Webhooks
@@ -92,6 +105,7 @@ Our error monitoring system automatically:
 ### 2. Jira Setup
 
 **Create Account:**
+
 ```bash
 1. Go to https://www.atlassian.com/software/jira/free
 2. Sign up (free for up to 10 users)
@@ -99,6 +113,7 @@ Our error monitoring system automatically:
 ```
 
 **Generate API Token:**
+
 ```bash
 1. Visit https://id.atlassian.com/manage-profile/security/api-tokens
 2. Create API token
@@ -108,6 +123,7 @@ Our error monitoring system automatically:
 ### 3. Supabase Migration
 
 Run the migration file to create the `error_logs` table:
+
 ```bash
 # In Supabase SQL Editor, run:
 src/lib/supabase/migrations/YYYYMMDD_create_error_logs.sql
@@ -119,17 +135,20 @@ src/lib/supabase/migrations/YYYYMMDD_create_error_logs.sql
 > Vercel webhooks require a **Pro plan** ($20/month). For free/hobby tier, manually check the Vercel dashboard for deployment status.
 
 **Option A: Manual Monitoring (Free)**
+
 - Check Vercel dashboard for deployment status
 - Deployment errors are visible immediately
 - Failed deployments don't affect production
 - Good enough for small apps
 
 **Option B: Automated (Pro Plan Required)**
+
 - Requires Vercel Pro plan
 - See [VERCEL_DISCORD_INTEGRATION.md](./VERCEL_DISCORD_INTEGRATION.md) for setup
 - Automatically posts deployment events to Discord
 
 **What's still monitored for free:**
+
 - ✅ Runtime errors in production (via our error monitoring)
 - ✅ API errors (logged to Supabase, Discord, Jira)
 - ✅ Client-side errors (captured by ErrorBoundary)
@@ -166,9 +185,10 @@ ERROR_MONITORING_ENVIRONMENT=production
 Errors are automatically captured from:
 
 **API Routes:**
+
 ```typescript
 // Wrap route handlers
-import { withErrorMonitoring } from '@/lib/error-monitoring';
+import { withErrorMonitoring } from "@/lib/error-monitoring";
 
 export const GET = withErrorMonitoring(async (req) => {
   // Your code
@@ -176,6 +196,7 @@ export const GET = withErrorMonitoring(async (req) => {
 ```
 
 **Client-Side:**
+
 ```typescript
 // Error Boundary wraps app
 <ErrorBoundary>
@@ -184,15 +205,16 @@ export const GET = withErrorMonitoring(async (req) => {
 ```
 
 **Manual Capture:**
+
 ```typescript
-import { captureError } from '@/lib/error-monitoring';
+import { captureError } from "@/lib/error-monitoring";
 
 try {
   // risky operation
 } catch (error) {
   await captureError(error, {
-    source: 'api',
-    url: '/api/some-route',
+    source: "api",
+    url: "/api/some-route",
     userId: user.id,
   });
 }
@@ -201,15 +223,18 @@ try {
 ### Viewing Errors
 
 **Discord:**
+
 - Real-time notifications in appropriate channels
 - Click Jira link to view full details
 
 **Jira:**
+
 - Browse all error tickets
 - Filter by severity, source, or date
 - Track resolution status
 
 **Supabase:**
+
 - Query `error_logs` table directly
 - View `error_stats` for analytics
 - Build custom dashboards
@@ -217,19 +242,24 @@ try {
 ## Smart Features
 
 ### Deduplication
+
 Errors with the same hash (type + message + stack trace) within 1 hour are grouped:
+
 - Occurrence count incremented
 - Last seen timestamp updated
 - No duplicate Discord/Jira notifications
 
 ### Noise Filtering
+
 Automatically ignores:
+
 - Bot traffic (curl, wget, spiders)
 - Single 404 errors
 - Development environment errors
 - Hydration warnings (unless frequent)
 
 ### Automatic Classification
+
 - Database connection errors → CRITICAL
 - 5xx status codes → HIGH
 - Auth/payment routes → HIGH
@@ -247,35 +277,39 @@ Automatically ignores:
 ## Troubleshooting
 
 **Discord not receiving notifications:**
+
 - Check webhook URL is correct
 - Verify severity matches channel
 - Check `ENABLE_ERROR_MONITORING=true`
 
 **Jira tickets not created:**
+
 - Verify API token is valid
 - Check project key matches
 - Review Jira API rate limits
 
 **Too many notifications:**
+
 - Increase severity threshold
 - Add more noise filters
 - Review deduplication logic
 
 ## Cost Breakdown
 
-| Service | Plan | Cost | Notes |
-|---------|------|------|-------|
-| Vercel | Hobby | $0 | Webhooks require Pro ($20/month) |
-| Discord | Free | $0 | Unlimited messages |
-| Jira | Free (≤10 users) | $0 | 2GB storage |
-| Supabase | Free tier | $0 | 500MB database |
-| **Total** | | **$0/month** | Manual deployment monitoring |
+| Service   | Plan             | Cost         | Notes                            |
+| --------- | ---------------- | ------------ | -------------------------------- |
+| Vercel    | Hobby            | $0           | Webhooks require Pro ($20/month) |
+| Discord   | Free             | $0           | Unlimited messages               |
+| Jira      | Free (≤10 users) | $0           | 2GB storage                      |
+| Supabase  | Free tier        | $0           | 500MB database                   |
+| **Total** |                  | **$0/month** | Manual deployment monitoring     |
 
 **Note:** All runtime error monitoring is free. Only deployment webhook automation requires paid plan.
 
 ## Next Steps
 
 After setup:
+
 1. Deploy error monitoring code
 2. Test with intentional errors
 3. Monitor for 24-48 hours

@@ -1,19 +1,21 @@
-# Next Click ERP - API Documentation
+# API Reference
 
-## Overview
+## Stack
 
-The Next Click ERP backend API is built with Next.js App Router, Supabase, and NextAuth for authentication.
+- **Runtime**: Next.js App Router API routes
+- **Database**: Supabase (PostgreSQL)
+- **Auth**: NextAuth v5 (session-based)
 
 ## Base URL
 
-```
+```bash
 Development: http://localhost:3000/api
 Production: https://your-domain.com/api
 ```
 
 ## Authentication
 
-All API endpoints (except `/api/auth/*`) require authentication via NextAuth session.
+All endpoints require NextAuth session (except `/api/auth/*`).
 
 ### Login
 

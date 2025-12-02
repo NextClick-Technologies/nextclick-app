@@ -7,7 +7,7 @@
 Already installed. Import and use:
 
 ```tsx
-import { sanitizeHtml, sanitizeText } from '@/shared/utils/sanitize';
+import { sanitizeHtml, sanitizeText } from "@/shared/utils/sanitize";
 ```
 
 ## When to Sanitize
@@ -15,11 +15,13 @@ import { sanitizeHtml, sanitizeText } from '@/shared/utils/sanitize';
 **ALWAYS sanitize user-generated content before rendering HTML.**
 
 ### Use `sanitizeHtml()` for:
+
 - Project/milestone descriptions
 - Employee/company addresses
 - Any rich text/HTML from users or database
 
 ### Use `sanitizeText()` for:
+
 - Plain text that should never contain HTML
 - Simple string fields
 
@@ -29,14 +31,14 @@ import { sanitizeHtml, sanitizeText } from '@/shared/utils/sanitize';
 
 ```tsx
 // ✅ CORRECT
-import { sanitizeHtml } from '@/shared/utils/sanitize';
+import { sanitizeHtml } from "@/shared/utils/sanitize";
 
 export function ProjectCard({ project }) {
   return (
-    <div 
-      dangerouslySetInnerHTML={{ 
-        __html: sanitizeHtml(project.description) 
-      }} 
+    <div
+      dangerouslySetInnerHTML={{
+        __html: sanitizeHtml(project.description),
+      }}
     />
   );
 }
@@ -51,14 +53,15 @@ export function ProjectCard({ project }) {
 
 ```tsx
 // For plain text (escapes HTML)
-import { sanitizeText } from '@/shared/utils/sanitize';
+import { sanitizeText } from "@/shared/utils/sanitize";
 
-<p>{sanitizeText(userInput)}</p>
+<p>{sanitizeText(userInput)}</p>;
 ```
 
 ## What's Allowed
 
 ### ✅ Safe HTML (Allowed)
+
 - Text formatting: `<strong>`, `<em>`, `<u>`
 - Structure: `<p>`, `<div>`, `<span>`, `<br>`
 - Headings: `<h1>` to `<h6>`
@@ -68,6 +71,7 @@ import { sanitizeText } from '@/shared/utils/sanitize';
 - Quotes: `<blockquote>`
 
 ### ❌ Blocked (Security)
+
 - Scripts: `<script>`
 - Event handlers: `onclick`, `onerror`, `onload`, etc.
 - JavaScript URLs: `javascript:`, `data:`, `vbscript:`
@@ -77,43 +81,57 @@ import { sanitizeText } from '@/shared/utils/sanitize';
 ## Common Patterns
 
 ### Project Descriptions
+
 ```tsx
-<div 
+<div
   className="text-sm"
-  dangerouslySetInnerHTML={{ 
-    __html: sanitizeHtml(project.description || '') 
+  dangerouslySetInnerHTML={{
+    __html: sanitizeHtml(project.description || ""),
   }}
 />
 ```
 
 ### Milestone Descriptions
+
 ```tsx
-{milestone.description && (
-  <div dangerouslySetInnerHTML={{ 
-    __html: sanitizeHtml(milestone.description) 
-  }} />
-)}
+{
+  milestone.description && (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: sanitizeHtml(milestone.description),
+      }}
+    />
+  );
+}
 ```
 
 ### Addresses
+
 ```tsx
-{address && (
-  <div dangerouslySetInnerHTML={{ 
-    __html: sanitizeHtml(address) 
-  }} />
-)}
+{
+  address && (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: sanitizeHtml(address),
+      }}
+    />
+  );
+}
 ```
 
 ### Tables with User Content
+
 ```tsx
-{items.map(item => (
-  <div
-    key={item.id}
-    dangerouslySetInnerHTML={{ 
-      __html: sanitizeHtml(item.description) 
-    }}
-  />
-))}
+{
+  items.map((item) => (
+    <div
+      key={item.id}
+      dangerouslySetInnerHTML={{
+        __html: sanitizeHtml(item.description),
+      }}
+    />
+  ));
+}
 ```
 
 ## Testing
@@ -147,7 +165,7 @@ sanitizeHtml('<a href="javascript:alert()">Click</a>');
 // Output: '<a>Click</a>' (href removed)
 
 // Safe content passes through:
-sanitizeHtml('<p>Hello <strong>world</strong></p>');
+sanitizeHtml("<p>Hello <strong>world</strong></p>");
 // Output: '<p>Hello <strong>world</strong></p>'
 ```
 
