@@ -38,8 +38,47 @@ export const useAddProjectMember = () => {
 
       return response.json();
     },
+    onMutate: async ({ projectId, employeeId, role }) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["project", projectId] });
+
+      // Snapshot previous value
+      const previousProject = queryClient.getQueryData(["project", projectId]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["project", projectId], (old: any) => {
+        if (!old?.data) return old;
+
+        // Create temporary member (will be replaced with real data on success)
+        const optimisticMember = {
+          id: employeeId, // Temporary - will be replaced
+          name: "Loading",
+          familyName: "...",
+          role: role || null,
+        };
+
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            members: [...(old.data.members || []), optimisticMember],
+          },
+        };
+      });
+
+      return { previousProject };
+    },
+    onError: (err, variables, context) => {
+      // Rollback on error
+      if (context?.previousProject) {
+        queryClient.setQueryData(
+          ["project", variables.projectId],
+          context.previousProject
+        );
+      }
+    },
     onSuccess: (_, variables) => {
-      // Invalidate project query to refetch with new member
+      // Refetch to get accurate server data
       queryClient.invalidateQueries({
         queryKey: ["project", variables.projectId],
       });
@@ -66,8 +105,41 @@ export const useRemoveProjectMember = () => {
 
       return response.status === 204 ? null : response.json();
     },
+    onMutate: async ({ projectId, employeeId }) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["project", projectId] });
+
+      // Snapshot previous value
+      const previousProject = queryClient.getQueryData(["project", projectId]);
+
+      // Optimistically remove the member
+      queryClient.setQueryData(["project", projectId], (old: any) => {
+        if (!old?.data) return old;
+
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            members: (old.data.members || []).filter(
+              (member: TeamMember) => member.id !== employeeId
+            ),
+          },
+        };
+      });
+
+      return { previousProject };
+    },
+    onError: (err, variables, context) => {
+      // Rollback on error
+      if (context?.previousProject) {
+        queryClient.setQueryData(
+          ["project", variables.projectId],
+          context.previousProject
+        );
+      }
+    },
     onSuccess: (_, variables) => {
-      // Invalidate project query to refetch without removed member
+      // Refetch to ensure consistency
       queryClient.invalidateQueries({
         queryKey: ["project", variables.projectId],
       });

@@ -150,7 +150,10 @@ export function ProjectMilestones({
           milestoneId={selectedMilestoneForTeam.id}
           milestoneName={selectedMilestoneForTeam.name}
           projectMembers={projectMembers}
-          currentMembers={selectedMilestoneForTeam.members || []}
+          currentMembers={
+            data?.data?.find((m) => m.id === selectedMilestoneForTeam.id)
+              ?.members || []
+          }
         />
       )}
     </>
