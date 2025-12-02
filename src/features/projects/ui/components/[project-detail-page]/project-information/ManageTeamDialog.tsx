@@ -10,6 +10,29 @@ import {
 } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
 import { toast } from "sonner";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { Avatar, AvatarFallback } from "@/shared/components/ui/avatar";
+import { X, Loader2, Check, ChevronsUpDown } from "lucide-react";
+import { useEmployees } from "@/features/employees/ui/hooks/useEmployee";
+import {
+  useAddProjectMember,
+  useRemoveProjectMember,
+} from "@/features/projects/ui/hooks/useProjectMembers";
+import { Badge } from "@/shared/components/ui/badge";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/shared/components/ui/command";
 import {
   Select,
   SelectContent,
@@ -17,16 +40,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
-import { Input } from "@/shared/components/ui/input";
-import { Label } from "@/shared/components/ui/label";
-import { Avatar, AvatarFallback } from "@/shared/components/ui/avatar";
-import { X, Loader2 } from "lucide-react";
-import { useEmployees } from "@/features/employees/ui/hooks/useEmployee";
-import {
-  useAddProjectMember,
-  useRemoveProjectMember,
-} from "@/features/projects/ui/hooks/useProjectMembers";
-import { Badge } from "@/shared/components/ui/badge";
+import { cn } from "@/shared/utils/cn";
+import { PROJECT_ROLES } from "@/shared/const/roles";
 
 interface TeamMember {
   id: string;
@@ -50,6 +65,7 @@ export function ManageTeamDialog({
 }: ManageTeamDialogProps) {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>("");
   const [role, setRole] = useState<string>("");
+  const [comboboxOpen, setComboboxOpen] = useState(false);
 
   const { data: employeesData, isLoading: isLoadingEmployees } = useEmployees();
   const addMember = useAddProjectMember();
@@ -114,6 +130,7 @@ export function ManageTeamDialog({
     if (!newOpen) {
       setSelectedEmployeeId("");
       setRole("");
+      setComboboxOpen(false);
     }
   };
 
@@ -131,42 +148,90 @@ export function ManageTeamDialog({
           {/* Add Member Section */}
           <div className="space-y-4">
             <h4 className="text-sm font-medium">Add Team Member</h4>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="employee">Employee</Label>
-                <Select
-                  value={selectedEmployeeId}
-                  onValueChange={setSelectedEmployeeId}
-                  disabled={
-                    isLoadingEmployees || availableEmployees.length === 0
-                  }
-                >
-                  <SelectTrigger id="employee">
-                    <SelectValue placeholder="Select employee" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableEmployees.map((emp) => (
-                      <SelectItem key={emp.id} value={emp.id}>
-                        {getFullName(emp.name, emp.familyName)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {availableEmployees.length === 0 && !isLoadingEmployees && (
-                  <p className="text-xs text-muted-foreground">
-                    All employees are already team members
-                  </p>
-                )}
-              </div>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="employee">Employee</Label>
+                  <Popover open={comboboxOpen} onOpenChange={setComboboxOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={comboboxOpen}
+                        className="justify-between"
+                        disabled={
+                          isLoadingEmployees || availableEmployees.length === 0
+                        }
+                      >
+                        {selectedEmployeeId
+                          ? getFullName(
+                              availableEmployees.find(
+                                (emp) => emp.id === selectedEmployeeId
+                              )?.name || "",
+                              availableEmployees.find(
+                                (emp) => emp.id === selectedEmployeeId
+                              )?.familyName || ""
+                            )
+                          : "Select employee..."}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0" align="start">
+                      <Command>
+                        <CommandInput placeholder="Search employees..." />
+                        <CommandList>
+                          <CommandEmpty>No employee found.</CommandEmpty>
+                          <CommandGroup>
+                            {availableEmployees.map((emp) => (
+                              <CommandItem
+                                key={emp.id}
+                                value={`${emp.name} ${emp.familyName}`}
+                                onSelect={() => {
+                                  setSelectedEmployeeId(emp.id);
+                                  setComboboxOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    selectedEmployeeId === emp.id
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {getFullName(emp.name, emp.familyName)}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  {availableEmployees.length === 0 && !isLoadingEmployees && (
+                    <p className="text-xs text-muted-foreground">
+                      All employees are already team members
+                    </p>
+                  )}
+                </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="role">Role (Optional)</Label>
-                <Input
-                  id="role"
-                  placeholder="e.g., Developer, Designer, etc."
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                />
+                <div className="grid gap-2">
+                  <Label htmlFor="role">Role (Optional)</Label>
+                  <Select value={role} onValueChange={setRole}>
+                    <SelectTrigger id="role">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PROJECT_ROLES.map((roleOption) => (
+                        <SelectItem
+                          key={roleOption.value}
+                          value={roleOption.value}
+                        >
+                          {roleOption.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <Button
