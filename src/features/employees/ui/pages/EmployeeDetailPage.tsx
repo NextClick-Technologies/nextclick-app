@@ -6,13 +6,13 @@ import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/shared/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useEmployee, useDeleteEmployee } from "../hooks/useEmployee";
-import { EmployeeDetailHeader } from "../components/[id]/EmployeeDetailHeader";
-import { PersonalInformation } from "../components/[id]/PersonalInformation";
-import { ContactInformation } from "../components/[id]/ContactInformation";
-import { EmploymentInformation } from "../components/[id]/EmploymentInformation";
-import { AddressInformation } from "../components/[id]/AddressInformation";
-import { EditEmployeeDialog } from "../components/[id]/edit-employee-dialog";
-import { DeleteEmployeeDialog } from "../components/[id]/DeleteEmployeeDialog";
+import { EmployeeDetailHeader } from "../components/[employee-detail-page]/EmployeeDetailHeader";
+import { PersonalInformation } from "../components/[employee-detail-page]/PersonalInformation";
+import { ContactInformation } from "../components/[employee-detail-page]/ContactInformation";
+import { EmploymentInformation } from "../components/[employee-detail-page]/EmploymentInformation";
+import { AddressInformation } from "../components/[employee-detail-page]/AddressInformation";
+import { EditEmployeeDialog } from "../components/[employee-detail-page]/edit-employee-dialog";
+import { DeleteEmployeeDialog } from "../components/[employee-detail-page]/DeleteEmployeeDialog";
 
 export default function EmployeeDetailPage() {
   const params = useParams();

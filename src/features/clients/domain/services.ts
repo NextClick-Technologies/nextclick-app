@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { transformToDb, transformFromDb } from "@/shared/lib/api/api-utils";
-import { clientSchema, updateClientSchema } from "../schemas";
-import * as clientRepository from "./repository";
-import type { ClientQueryOptions } from "./repository";
+import { clientSchema, updateClientSchema } from "./schemas";
+import * as clientRepository from "./repositories";
+import type { ClientQueryOptions } from "./repositories";
 
 /**
  * Business Logic Layer for Clients

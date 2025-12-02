@@ -177,6 +177,67 @@ describe("compressImage", () => {
     expect(result).toBe(smallFile);
   });
 
+  it("should return original file if smaller than maxSizeKB", async () => {
+    // Create a 1KB file (1024 bytes)
+    const smallFile = new File(["x".repeat(1024)], "tiny.jpg", {
+      type: "image/jpeg",
+    });
+
+    // Default maxSizeKB is 50KB, so this should return as-is
+    const result = await compressImage(smallFile);
+    expect(result).toBe(smallFile);
+  });
+
+  it("should accept different file types", async () => {
+    const pngFile = new File(["x".repeat(100)], "test.png", {
+      type: "image/png",
+    });
+
+    // If it's already small enough but different type, it will need compression
+    // For this test, we're just checking it accepts PNG
+    const result = await compressImage(pngFile, { mimeType: "image/png" });
+    expect(result).toBeDefined();
+  });
+
+  it("should accept custom maxSizeKB option", async () => {
+    const file = new File(["x".repeat(100)], "test.jpg", {
+      type: "image/jpeg",
+    });
+
+    const result = await compressImage(file, { maxSizeKB: 1 });
+    expect(result).toBeDefined();
+  });
+
+  it("should accept custom quality option", async () => {
+    const file = new File(["x".repeat(100)], "test.jpg", {
+      type: "image/jpeg",
+    });
+
+    const result = await compressImage(file, { quality: 0.5 });
+    expect(result).toBeDefined();
+  });
+
+  it("should accept custom dimensions", async () => {
+    const file = new File(["x".repeat(100)], "test.jpg", {
+      type: "image/jpeg",
+    });
+
+    const result = await compressImage(file, {
+      maxWidth: 800,
+      maxHeight: 600,
+    });
+    expect(result).toBeDefined();
+  });
+
+  it("should handle empty options object", async () => {
+    const file = new File(["x".repeat(100)], "test.jpg", {
+      type: "image/jpeg",
+    });
+
+    const result = await compressImage(file, {});
+    expect(result).toBeDefined();
+  });
+
   // Note: Canvas API-based compression tests require canvas npm package
   // These tests should be run as integration tests with canvas installed
   // or in a real browser environment. Skipping for unit tests.

@@ -23,7 +23,7 @@ jest.mock("next/server", () => ({
 }));
 
 // Mock dependencies
-jest.mock("@/shared/lib/auth", () => ({
+jest.mock("@/shared/lib/auth/auth", () => ({
   auth: jest.fn(),
 }));
 
@@ -52,7 +52,7 @@ jest.mock("@/shared/lib/email/auth-emails", () => ({
   sendPasswordChangedEmail: jest.fn(),
 }));
 
-jest.mock("@/shared/lib/logger", () => ({
+jest.mock("@/shared/lib/logs/logger", () => ({
   logger: {
     info: jest.fn(),
     warn: jest.fn(),

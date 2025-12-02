@@ -58,7 +58,7 @@ export const mockDbMilestone: DbMilestone = {
 };
 
 /**
- * Mock Milestone insert data
+ * Mock Milestone insert data (database - snake_case)
  */
 export const mockMilestoneInsert: DbMilestoneInsert = {
   project_id: "550e8400-e29b-41d4-a716-446655440201",
@@ -70,11 +70,32 @@ export const mockMilestoneInsert: DbMilestoneInsert = {
 };
 
 /**
- * Mock Milestone update data
+ * Mock Milestone insert data (frontend - camelCase)
+ */
+export const mockMilestoneInput = {
+  projectId: "550e8400-e29b-41d4-a716-446655440201",
+  name: "Phase 3: Testing",
+  description: "Quality assurance and testing",
+  startDate: "2024-04-21",
+  finishDate: "2024-05-20",
+  status: MilestoneStatus.PENDING,
+};
+
+/**
+ * Mock Milestone update data (database - snake_case)
  */
 export const mockMilestoneUpdate: DbMilestoneUpdate = {
   status: MilestoneStatus.COMPLETED,
   completion_date: "2024-05-15",
   remarks: "Completed successfully",
   updated_at: new Date().toISOString(),
+};
+
+/**
+ * Mock Milestone update data (frontend - camelCase)
+ */
+export const mockMilestoneUpdateInput = {
+  status: MilestoneStatus.COMPLETED,
+  completionDate: "2024-05-15",
+  remarks: "Completed successfully",
 };

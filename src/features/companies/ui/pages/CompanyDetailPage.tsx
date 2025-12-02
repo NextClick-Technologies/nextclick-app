@@ -6,11 +6,11 @@ import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/shared/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useCompany, useDeleteCompany } from "../hooks/useCompany";
-import { CompanyDetailHeader } from "../components/[id]/CompanyDetailHeader";
-import { CompanyInformation } from "../components/[id]/CompanyInformation";
-import { ClientsSummary } from "../components/[id]/ClientsSummary";
-import { EditCompanyDialog } from "../components/[id]/edit-company-dialog";
-import { DeleteCompanyDialog } from "../components/[id]/DeleteCompanyDialog";
+import { CompanyDetailHeader } from "../components/[company-detail-page]/CompanyDetailHeader";
+import { CompanyInformation } from "../components/[company-detail-page]/CompanyInformation";
+import { ClientsSummary } from "../components/[company-detail-page]/ClientsSummary";
+import { EditCompanyDialog } from "../components/[company-detail-page]/edit-company-dialog";
+import { DeleteCompanyDialog } from "../components/[company-detail-page]/DeleteCompanyDialog";
 
 export default function CompanyDetailPage() {
   const params = useParams();

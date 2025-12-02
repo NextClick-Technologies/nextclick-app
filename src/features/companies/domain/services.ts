@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { transformToDb, transformFromDb } from "@/shared/lib/api/api-utils";
-import { companySchema, updateCompanySchema } from "../schemas";
-import * as companyRepository from "./repository";
-import type { CompanyQueryOptions } from "./repository";
+import { companySchema, updateCompanySchema } from "./schemas";
+import * as companyRepository from "./repositories";
+import type { CompanyQueryOptions } from "./repositories";
 
 /**
  * Business Logic Layer for Companies

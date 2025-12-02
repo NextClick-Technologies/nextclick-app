@@ -6,13 +6,13 @@ import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/shared/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useProject, useDeleteProject } from "../hooks/useProject";
-import { ProjectDetailHeader } from "../components/[id]/ProjectDetailHeader";
-import { ProjectInformation } from "../components/[id]/project-information";
-import { BudgetInformation } from "../components/[id]/BudgetInformation";
-import { ProjectMilestones } from "../components/[id]/(milestones)/project-milestones";
-import { MilestoneStats } from "../components/[id]/(milestones)/milestone-progress";
-import { EditProjectDialog } from "../components/[id]/edit-project-dialog";
-import { DeleteProjectDialog } from "../components/[id]/DeleteProjectDialog";
+import { ProjectDetailHeader } from "../components/[project-detail-page]/ProjectDetailHeader";
+import { ProjectInformation } from "../components/[project-detail-page]/project-information";
+import { BudgetInformation } from "../components/[project-detail-page]/BudgetInformation";
+import { ProjectMilestones } from "../components/[project-detail-page]/(milestones)/project-milestones";
+import { MilestoneStats } from "../components/[project-detail-page]/(milestones)/milestone-progress";
+import { EditProjectDialog } from "../components/[project-detail-page]/edit-project-dialog";
+import { DeleteProjectDialog } from "../components/[project-detail-page]/DeleteProjectDialog";
 
 export default function ProjectDetailPage() {
   const params = useParams();

@@ -7,7 +7,7 @@ import {
   deleteProjectMember,
 } from "@/shared/lib/supabase/auth-client";
 import * as projectMembersRepository from "./project-members.repository";
-import { addTeamMemberSchema, assignProjectMemberSchema } from "../schemas";
+import { addTeamMemberSchema, assignProjectMemberSchema } from "./schemas";
 
 /**
  * Business Logic Layer for Project Members

@@ -11,8 +11,8 @@ import {
   parseOrderBy,
   buildPaginatedResponse,
 } from "@/shared/lib/api/api-utils";
-import * as projectService from "../domain/services/projects.service";
-import * as projectMembersService from "../domain/services/project-members.service";
+import * as projectService from "../domain/projects.service";
+import * as projectMembersService from "../domain/project-members.service";
 
 /**
  * GET /api/project - Get all projects with pagination

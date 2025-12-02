@@ -22,6 +22,8 @@ const config = {
     "/__tests__/fixtures/",
     "/__tests__/mocks/",
     "/__tests__/utils/",
+    "/__tests__/e2e/",
+    ".spec.ts$",
   ],
   collectCoverageFrom: [
     "src/**/*.{js,jsx,ts,tsx}",
@@ -29,6 +31,7 @@ const config = {
     "!src/**/*.stories.{js,jsx,ts,tsx}",
     "!src/__tests__/**",
   ],
+  transformIgnorePatterns: ["node_modules/(?!(nanoid)/)"],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

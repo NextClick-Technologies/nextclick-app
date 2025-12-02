@@ -6,12 +6,12 @@ import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/shared/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useClient, useDeleteClient } from "../hooks/useClient";
-import { ClientDetailHeader } from "../components/[id]/ClientDetailHeader";
-import { ContactInformation } from "../components/[id]/ContactInformation";
-import { FinancialInformation } from "../components/[id]/FinancialInformation";
-import { ProjectSummary } from "../components/[id]/ProjectSummary";
-import { EditClientDialog } from "../components/[id]/edit-client-dialog";
-import { DeleteClientDialog } from "../components/[id]/DeleteClientDialog";
+import { ClientDetailHeader } from "../components/[client-detail-page]/ClientDetailHeader";
+import { ContactInformation } from "../components/[client-detail-page]/ContactInformation";
+import { FinancialInformation } from "../components/[client-detail-page]/FinancialInformation";
+import { ProjectSummary } from "../components/[client-detail-page]/ProjectSummary";
+import { EditClientDialog } from "../components/[client-detail-page]/edit-client-dialog";
+import { DeleteClientDialog } from "../components/[client-detail-page]/DeleteClientDialog";
 
 export default function ClientDetailPage() {
   const params = useParams();

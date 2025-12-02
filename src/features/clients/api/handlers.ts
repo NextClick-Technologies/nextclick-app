@@ -11,7 +11,7 @@ import {
   parseOrderBy,
   buildPaginatedResponse,
 } from "@/shared/lib/api/api-utils";
-import * as clientService from "../domain/services/service";
+import * as clientService from "../domain/services";
 
 /**
  * GET /api/client - Get all clients with pagination
