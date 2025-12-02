@@ -73,6 +73,10 @@ function NavItem({
   isCollapsed = false,
 }: NavItemProps) {
   const { closeMobile } = useSidebar();
+  const pathname = usePathname();
+
+  // Check if current pathname starts with the href (for nested routes)
+  const isActiveRoute = pathname === href || pathname.startsWith(href + "/");
 
   const linkContent = (
     <Link
@@ -80,7 +84,7 @@ function NavItem({
       onClick={closeMobile}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-        isActive
+        isActiveRoute
           ? "bg-primary text-primary-foreground"
           : "hover:bg-secondary hover:text-secondary-foreground",
         isCollapsed && "justify-center px-2"
@@ -115,7 +119,7 @@ export function Sidebar() {
     <aside
       className={cn(
         "fixed inset-y-0 left-0 z-50 flex flex-col border-r bg-card transition-all duration-300",
-        isCollapsed ? "w-16" : "w-64"
+        isCollapsed ? "w-16" : "w-56"
       )}
     >
       <div

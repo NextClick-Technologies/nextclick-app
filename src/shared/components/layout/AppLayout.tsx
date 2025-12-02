@@ -40,7 +40,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <div
         className={cn(
           "transition-all duration-300",
-          isCollapsed ? "lg:pl-16" : "lg:pl-64"
+          isCollapsed ? "lg:pl-16" : "lg:pl-56"
         )}
       >
         <Header />
