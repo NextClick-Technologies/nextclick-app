@@ -4,9 +4,14 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/shared/components/ui/button";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/shared/components/ui/tabs";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useProject, useDeleteProject } from "../hooks/useProject";
-import { ProjectDetailHeader } from "../components/[project-detail-page]/ProjectDetailHeader";
 import { ProjectInformation } from "../components/[project-detail-page]/project-information";
 import { BudgetInformation } from "../components/[project-detail-page]/BudgetInformation";
 import { ProjectMilestones } from "../components/[project-detail-page]/(milestones)/project-milestones";
@@ -91,49 +96,61 @@ export default function ProjectDetailPage() {
   return (
     <AppLayout>
       <div className="space-y-6">
-        <ProjectDetailHeader
-          projectName={project.name}
-          onBack={handleBack}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        {/* Tabs */}
+        <Tabs defaultValue="detail" className="space-y-6">
+          <TabsList className="bg-transparent h-auto p-0 gap-1">
+            <TabsTrigger value="detail" className="px-4 py-2">
+              Detail
+            </TabsTrigger>
+            <TabsTrigger value="milestones" className="px-4 py-2">
+              Milestones
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Project Information and Budget Information */}
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <ProjectInformation
-              projectId={projectId}
-              type={project.type}
-              status={project.status}
-              priority={project.priority}
-              startDate={project.startDate}
-              finishDate={project.finishDate}
-              completionDate={project.completionDate}
-              description={project.description}
-              clientName={clientName}
-              projectManagerName={projectManagerName}
-              members={project.members}
-            />
-          </div>
+          {/* Detail Tab */}
+          <TabsContent value="detail" className="space-y-6">
+            <div className="grid gap-6 lg:grid-cols-3">
+              <div className="lg:col-span-2">
+                <ProjectInformation
+                  projectId={projectId}
+                  projectName={project.name}
+                  type={project.type}
+                  status={project.status}
+                  priority={project.priority}
+                  startDate={project.startDate}
+                  finishDate={project.finishDate}
+                  completionDate={project.completionDate}
+                  description={project.description}
+                  clientName={clientName}
+                  projectManagerName={projectManagerName}
+                  members={project.members}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              </div>
 
-          <div>
-            <BudgetInformation
-              budget={project.budget}
-              paymentTerms={project.paymentTerms}
-            />
-          </div>
-        </div>
+              <div>
+                <BudgetInformation
+                  budget={project.budget}
+                  paymentTerms={project.paymentTerms}
+                />
+              </div>
+            </div>
+          </TabsContent>
 
-        {/* Project Milestones and Milestone Progress */}
-        <div className="grid gap-6 lg:grid-cols-5">
-          <div className="lg:col-span-2">
-            <ProjectMilestones projectId={projectId} />
-          </div>
+          {/* Milestones Tab */}
+          <TabsContent value="milestones" className="space-y-6">
+            <div className="grid gap-6 lg:grid-cols-5">
+              <div className="lg:col-span-2">
+                <ProjectMilestones projectId={projectId} />
+              </div>
 
-          <div className="lg:col-span-3">
-            <MilestoneStats projectId={projectId} />
-          </div>
-        </div>
+              <div className="lg:col-span-3">
+                <MilestoneStats projectId={projectId} />
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Edit Dialog */}
