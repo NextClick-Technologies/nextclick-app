@@ -65,7 +65,7 @@ export async function getMilestones(request: NextRequest) {
 
     // Transform milestone members to camelCase
     const transformedData = (data || []).map((milestone: any) => {
-      const transformed = transformFromDb(milestone);
+      const transformed = transformFromDb(milestone) as any;
       if (milestone.milestone_members) {
         transformed.members = milestone.milestone_members.map(
           (member: any) => ({
@@ -143,13 +143,15 @@ export async function getMilestone(id: string) {
 
     // Transform milestone members to camelCase
     const transformed: any = transformFromDb(data);
-    if (data.milestone_members) {
-      transformed.members = data.milestone_members.map((member: any) => ({
-        id: member.employees.id,
-        name: member.employees.name,
-        familyName: member.employees.family_name,
-        role: member.role,
-      }));
+    if ((data as any).milestone_members) {
+      transformed.members = (data as any).milestone_members.map(
+        (member: any) => ({
+          id: member.employees.id,
+          name: member.employees.name,
+          familyName: member.employees.family_name,
+          role: member.role,
+        })
+      );
     }
 
     return apiSuccess(transformed);
