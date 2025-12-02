@@ -46,6 +46,7 @@ interface TeamMember {
   id: string;
   name: string;
   familyName: string;
+  position?: string | null;
   role?: string | null;
 }
 
@@ -184,7 +185,9 @@ export function ManageMilestoneTeamDialog({
                             {availableEmployees.map((emp) => (
                               <CommandItem
                                 key={emp.id}
-                                value={`${emp.name} ${emp.familyName}`}
+                                value={`${emp.name} ${emp.familyName} ${
+                                  emp.position || ""
+                                }`}
                                 onSelect={() => {
                                   setSelectedEmployeeId(emp.id);
                                   setComboboxOpen(false);
@@ -198,7 +201,16 @@ export function ManageMilestoneTeamDialog({
                                       : "opacity-0"
                                   )}
                                 />
-                                {getFullName(emp.name, emp.familyName)}
+                                <div className="flex flex-col">
+                                  <span>
+                                    {getFullName(emp.name, emp.familyName)}
+                                  </span>
+                                  {emp.position && (
+                                    <span className="text-xs text-muted-foreground">
+                                      {emp.position}
+                                    </span>
+                                  )}
+                                </div>
                               </CommandItem>
                             ))}
                           </CommandGroup>
