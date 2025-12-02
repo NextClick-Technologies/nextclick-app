@@ -9,14 +9,6 @@ import {
   UserCog,
   Wallet,
   TrendingUp,
-  FileText,
-  Search,
-  Package,
-  CreditCard,
-  Settings,
-  Shield,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import { NavItem } from "./NavItem";
 import { Button } from "@/shared/components/ui/button";
@@ -53,17 +45,6 @@ const navigation: NavSection[] = [
       { name: "Employees", href: "/employees", icon: UserCog },
       { name: "Payroll", href: "/payroll", icon: Wallet },
       { name: "Performance", href: "/performance", icon: TrendingUp },
-    ],
-  },
-  {
-    section: "Others",
-    items: [
-      { name: "Document Center", href: "/documents", icon: FileText },
-      { name: "Research Hub", href: "/research", icon: Search },
-      { name: "Service Catalog", href: "/services", icon: Package },
-      { name: "Billing Management", href: "/billing", icon: CreditCard },
-      { name: "Service Management", href: "/service-mgmt", icon: Settings },
-      { name: "Security Center", href: "/security", icon: Shield },
     ],
   },
 ];
