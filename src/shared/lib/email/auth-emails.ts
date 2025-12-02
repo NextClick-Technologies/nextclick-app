@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { logger } from "@/shared/lib/logger";
+import { logger } from "@/shared/lib/logs/logger";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL = process.env.FROM_EMAIL || "noreply@nextclick.com";
@@ -145,7 +145,10 @@ export async function sendPasswordChangedEmail(email: string): Promise<void> {
       `,
     });
   } catch (error) {
-    logger.error({ err: error, email }, "Failed to send password changed email");
+    logger.error(
+      { err: error, email },
+      "Failed to send password changed email"
+    );
     // Don't throw - this is just a notification
   }
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { camelizeKeys, decamelizeKeys } from "humps";
-import { logger } from "@/shared/lib/logger";
+import { logger } from "@/shared/lib/logs/logger";
 
 export interface ApiError {
   error: string;

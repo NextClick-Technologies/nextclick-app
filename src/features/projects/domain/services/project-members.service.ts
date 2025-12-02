@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { supabaseAdmin } from "@/shared/lib/supabase/server";
-import { logger } from "@/shared/lib/logger";
+import { logger } from "@/shared/lib/logs/logger";
 import { ProjectMemberInsert } from "@/shared/types/database.type";
 import {
   createProjectMember,

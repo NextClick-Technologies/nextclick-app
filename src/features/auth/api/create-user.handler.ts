@@ -3,7 +3,7 @@
  * Admin-only endpoint to create new users
  */
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/shared/lib/auth";
+import { auth } from "@/shared/lib/auth/auth";
 import {
   getUserByEmail,
   createUser,
@@ -20,7 +20,7 @@ import {
   sendVerificationEmail,
 } from "@/shared/lib/email/auth-emails";
 import type { CreateUserInput } from "@/shared/types/auth.types";
-import { logger } from "@/shared/lib/logger";
+import { logger } from "@/shared/lib/logs/logger";
 
 /**
  * POST /api/auth/create-user

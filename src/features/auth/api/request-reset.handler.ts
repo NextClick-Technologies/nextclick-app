@@ -10,7 +10,7 @@ import {
 } from "@/shared/lib/supabase/auth-client";
 import { generateSecureToken, getTokenExpiration } from "../domain/password";
 import { sendPasswordResetEmail } from "@/shared/lib/email/auth-emails";
-import { logger } from "@/shared/lib/logger";
+import { logger } from "@/shared/lib/logs/logger";
 
 /**
  * POST /api/auth/request-reset

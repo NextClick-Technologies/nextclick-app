@@ -9,7 +9,7 @@ import {
   createAuditLog,
 } from "@/shared/lib/supabase/auth-client";
 import { isTokenExpired } from "../domain/password";
-import { logger } from "@/shared/lib/logger";
+import { logger } from "@/shared/lib/logs/logger";
 
 /**
  * POST /api/auth/verify-email

@@ -7,7 +7,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Upload, X, Loader2 } from "lucide-react";
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { compressImage, isImageFile } from "@/shared/utils/image";
+import { compressImage, isImageFile } from "@/shared/utils/image-compress";
 import { supabase } from "@/shared/lib/supabase/client";
 
 interface PhotoUploadProps {

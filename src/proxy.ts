@@ -1,4 +1,4 @@
-import { auth } from "@/shared/lib/auth";
+import { auth } from "@/shared/lib/auth/auth";
 
 export default auth((req) => {
   // req.auth contains the session data

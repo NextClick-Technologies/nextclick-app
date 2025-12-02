@@ -3,9 +3,9 @@
  * Handles global project member operations with authentication and audit logging
  */
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/shared/lib/auth";
+import { auth } from "@/shared/lib/auth/auth";
 import { createAuditLog } from "@/shared/lib/supabase/auth-client";
-import { logger } from "@/shared/lib/logger";
+import { logger } from "@/shared/lib/logs/logger";
 import * as projectMembersService from "../domain/services/project-members.service";
 
 /**

@@ -4,7 +4,7 @@ import {
   isImageFile,
   getExtensionFromMimeType,
   generateUniqueFilename,
-} from "@/shared/utils/image";
+} from "@/shared/utils/image-compress";
 
 // Mock File and Blob
 global.File = class MockFile extends Blob {

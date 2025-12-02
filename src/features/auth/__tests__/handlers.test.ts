@@ -60,7 +60,7 @@ jest.mock("@/shared/lib/logger", () => ({
   },
 }));
 
-import { auth } from "@/shared/lib/auth";
+import { auth } from "@/shared/lib/auth/auth";
 import {
   getUserByEmail,
   createUser,
