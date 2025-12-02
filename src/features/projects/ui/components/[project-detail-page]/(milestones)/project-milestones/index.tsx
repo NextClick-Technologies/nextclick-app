@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { useMilestones } from "@/features/milestone/ui/hooks/useMilestone";
 import { AddMilestoneDialog } from "./add-milestone-dialog";
@@ -11,13 +16,27 @@ import { MilestoneFilters, type StatusFilter } from "./MilestoneFilters";
 import { MilestoneList } from "./MilestoneList";
 import { DeleteMilestoneDialog } from "./DeleteMilestoneDialog";
 import { useMilestoneActions } from "./useMilestoneActions";
+import { ManageMilestoneTeamDialog } from "./ManageMilestoneTeamDialog";
+import { Milestone } from "@/features/milestone/domain/types";
 
 interface ProjectMilestonesProps {
   projectId: string;
+  projectMembers?: Array<{
+    id: string;
+    name: string;
+    familyName: string;
+    role?: string | null;
+  }>;
 }
 
-export function ProjectMilestones({ projectId }: ProjectMilestonesProps) {
+export function ProjectMilestones({
+  projectId,
+  projectMembers = [],
+}: ProjectMilestonesProps) {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [manageTeamDialogOpen, setManageTeamDialogOpen] = useState(false);
+  const [selectedMilestoneForTeam, setSelectedMilestoneForTeam] =
+    useState<Milestone | null>(null);
 
   const { data, isLoading, error } = useMilestones({
     projectId,
@@ -38,6 +57,11 @@ export function ProjectMilestones({ projectId }: ProjectMilestonesProps) {
     confirmDelete,
     deleteMilestone,
   } = useMilestoneActions();
+
+  const handleManageTeam = (milestone: Milestone) => {
+    setSelectedMilestoneForTeam(milestone);
+    setManageTeamDialogOpen(true);
+  };
 
   // Filter milestones by status
   const filteredMilestones =
@@ -88,6 +112,9 @@ export function ProjectMilestones({ projectId }: ProjectMilestonesProps) {
             onEdit={handleEdit}
             onDelete={handleDeleteClick}
             onAddClick={() => setAddDialogOpen(true)}
+            onManageTeam={
+              projectMembers.length > 0 ? handleManageTeam : undefined
+            }
           />
         </CardContent>
       </Card>
@@ -114,6 +141,18 @@ export function ProjectMilestones({ projectId }: ProjectMilestonesProps) {
         onConfirm={confirmDelete}
         isPending={deleteMilestone.isPending}
       />
+
+      {/* Manage Milestone Team Dialog */}
+      {selectedMilestoneForTeam && (
+        <ManageMilestoneTeamDialog
+          open={manageTeamDialogOpen}
+          onOpenChange={setManageTeamDialogOpen}
+          milestoneId={selectedMilestoneForTeam.id}
+          milestoneName={selectedMilestoneForTeam.name}
+          projectMembers={projectMembers}
+          currentMembers={selectedMilestoneForTeam.members || []}
+        />
+      )}
     </>
   );
 }

@@ -7,7 +7,7 @@ import {
   deleteProjectMember,
 } from "@/shared/lib/supabase/auth-client";
 import * as projectMembersRepository from "./project-members.repository";
-import { addTeamMemberSchema, assignProjectMemberSchema } from "./schemas";
+import { addTeamMemberSchema } from "./schemas";
 
 /**
  * Business Logic Layer for Project Members
@@ -21,34 +21,21 @@ export async function addProjectMember(projectId: string, input: unknown) {
 
   logger.info({ projectId, employeeId, role }, "Adding member to project");
 
-  // Get the user_id from the employee
+  // Verify employee exists
   const { data: employee, error: employeeError } =
     await projectMembersRepository.findEmployeeById(employeeId);
 
   logger.debug({ employee, employeeError }, "Employee lookup result");
 
-  if (employeeError) {
+  if (employeeError || !employee) {
     logger.error({ err: employeeError }, "Employee lookup error");
-    throw new Error(`Employee lookup failed: ${employeeError.message}`);
+    throw new Error("Employee not found");
   }
-
-  type EmployeeResult = { user_id: string | null };
-  const employeeResult = employee as unknown as EmployeeResult;
-
-  if (!employeeResult || !employeeResult.user_id) {
-    logger.error({ employee }, "Employee not linked to user");
-    throw new Error(
-      "Employee not linked to a user account. Please create a user account for this employee first."
-    );
-  }
-
-  const userId = employeeResult.user_id;
-  logger.debug({ userId }, "Using user_id");
 
   // Check if member already exists
   const { data: existing } = await projectMembersRepository.checkMemberExists(
     projectId,
-    userId
+    employeeId
   );
 
   if (existing) {
@@ -58,7 +45,7 @@ export async function addProjectMember(projectId: string, input: unknown) {
   // Add the team member
   const memberData: ProjectMemberInsert = {
     project_id: projectId,
-    user_id: userId,
+    employee_id: employeeId,
     role: role || null,
   };
 
@@ -67,7 +54,7 @@ export async function addProjectMember(projectId: string, input: unknown) {
   const { data, error } = await supabaseAdmin
     .from("project_members")
     .insert(memberData as never)
-    .select("id, role, user_id, users(id, employees(id, name, family_name))")
+    .select("id, role, employee_id, employees(id, name, family_name)")
     .single();
 
   logger.debug({ data, error }, "Insert result");
@@ -85,19 +72,16 @@ export async function addProjectMember(projectId: string, input: unknown) {
   type MemberResponse = {
     id: string;
     role: string | null;
-    user_id: string;
-    users: {
+    employee_id: string;
+    employees: {
       id: string;
-      employees: Array<{
-        id: string;
-        name: string;
-        family_name: string;
-      }>;
+      name: string;
+      family_name: string;
     };
   };
 
   const memberResponse = data as unknown as MemberResponse;
-  const employeeData = memberResponse.users?.employees?.[0];
+  const employeeData = memberResponse.employees;
   logger.debug({ employeeData }, "Employee data from response");
 
   if (!employeeData) {
@@ -125,33 +109,11 @@ export async function removeProjectMember(
 ) {
   logger.info({ projectId, employeeId }, "Removing member from project");
 
-  // Get the user_id from the employee
-  const { data: employee, error: employeeError } =
-    await projectMembersRepository.findEmployeeById(employeeId);
-
-  logger.debug({ employee, employeeError }, "Employee lookup result");
-
-  if (employeeError) {
-    logger.error({ err: employeeError }, "Employee lookup error");
-    throw new Error("Employee not linked to a user account");
-  }
-
-  type EmployeeResult = { user_id: string | null };
-  const employeeResult = employee as unknown as EmployeeResult;
-
-  if (!employeeResult || !employeeResult.user_id) {
-    logger.error({ employee }, "Employee lookup error or no user_id");
-    throw new Error("Employee not linked to a user account");
-  }
-
-  const userId = employeeResult.user_id;
-  logger.debug({ userId }, "Deleting with user_id");
-
   const { error } = await supabaseAdmin
     .from("project_members")
     .delete()
     .eq("project_id", projectId)
-    .eq("user_id", userId);
+    .eq("employee_id", employeeId);
 
   if (error) {
     logger.error({ err: error }, "Delete error");
@@ -167,14 +129,14 @@ export async function removeProjectMember(
  */
 export async function listProjectMembers(
   projectId?: string,
-  userId?: string,
+  employeeId?: string,
   userRole?: string
 ) {
   // Employees can only see their own memberships
-  const filterUserId = userRole === "employee" ? userId : undefined;
+  const filterEmployeeId = userRole === "employee" ? employeeId : undefined;
 
   const { data: members, error } =
-    await projectMembersRepository.findAllMembers(projectId, filterUserId);
+    await projectMembersRepository.findAllMembers(projectId, filterEmployeeId);
 
   if (error) {
     logger.error({ err: error, projectId }, "Error fetching project members");
@@ -185,16 +147,23 @@ export async function listProjectMembers(
 }
 
 /**
- * Assign user to project (Admin/Manager only)
+ * Assign employee to project (Admin/Manager only)
+ * Note: Function name kept for API compatibility but now works with employee_id
  */
-export async function assignUserToProject(input: unknown) {
-  const { projectId, userId, role } = assignProjectMemberSchema.parse(input);
+export async function assignUserToProject(input: {
+  projectId: string;
+  userId: string; // This is actually employee_id for backward API compatibility
+  role?: string | null;
+}) {
+  const { projectId, userId: employeeId, role } = input;
 
-  // Check if user exists
-  const { data: user } = await projectMembersRepository.findUserById(userId);
+  // Check if employee exists
+  const { data: employee } = await projectMembersRepository.findEmployeeById(
+    employeeId
+  );
 
-  if (!user) {
-    throw new Error("User not found");
+  if (!employee) {
+    throw new Error("Employee not found");
   }
 
   // Check if project exists
@@ -208,30 +177,30 @@ export async function assignUserToProject(input: unknown) {
 
   // Check if membership already exists
   const { data: existingMember } =
-    await projectMembersRepository.checkMemberExists(projectId, userId);
+    await projectMembersRepository.checkMemberExists(projectId, employeeId);
 
   if (existingMember) {
-    throw new Error("User is already assigned to this project");
+    throw new Error("Employee is already assigned to this project");
   }
 
   // Create project member
   const { data: newMember, error: createError } = await createProjectMember({
     project_id: projectId,
-    user_id: userId,
+    employee_id: employeeId,
     role: role || null,
   });
 
   if (createError) {
     logger.error(
-      { err: createError, projectId, userId },
+      { err: createError, projectId, employeeId },
       "Error creating project member"
     );
-    throw new Error("Failed to assign user to project");
+    throw new Error("Failed to assign employee to project");
   }
 
   return {
     member: newMember,
-    user,
+    user: employee, // Return employee as "user" for API compatibility
     project,
   };
 }

@@ -13,6 +13,7 @@ interface MilestoneTimelineItemProps {
   isLast?: boolean;
   onEdit: (milestone: Milestone) => void;
   onDelete: (milestone: Milestone) => void;
+  onManageTeam?: (milestone: Milestone) => void;
 }
 
 export function MilestoneTimelineItem({
@@ -20,6 +21,7 @@ export function MilestoneTimelineItem({
   isLast,
   onEdit,
   onDelete,
+  onManageTeam,
 }: MilestoneTimelineItemProps) {
   const statusConfig = getStatusConfig(milestone.status);
   const overdue = isOverdue(milestone);
@@ -38,6 +40,7 @@ export function MilestoneTimelineItem({
         overdue={overdue}
         onEdit={onEdit}
         onDelete={onDelete}
+        onManageTeam={onManageTeam}
       />
     </div>
   );

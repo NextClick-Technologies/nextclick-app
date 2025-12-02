@@ -41,7 +41,7 @@ export async function getProjectById(id: string) {
     ...baseData,
     members: (data as any).project_members
       ?.map((pm: any) => {
-        const employee = pm.users?.employees?.[0];
+        const employee = pm.employees;
         return employee
           ? {
               id: employee.id,

@@ -154,7 +154,10 @@ export default function ProjectDetailPage() {
           <TabsContent value="milestones" className="mt-6 space-y-6">
             <div className="grid gap-6 lg:grid-cols-5">
               <div className="lg:col-span-2">
-                <ProjectMilestones projectId={projectId} />
+                <ProjectMilestones
+                  projectId={projectId}
+                  projectMembers={project.members || []}
+                />
               </div>
 
               <div className="lg:col-span-3">

@@ -35,7 +35,7 @@ export async function findById(id: string) {
       `*, 
        client:clients(id, name, family_name), 
        employee:employees(id, name, family_name), 
-       project_members(id, role, user_id, users(id, employees(id, name, family_name)))`
+       project_members(id, role, employee_id, employees(id, name, family_name))`
     )
     .eq("id", id)
     .single();

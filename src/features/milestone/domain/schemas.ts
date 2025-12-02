@@ -16,3 +16,31 @@ export const updateMilestoneSchema = milestoneSchema.partial();
 
 export type MilestoneInput = z.infer<typeof milestoneSchema>;
 export type UpdateMilestoneInput = z.infer<typeof updateMilestoneSchema>;
+
+/**
+ * Milestone Members Schemas
+ */
+
+/**
+ * Schema for adding a team member to a milestone (by employeeId)
+ */
+export const addMilestoneTeamMemberSchema = z.object({
+  employeeId: z.string().uuid("Invalid employee ID"),
+  role: z.string().optional(),
+});
+
+/**
+ * Schema for milestone member record
+ */
+export const milestoneMemberSchema = z.object({
+  id: z.string().uuid(),
+  milestoneId: z.string().uuid(),
+  employeeId: z.string().uuid(),
+  role: z.string().nullable(),
+  createdAt: z.string(),
+});
+
+export type AddMilestoneTeamMemberInput = z.infer<
+  typeof addMilestoneTeamMemberSchema
+>;
+export type MilestoneMember = z.infer<typeof milestoneMemberSchema>;

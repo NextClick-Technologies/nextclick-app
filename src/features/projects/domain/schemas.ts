@@ -43,21 +43,12 @@ export const addTeamMemberSchema = z.object({
 });
 
 /**
- * Schema for assigning a user to a project (by userId - for global management)
- */
-export const assignProjectMemberSchema = z.object({
-  projectId: z.string().uuid("Invalid project ID"),
-  userId: z.string().uuid("Invalid user ID"),
-  role: z.string().optional(),
-});
-
-/**
  * Schema for project member record (matches database.type.ts Row type)
  */
 export const projectMemberSchema = z.object({
   id: z.string().uuid(),
   projectId: z.string().uuid(),
-  userId: z.string().uuid(),
+  employeeId: z.string().uuid(),
   role: z.string().nullable(),
   createdAt: z.string(),
 });
@@ -68,7 +59,7 @@ export const projectMemberSchema = z.object({
 export const createProjectMemberSchema = z.object({
   id: z.string().uuid().optional(),
   projectId: z.string().uuid(),
-  userId: z.string().uuid(),
+  employeeId: z.string().uuid(),
   role: z.string().optional().nullable(),
   createdAt: z.string().optional(),
 });
@@ -78,9 +69,6 @@ export const updateProjectMemberSchema = z.object({
 });
 
 export type AddTeamMemberInput = z.infer<typeof addTeamMemberSchema>;
-export type AssignProjectMemberInput = z.infer<
-  typeof assignProjectMemberSchema
->;
 export type ProjectMember = z.infer<typeof projectMemberSchema>;
 export type CreateProjectMemberInput = z.infer<
   typeof createProjectMemberSchema

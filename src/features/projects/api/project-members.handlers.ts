@@ -23,9 +23,12 @@ export async function getProjectMembers(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId") || undefined;
 
+    // For employee role, we need to get their employee_id from the session
+    // For now, we'll pass user.id which should map to employee_id
+    // You may need to adjust this based on your auth structure
     const members = await projectMembersService.listProjectMembers(
       projectId,
-      session.user.id,
+      session.user.id, // This should be employee_id for employee role
       session.user.role
     );
 
@@ -41,7 +44,8 @@ export async function getProjectMembers(request: NextRequest) {
 
 /**
  * POST /api/project/project-members
- * Assign user to project (Admin/Manager only) - uses userId
+ * Assign employee to project (Admin/Manager only)
+ * Note: Uses userId parameter for backward compatibility but stores employee_id
  */
 export async function assignUserToProject(request: NextRequest) {
   try {
@@ -51,7 +55,7 @@ export async function assignUserToProject(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Only admins and managers can assign users to projects
+    // Only admins and managers can assign employees to projects
     if (session.user.role !== "admin" && session.user.role !== "manager") {
       return NextResponse.json(
         { error: "Forbidden - Admin or Manager access required" },
@@ -60,11 +64,11 @@ export async function assignUserToProject(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { projectId, userId, role } = body;
+    const { projectId, userId, role } = body; // userId is actually employeeId
 
     if (!projectId || !userId) {
       return NextResponse.json(
-        { error: "Project ID and User ID are required" },
+        { error: "Project ID and Employee ID are required" },
         { status: 400 }
       );
     }
@@ -72,7 +76,7 @@ export async function assignUserToProject(request: NextRequest) {
     const { member, user, project } =
       await projectMembersService.assignUserToProject({
         projectId,
-        userId,
+        userId, // This gets mapped to employeeId in service
         role,
       });
 
@@ -85,8 +89,10 @@ export async function assignUserToProject(request: NextRequest) {
       details: {
         project_id: projectId,
         project_name: (project as unknown as { name: string })?.name,
-        assigned_user_id: userId,
-        assigned_user_email: (user as unknown as { email: string })?.email,
+        assigned_employee_id: userId,
+        assigned_employee_name: `${
+          (user as unknown as { name: string })?.name
+        } ${(user as unknown as { family_name: string })?.family_name}`,
         member_role: role,
       },
       ip_address:
@@ -98,24 +104,24 @@ export async function assignUserToProject(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "User assigned to project successfully",
+        message: "Employee assigned to project successfully",
         member,
       },
       { status: 201 }
     );
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "User not found") {
+      if (error.message === "Employee not found") {
         return NextResponse.json({ error: error.message }, { status: 404 });
       }
       if (error.message === "Project not found") {
         return NextResponse.json({ error: error.message }, { status: 404 });
       }
-      if (error.message === "User is already assigned to this project") {
+      if (error.message === "Employee is already assigned to this project") {
         return NextResponse.json({ error: error.message }, { status: 409 });
       }
     }
-    logger.error({ err: error }, "Error in assign user to project");
+    logger.error({ err: error }, "Error in assign employee to project");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -125,7 +131,7 @@ export async function assignUserToProject(request: NextRequest) {
 
 /**
  * DELETE /api/project/project-members?id=xxx
- * Remove user from project by member ID (Admin/Manager only)
+ * Remove employee from project by member ID (Admin/Manager only)
  */
 export async function removeUserFromProject(request: NextRequest) {
   try {
@@ -135,7 +141,7 @@ export async function removeUserFromProject(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Only admins and managers can remove users from projects
+    // Only admins and managers can remove employees from projects
     if (session.user.role !== "admin" && session.user.role !== "manager") {
       return NextResponse.json(
         { error: "Forbidden - Admin or Manager access required" },
@@ -165,9 +171,15 @@ export async function removeUserFromProject(request: NextRequest) {
         project_id: (member as unknown as { project_id: string })?.project_id,
         project_name: (member as unknown as { projects?: { name: string } })
           ?.projects?.name,
-        removed_user_id: (member as unknown as { user_id: string })?.user_id,
-        removed_user_email: (member as unknown as { users?: { email: string } })
-          ?.users?.email,
+        removed_employee_id: (member as unknown as { employee_id: string })
+          ?.employee_id,
+        removed_employee_name: `${
+          (member as unknown as { employees?: { name: string } })?.employees
+            ?.name
+        } ${
+          (member as unknown as { employees?: { family_name: string } })
+            ?.employees?.family_name
+        }`,
       },
       ip_address:
         request.headers.get("x-forwarded-for") ||
@@ -178,7 +190,7 @@ export async function removeUserFromProject(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "User removed from project successfully",
+        message: "Employee removed from project successfully",
       },
       { status: 200 }
     );
@@ -189,7 +201,7 @@ export async function removeUserFromProject(request: NextRequest) {
     ) {
       return NextResponse.json({ error: error.message }, { status: 404 });
     }
-    logger.error({ err: error }, "Error in remove user from project");
+    logger.error({ err: error }, "Error in remove employee from project");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

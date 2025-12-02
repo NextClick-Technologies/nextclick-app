@@ -27,9 +27,22 @@ export async function getMilestones(request: NextRequest) {
     const orderByParam = searchParams.get("orderBy");
     const projectId = searchParams.get("projectId");
 
-    let query = supabaseAdmin
-      .from("milestones")
-      .select("*", { count: "exact" });
+    let query = supabaseAdmin.from("milestones").select(
+      `
+        *,
+        milestone_members (
+          id,
+          employee_id,
+          role,
+          employees (
+            id,
+            name,
+            family_name
+          )
+        )
+      `,
+      { count: "exact" }
+    );
 
     if (projectId) {
       query = query.eq(transformColumnName("projectId"), projectId);
@@ -50,13 +63,24 @@ export async function getMilestones(request: NextRequest) {
       return apiError(error.message, 500);
     }
 
+    // Transform milestone members to camelCase
+    const transformedData = (data || []).map((milestone: any) => {
+      const transformed = transformFromDb(milestone);
+      if (milestone.milestone_members) {
+        transformed.members = milestone.milestone_members.map(
+          (member: any) => ({
+            id: member.employees.id,
+            name: member.employees.name,
+            familyName: member.employees.family_name,
+            role: member.role,
+          })
+        );
+      }
+      return transformed;
+    });
+
     return apiSuccess(
-      buildPaginatedResponse(
-        transformFromDb<unknown[]>(data || []),
-        page,
-        pageSize,
-        count || 0
-      )
+      buildPaginatedResponse(transformedData, page, pageSize, count || 0)
     );
   } catch (error) {
     return handleApiError(error);
@@ -95,7 +119,21 @@ export async function getMilestone(id: string) {
   try {
     const { data, error } = await supabaseAdmin
       .from("milestones")
-      .select("*")
+      .select(
+        `
+        *,
+        milestone_members (
+          id,
+          employee_id,
+          role,
+          employees (
+            id,
+            name,
+            family_name
+          )
+        )
+      `
+      )
       .eq("id", id)
       .single();
 
@@ -103,7 +141,18 @@ export async function getMilestone(id: string) {
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);
     }
 
-    return apiSuccess(transformFromDb(data));
+    // Transform milestone members to camelCase
+    const transformed: any = transformFromDb(data);
+    if (data.milestone_members) {
+      transformed.members = data.milestone_members.map((member: any) => ({
+        id: member.employees.id,
+        name: member.employees.name,
+        familyName: member.employees.family_name,
+        role: member.role,
+      }));
+    }
+
+    return apiSuccess(transformed);
   } catch (error) {
     return handleApiError(error);
   }

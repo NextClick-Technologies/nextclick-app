@@ -26,4 +26,10 @@ export interface Milestone {
   order?: number;
   createdAt: string;
   updatedAt: string;
+  members?: Array<{
+    id: string;
+    name: string;
+    familyName: string;
+    role?: string | null;
+  }>;
 }

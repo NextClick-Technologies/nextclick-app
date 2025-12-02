@@ -282,6 +282,29 @@ export interface Database {
           updated_at?: string;
         };
       };
+      milestone_members: {
+        Row: {
+          id: string;
+          milestone_id: string;
+          employee_id: string;
+          role: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          milestone_id: string;
+          employee_id: string;
+          role?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          milestone_id?: string;
+          employee_id?: string;
+          role?: string | null;
+          created_at?: string;
+        };
+      };
       payments: {
         Row: {
           id: string;
@@ -439,21 +462,21 @@ export interface Database {
         Row: {
           id: string;
           project_id: string;
-          user_id: string;
+          employee_id: string;
           role: string | null;
           created_at: string;
         };
         Insert: {
           id?: string;
           project_id: string;
-          user_id: string;
+          employee_id: string;
           role?: string | null;
           created_at?: string;
         };
         Update: {
           id?: string;
           project_id?: string;
-          user_id?: string;
+          employee_id?: string;
           role?: string | null;
           created_at?: string;
         };
@@ -489,6 +512,13 @@ export type MilestoneInsert =
   Database["public"]["Tables"]["milestones"]["Insert"];
 export type MilestoneUpdate =
   Database["public"]["Tables"]["milestones"]["Update"];
+
+export type MilestoneMember =
+  Database["public"]["Tables"]["milestone_members"]["Row"];
+export type MilestoneMemberInsert =
+  Database["public"]["Tables"]["milestone_members"]["Insert"];
+export type MilestoneMemberUpdate =
+  Database["public"]["Tables"]["milestone_members"]["Update"];
 
 export type Payment = Database["public"]["Tables"]["payments"]["Row"];
 export type PaymentInsert = Database["public"]["Tables"]["payments"]["Insert"];

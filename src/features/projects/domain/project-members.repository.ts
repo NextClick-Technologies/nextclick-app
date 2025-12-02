@@ -5,17 +5,17 @@ import { supabaseAdmin } from "@/shared/lib/supabase/server";
  * Data Access Layer for Project Members
  */
 
-export async function findAllMembers(projectId?: string, userId?: string) {
+export async function findAllMembers(projectId?: string, employeeId?: string) {
   let query = supabaseAdmin.from("project_members").select(`
       id,
       project_id,
-      user_id,
+      employee_id,
       role,
       created_at,
-      users:user_id (
+      employees:employee_id (
         id,
-        email,
-        role
+        name,
+        family_name
       ),
       projects:project_id (
         id,
@@ -28,9 +28,9 @@ export async function findAllMembers(projectId?: string, userId?: string) {
     query = query.eq("project_id", projectId);
   }
 
-  // Filter by user if provided
-  if (userId) {
-    query = query.eq("user_id", userId);
+  // Filter by employee if provided
+  if (employeeId) {
+    query = query.eq("employee_id", employeeId);
   }
 
   return await query;
@@ -43,8 +43,8 @@ export async function findMemberById(memberId: string) {
       `
       id,
       project_id,
-      user_id,
-      users:user_id (email),
+      employee_id,
+      employees:employee_id (id, name, family_name),
       projects:project_id (name)
     `
     )
@@ -52,20 +52,12 @@ export async function findMemberById(memberId: string) {
     .single();
 }
 
-export async function checkMemberExists(projectId: string, userId: string) {
+export async function checkMemberExists(projectId: string, employeeId: string) {
   return await supabaseAdmin
     .from("project_members")
     .select("id")
     .eq("project_id", projectId)
-    .eq("user_id", userId)
-    .single();
-}
-
-export async function findUserById(userId: string) {
-  return await supabaseAdmin
-    .from("users")
-    .select("id, email")
-    .eq("id", userId)
+    .eq("employee_id", employeeId)
     .single();
 }
 
@@ -80,7 +72,7 @@ export async function findProjectById(projectId: string) {
 export async function findEmployeeById(employeeId: string) {
   return await supabaseAdmin
     .from("employees")
-    .select("user_id")
+    .select("id, name, family_name")
     .eq("id", employeeId)
     .single();
 }

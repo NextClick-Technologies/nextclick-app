@@ -9,6 +9,7 @@ import { sanitizeHtml } from "@/shared/utils/sanitize";
 import { Clock, Pencil, Trash2 } from "lucide-react";
 import { StatusConfig } from "./MilestoneStatusConfig";
 import { formatDate, getDateRange } from "./MilestoneDateUtils";
+import { TeamMembers } from "../../../project-information/TeamMembers";
 
 interface MilestoneCardProps {
   milestone: Milestone;
@@ -16,6 +17,7 @@ interface MilestoneCardProps {
   overdue: boolean;
   onEdit: (milestone: Milestone) => void;
   onDelete: (milestone: Milestone) => void;
+  onManageTeam?: (milestone: Milestone) => void;
 }
 
 export function MilestoneCard({
@@ -24,6 +26,7 @@ export function MilestoneCard({
   overdue,
   onEdit,
   onDelete,
+  onManageTeam,
 }: MilestoneCardProps) {
   const StatusIcon = statusConfig.icon;
 
@@ -81,6 +84,16 @@ export function MilestoneCard({
           {milestone.remarks && (
             <div className="mt-2 rounded-md bg-muted/50 p-2 text-sm italic text-muted-foreground">
               &ldquo;{milestone.remarks}&rdquo;
+            </div>
+          )}
+
+          {/* Team Members */}
+          {onManageTeam && (
+            <div className="mt-3 pt-3 border-t">
+              <TeamMembers
+                members={milestone.members || []}
+                onManageTeam={() => onManageTeam(milestone)}
+              />
             </div>
           )}
         </div>

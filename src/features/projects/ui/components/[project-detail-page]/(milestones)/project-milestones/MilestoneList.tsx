@@ -14,6 +14,7 @@ interface MilestoneListProps {
   onEdit: (milestone: Milestone) => void;
   onDelete: (milestone: Milestone) => void;
   onAddClick: () => void;
+  onManageTeam?: (milestone: Milestone) => void;
 }
 
 export function MilestoneList({
@@ -24,6 +25,7 @@ export function MilestoneList({
   onEdit,
   onDelete,
   onAddClick,
+  onManageTeam,
 }: MilestoneListProps) {
   if (isLoading) {
     return (
@@ -82,6 +84,7 @@ export function MilestoneList({
           isLast={index === milestones.length - 1}
           onEdit={onEdit}
           onDelete={onDelete}
+          onManageTeam={onManageTeam}
         />
       ))}
     </div>
