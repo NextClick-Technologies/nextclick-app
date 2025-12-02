@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -9,12 +10,19 @@ import {
   UserCog,
   Wallet,
   TrendingUp,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
-import { NavItem } from "./NavItem";
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils/cn";
 import { UserMenu } from "@/shared/components/UserMenu";
 import { useSidebar } from "@/shared/contexts";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/components/ui/tooltip";
 
 interface SectionNavItem {
   name: string;
@@ -25,6 +33,14 @@ interface SectionNavItem {
 interface NavSection {
   section?: string;
   items: SectionNavItem[];
+}
+
+interface NavItemProps {
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  isActive: boolean;
+  isCollapsed?: boolean;
 }
 
 const navigation: NavSection[] = [
@@ -49,9 +65,51 @@ const navigation: NavSection[] = [
   },
 ];
 
+function NavItem({
+  name,
+  href,
+  icon: Icon,
+  isActive,
+  isCollapsed = false,
+}: NavItemProps) {
+  const { closeMobile } = useSidebar();
+
+  const linkContent = (
+    <Link
+      href={href}
+      onClick={closeMobile}
+      className={cn(
+        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+        isActive
+          ? "bg-primary text-primary-foreground"
+          : "hover:bg-secondary hover:text-secondary-foreground",
+        isCollapsed && "justify-center px-2"
+      )}
+    >
+      <Icon className="h-4 w-4 shrink-0" />
+      {!isCollapsed && <span>{name}</span>}
+    </Link>
+  );
+
+  if (isCollapsed) {
+    return (
+      <TooltipProvider delayDuration={0}>
+        <Tooltip>
+          <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
+          <TooltipContent side="right" className="font-medium">
+            {name}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return linkContent;
+}
+
 export function Sidebar() {
   const pathname = usePathname();
-  const { isCollapsed } = useSidebar();
+  const { isCollapsed, toggleCollapse } = useSidebar();
 
   return (
     <aside
@@ -67,18 +125,28 @@ export function Sidebar() {
         )}
       >
         {!isCollapsed ? (
-          <>
+          <div className="flex w-full items-center justify-between">
             <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
               <span className="text-sm font-bold">NC</span>
             </div>
-            <div className="ml-2">
-              <h1 className="text-sm font-semibold">Next Click ERP</h1>
-            </div>
-          </>
-        ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
-            <span className="text-sm font-bold">NC</span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleCollapse}
+              className="h-10 w-10"
+            >
+              <PanelLeftClose className="h-6 w-6" />
+            </Button>
           </div>
+        ) : (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleCollapse}
+            className="h-10 w-10"
+          >
+            <PanelLeftOpen className="h-6 w-6" />
+          </Button>
         )}
       </div>
 

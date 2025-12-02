@@ -1,20 +1,13 @@
 "use client";
 
 import { Input } from "@/shared/components/ui/input";
-import {
-  Bell,
-  MessageSquare,
-  Search,
-  Menu,
-  PanelLeftClose,
-  PanelLeftOpen,
-} from "lucide-react";
+import { Bell, MessageSquare, Search, Menu } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
 import { useSidebar } from "@/shared/contexts";
 
 export function Header() {
-  const { isCollapsed, toggleCollapse, toggleMobile } = useSidebar();
+  const { toggleMobile } = useSidebar();
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
       <div className="flex h-16 items-center gap-4 px-6">
@@ -27,26 +20,6 @@ export function Header() {
           aria-label="Open menu"
         >
           <Menu className="h-5 w-5" />
-        </Button>
-
-        {/* Desktop Collapse Toggle */}
-        <Button
-          variant="ghost"
-          onClick={toggleCollapse}
-          className="hidden lg:flex h-full rounded-none hover:bg-accent"
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {isCollapsed ? (
-            <PanelLeftOpen
-              className="scale-80 text-muted-foreground font-extralight"
-              style={{ width: "32px", height: "32px" }}
-            />
-          ) : (
-            <PanelLeftClose
-              className="scale-80 text-muted-foreground font-extralight"
-              style={{ width: "32px", height: "32px" }}
-            />
-          )}
         </Button>
 
         <div className="flex flex-1 items-center gap-4 justify-end">

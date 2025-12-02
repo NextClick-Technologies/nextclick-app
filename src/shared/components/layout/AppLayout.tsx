@@ -1,6 +1,6 @@
 "use client";
 
-import { Sidebar } from "./sidebar";
+import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { Sheet, SheetContent, SheetTitle } from "@/shared/components/ui/sheet";
 import { cn } from "@/shared/utils/cn";
