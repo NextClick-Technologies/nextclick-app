@@ -4,6 +4,12 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/shared/components/ui/button";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/shared/components/ui/tabs";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useCompany, useDeleteCompany } from "../hooks/useCompany";
 import { CompanyDetailHeader } from "../components/[company-detail-page]/CompanyDetailHeader";
@@ -80,33 +86,63 @@ export default function CompanyDetailPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
-        <CompanyDetailHeader
-          companyName={company.name}
-          onBack={handleBack}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Left Column - Company Info */}
-          <div className="lg:col-span-2">
-            <CompanyInformation
-              email={company.email}
-              phoneNumber={company.phoneNumber}
-              address={company.address}
-              contactPerson={company.contactPerson}
-              industry={company.industry}
-              status={company.status}
-            />
-          </div>
-
-          {/* Right Column - Clients Summary */}
-          <div>
-            <ClientsSummary />
-          </div>
+      <Tabs
+        defaultValue="detail"
+        className="flex flex-col -mx-4 -my-4 sm:-mx-6 sm:-my-6 h-[calc(100vh-5rem)]"
+      >
+        {/* Tabs Header - Fixed */}
+        <div className="shrink-0 pb-2 px-4 pt-4 sm:px-6 sm:pt-6 bg-background">
+          <TabsList className="bg-transparent h-auto p-0 gap-2">
+            <TabsTrigger
+              value="detail"
+              className="px-4 py-2 data-[state=active]:bg-gray-50"
+            >
+              Detail
+            </TabsTrigger>
+            <TabsTrigger
+              value="projects"
+              className="px-4 py-2 data-[state=active]:bg-gray-50"
+            >
+              Projects
+            </TabsTrigger>
+          </TabsList>
         </div>
-      </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6">
+          {/* Detail Tab */}
+          <TabsContent value="detail" className="mt-6 space-y-6">
+            <div className="grid gap-6 lg:grid-cols-3">
+              {/* Left Column - Company Info */}
+              <div className="lg:col-span-2">
+                <CompanyInformation
+                  companyName={company.name}
+                  email={company.email}
+                  phoneNumber={company.phoneNumber}
+                  address={company.address}
+                  contactPerson={company.contactPerson}
+                  industry={company.industry}
+                  status={company.status}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              </div>
+
+              {/* Right Column - Clients Summary */}
+              <div>
+                <ClientsSummary />
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Projects Tab */}
+          <TabsContent value="projects" className="mt-6">
+            <div className="flex items-center justify-center min-h-[40vh] text-muted-foreground">
+              <p>Projects overview coming soon...</p>
+            </div>
+          </TabsContent>
+        </div>
+      </Tabs>
 
       {/* Edit Dialog */}
       <EditCompanyDialog

@@ -4,6 +4,12 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/shared/components/ui/button";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/shared/components/ui/tabs";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useClient, useDeleteClient } from "../hooks/useClient";
 import { ClientDetailHeader } from "../components/[client-detail-page]/ClientDetailHeader";
@@ -74,38 +80,68 @@ export default function ClientDetailPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
-        <ClientDetailHeader
-          clientName={client.name}
-          familyName={client.familyName}
-          onBack={handleBack}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Left Column - Contact Info */}
-          <div className="lg:col-span-2">
-            <ContactInformation
-              email={client.email}
-              phoneNumber={client.phoneNumber}
-              contactPerson={`${client.name} ${client.familyName}`}
-              status={client.status}
-              joinDate={client.joinDate}
-              companyName={client.company?.name || "N/A"}
-              companyId={client.company?.id || null}
-            />
-          </div>
-
-          {/* Right Column - Financial & Project Summary */}
-          <div className="space-y-6">
-            <FinancialInformation
-              totalContractValue={client.totalContractValue}
-            />
-            <ProjectSummary />
-          </div>
+      <Tabs
+        defaultValue="detail"
+        className="flex flex-col -mx-4 -my-4 sm:-mx-6 sm:-my-6 h-[calc(100vh-5rem)]"
+      >
+        {/* Tabs Header - Fixed */}
+        <div className="shrink-0 pb-2 px-4 pt-4 sm:px-6 sm:pt-6 bg-background">
+          <TabsList className="bg-transparent h-auto p-0 gap-2">
+            <TabsTrigger
+              value="detail"
+              className="px-4 py-2 data-[state=active]:bg-gray-50"
+            >
+              Detail
+            </TabsTrigger>
+            <TabsTrigger
+              value="activity"
+              className="px-4 py-2 data-[state=active]:bg-gray-50"
+            >
+              Activity
+            </TabsTrigger>
+          </TabsList>
         </div>
-      </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6">
+          {/* Detail Tab */}
+          <TabsContent value="detail" className="mt-6 space-y-6">
+            <div className="grid gap-6 lg:grid-cols-3">
+              {/* Left Column - Contact Info */}
+              <div className="lg:col-span-2">
+                <ContactInformation
+                  clientName={client.name}
+                  familyName={client.familyName}
+                  email={client.email}
+                  phoneNumber={client.phoneNumber}
+                  contactPerson={`${client.name} ${client.familyName}`}
+                  status={client.status}
+                  joinDate={client.joinDate}
+                  companyName={client.company?.name || "N/A"}
+                  companyId={client.company?.id || null}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              </div>
+
+              {/* Right Column - Financial & Project Summary */}
+              <div className="space-y-6">
+                <FinancialInformation
+                  totalContractValue={client.totalContractValue}
+                />
+                <ProjectSummary />
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Activity Tab */}
+          <TabsContent value="activity" className="mt-6">
+            <div className="flex items-center justify-center min-h-[40vh] text-muted-foreground">
+              <p>Activity history coming soon...</p>
+            </div>
+          </TabsContent>
+        </div>
+      </Tabs>
 
       {/* Edit Dialog */}
       <EditClientDialog
