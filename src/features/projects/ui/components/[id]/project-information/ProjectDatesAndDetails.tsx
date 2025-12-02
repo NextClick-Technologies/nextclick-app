@@ -2,6 +2,7 @@
 
 import { TeamMembers } from "./TeamMembers";
 import { formatDate } from "./projectInfoUtils";
+import { sanitizeHtml } from "@/shared/utils/sanitize";
 
 interface TeamMember {
   id: string;
@@ -52,7 +53,10 @@ export function ProjectDatesAndDetails({
           <p className="text-sm font-medium text-muted-foreground">
             Description:
           </p>
-          <p className="text-sm">{description}</p>
+          <div
+            className="text-sm"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }}
+          />
         </div>
       )}
       <div>

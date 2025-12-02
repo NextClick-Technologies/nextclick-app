@@ -8,6 +8,7 @@ import {
 } from "@/features/projects/domain/types";
 import { Badge } from "@/shared/components/ui/badge";
 import { Avatar } from "@/shared/components/ui/avatar";
+import { sanitizeHtml } from "@/shared/utils/sanitize";
 import { FolderKanban } from "lucide-react";
 
 interface ProjectTableProps {
@@ -103,9 +104,12 @@ export function ProjectTable({ projects }: ProjectTableProps) {
                     <div>
                       <p className="font-medium">{project.name}</p>
                       {project.description && (
-                        <p className="text-sm text-muted-foreground max-w-xs truncate">
-                          {project.description}
-                        </p>
+                        <div
+                          className="text-sm text-muted-foreground max-w-xs truncate"
+                          dangerouslySetInnerHTML={{
+                            __html: sanitizeHtml(project.description),
+                          }}
+                        />
                       )}
                     </div>
                   </div>
@@ -153,9 +157,12 @@ export function ProjectTable({ projects }: ProjectTableProps) {
               <div className="flex-1 min-w-0">
                 <p className="font-medium truncate">{project.name}</p>
                 {project.description && (
-                  <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                    {project.description}
-                  </p>
+                  <div
+                    className="text-sm text-muted-foreground line-clamp-2 mt-1"
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHtml(project.description),
+                    }}
+                  />
                 )}
               </div>
               <Badge variant={getStatusVariant(project.status)}>

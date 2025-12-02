@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { Company } from "@/features/companies/domain/types";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
-import { Building2 } from "lucide-react";
+import { sanitizeHtml } from "@/shared/utils/sanitize";
+import { Building2, Mail, MapPin, Phone } from "lucide-react";
 
 interface CompanyTableProps {
   companies: Company[];
@@ -145,7 +146,12 @@ export function CompanyTable({ companies }: CompanyTableProps) {
                   <span className="text-muted-foreground text-xs shrink-0">
                     Address:
                   </span>
-                  <span className="line-clamp-2">{company.address}</span>
+                  <div
+                    className="line-clamp-2"
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHtml(company.address),
+                    }}
+                  />
                 </div>
               )}
             </div>

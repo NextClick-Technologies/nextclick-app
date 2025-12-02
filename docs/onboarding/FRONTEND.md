@@ -651,12 +651,15 @@ import { Input } from '@/components/ui/input';
 1. **Create the file** in appropriate directory:
 
 ```tsx
-// src/components/clients/ClientCard.tsx
+// src/features/clients/ui/components/ClientCard.tsx
+import { sanitizeHtml } from "@/shared/utils/sanitize";
+
 interface ClientCardProps {
   client: {
     id: string;
     name: string;
     email: string;
+    description?: string;
   };
   onEdit?: () => void;
 }
@@ -666,6 +669,15 @@ export function ClientCard({ client, onEdit }: ClientCardProps) {
     <div className="rounded-lg border p-4">
       <h3 className="text-lg font-semibold">{client.name}</h3>
       <p className="text-sm text-muted-foreground">{client.email}</p>
+
+      {/* Sanitize user-generated HTML content */}
+      {client.description && (
+        <div
+          className="mt-2 text-sm"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(client.description) }}
+        />
+      )}
+
       {onEdit && (
         <Button onClick={onEdit} variant="outline" size="sm">
           Edit
@@ -1008,6 +1020,101 @@ export function ClientsTable({ data }) {
 }
 ```
 
+## 🔒 Security Best Practices
+
+### XSS Protection with DOMPurify
+
+**Always sanitize user-generated HTML content** before rendering to prevent XSS attacks.
+
+**Import the sanitization utilities:**
+
+```tsx
+import { sanitizeHtml, sanitizeText } from "@/shared/utils/sanitize";
+```
+
+**When to use `sanitizeHtml()`:**
+
+Use when rendering user-generated HTML content with formatting (descriptions, addresses, notes):
+
+```tsx
+// ✅ CORRECT: Sanitize before rendering HTML
+export function ProjectDescription({ description }: { description: string }) {
+  return (
+    <div
+      className="text-sm"
+      dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }}
+    />
+  );
+}
+
+// ❌ WRONG: Never use dangerouslySetInnerHTML without sanitization
+<div dangerouslySetInnerHTML={{ __html: userContent }} />; // DANGEROUS!
+```
+
+**When to use `sanitizeText()`:**
+
+Use when displaying plain text user input:
+
+```tsx
+// For plain text display
+export function UserComment({ text }: { text: string }) {
+  return <p>{sanitizeText(text)}</p>;
+}
+```
+
+**What's allowed and blocked:**
+
+```typescript
+// ✅ ALLOWED: Safe formatting
+<p>Text with <strong>bold</strong> and <em>italic</em></p>
+<ul><li>List items</li></ul>
+<a href="https://safe-url.com">Links</a>
+<h1>Headings</h1>
+
+// ❌ BLOCKED: Dangerous content
+<script>alert('XSS')</script>                    // Scripts
+<img src=x onerror=alert('XSS')>                 // Event handlers
+<a href="javascript:alert('XSS')">Link</a>       // JavaScript URLs
+<iframe src="evil.com"></iframe>                 // Iframes
+<div onclick="malicious()">Click</div>           // Inline events
+```
+
+**Common use cases:**
+
+```tsx
+// Project descriptions
+<div dangerouslySetInnerHTML={{ __html: sanitizeHtml(project.description) }} />
+
+// Milestone descriptions
+<div dangerouslySetInnerHTML={{ __html: sanitizeHtml(milestone.description) }} />
+
+// Employee addresses
+<div dangerouslySetInnerHTML={{ __html: sanitizeHtml(employee.address) }} />
+
+// Company information
+<div dangerouslySetInnerHTML={{ __html: sanitizeHtml(company.address) }} />
+```
+
+**Never skip sanitization:**
+
+```tsx
+// ❌ BAD: Direct rendering of user content
+<div>{userGeneratedHtml}</div>
+<div dangerouslySetInnerHTML={{ __html: userInput }} />
+
+// ✅ GOOD: Always sanitize first
+<div dangerouslySetInnerHTML={{ __html: sanitizeHtml(userInput) }} />
+```
+
+**Testing sanitization:**
+
+```bash
+# Run sanitization tests
+npm test -- sanitize.test.ts
+```
+
+See [`docs/instructions/XSS_PROTECTION.md`](../instructions/XSS_PROTECTION.md) for detailed usage instructions.
+
 ## ✅ Best Practices
 
 ### Performance
@@ -1030,6 +1137,7 @@ export function ClientsTable({ data }) {
 - Extract repeated logic to hooks
 - Keep components small and focused
 - Write descriptive variable names
+- **Always sanitize user-generated HTML content** (see Security section above)
 
 ## 🐛 Troubleshooting
 

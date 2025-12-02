@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/shared/components/ui/card";
+import { sanitizeHtml } from "@/shared/utils/sanitize";
 
 interface AddressInformationProps {
   address: string | null;
@@ -29,7 +30,12 @@ export function AddressInformation({
       </div>
       {hasAddress ? (
         <div className="space-y-2">
-          {address && <p className="text-sm">{address}</p>}
+          {address && (
+            <div
+              className="text-sm"
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(address) }}
+            />
+          )}
           <p className="text-sm">
             {[city, state, zipCode].filter(Boolean).join(", ")}
           </p>

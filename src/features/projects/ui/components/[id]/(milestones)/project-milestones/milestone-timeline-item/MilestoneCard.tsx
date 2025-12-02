@@ -5,6 +5,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Card } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils/cn";
+import { sanitizeHtml } from "@/shared/utils/sanitize";
 import { Clock, Pencil, Trash2 } from "lucide-react";
 import { StatusConfig } from "./MilestoneStatusConfig";
 import { formatDate, getDateRange } from "./MilestoneDateUtils";
@@ -51,9 +52,14 @@ export function MilestoneCard({
           </div>
 
           {/* Description */}
-          <p className="text-sm text-muted-foreground">
-            {milestone.description}
-          </p>
+          {milestone.description && (
+            <div
+              className="text-sm text-muted-foreground"
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(milestone.description),
+              }}
+            />
+          )}
 
           {/* Date range */}
           <div className="flex flex-wrap items-center gap-4 text-sm">
