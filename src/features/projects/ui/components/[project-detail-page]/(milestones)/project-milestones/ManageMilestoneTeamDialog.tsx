@@ -32,15 +32,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/shared/components/ui/command";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/components/ui/select";
 import { cn } from "@/shared/utils/cn";
-import { PROJECT_ROLES } from "@/shared/const/roles";
 
 interface TeamMember {
   id: string;
@@ -68,7 +60,6 @@ export function ManageMilestoneTeamDialog({
   currentMembers,
 }: ManageMilestoneTeamDialogProps) {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>("");
-  const [role, setRole] = useState<string>("");
   const [comboboxOpen, setComboboxOpen] = useState(false);
 
   const addMember = useAddMilestoneMember();
@@ -82,16 +73,19 @@ export function ManageMilestoneTeamDialog({
   const handleAddMember = () => {
     if (!selectedEmployeeId) return;
 
+    const selectedMember = projectMembers.find(
+      (emp) => emp.id === selectedEmployeeId
+    );
+
     addMember.mutate(
       {
         milestoneId,
         employeeId: selectedEmployeeId,
-        role: role || undefined,
+        role: selectedMember?.role || undefined,
       },
       {
         onSuccess: () => {
           setSelectedEmployeeId("");
-          setRole("");
           toast.success("Team member assigned to milestone");
         },
         onError: (error) => {
@@ -131,7 +125,6 @@ export function ManageMilestoneTeamDialog({
     // Reset form when dialog closes
     if (!newOpen) {
       setSelectedEmployeeId("");
-      setRole("");
       setComboboxOpen(false);
     }
   };
@@ -151,99 +144,78 @@ export function ManageMilestoneTeamDialog({
           <div className="space-y-4">
             <h4 className="text-sm font-medium">Assign Team Member</h4>
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="employee">Project Team Member</Label>
-                  <Popover open={comboboxOpen} onOpenChange={setComboboxOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={comboboxOpen}
-                        className="justify-between"
-                        disabled={availableEmployees.length === 0}
-                      >
-                        {selectedEmployeeId
-                          ? getFullName(
-                              availableEmployees.find(
-                                (emp) => emp.id === selectedEmployeeId
-                              )?.name || "",
-                              availableEmployees.find(
-                                (emp) => emp.id === selectedEmployeeId
-                              )?.familyName || ""
-                            )
-                          : "Select team member..."}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
-                      <Command>
-                        <CommandInput placeholder="Search team members..." />
-                        <CommandList>
-                          <CommandEmpty>No team member found.</CommandEmpty>
-                          <CommandGroup>
-                            {availableEmployees.map((emp) => (
-                              <CommandItem
-                                key={emp.id}
-                                value={`${emp.name} ${emp.familyName} ${
-                                  emp.position || ""
-                                }`}
-                                onSelect={() => {
-                                  setSelectedEmployeeId(emp.id);
-                                  setComboboxOpen(false);
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    selectedEmployeeId === emp.id
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                                <div className="flex flex-col">
-                                  <span>
-                                    {getFullName(emp.name, emp.familyName)}
-                                  </span>
-                                  {emp.position && (
-                                    <span className="text-xs text-muted-foreground">
-                                      {emp.position}
-                                    </span>
-                                  )}
+              <div className="grid gap-2">
+                <Label htmlFor="employee">Project Team Member</Label>
+                <Popover open={comboboxOpen} onOpenChange={setComboboxOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={comboboxOpen}
+                      className="justify-between"
+                      disabled={availableEmployees.length === 0}
+                    >
+                      {selectedEmployeeId
+                        ? getFullName(
+                            availableEmployees.find(
+                              (emp) => emp.id === selectedEmployeeId
+                            )?.name || "",
+                            availableEmployees.find(
+                              (emp) => emp.id === selectedEmployeeId
+                            )?.familyName || ""
+                          )
+                        : "Select team member..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0" align="start">
+                    <Command>
+                      <CommandInput placeholder="Search team members..." />
+                      <CommandList>
+                        <CommandEmpty>No team member found.</CommandEmpty>
+                        <CommandGroup>
+                          {availableEmployees.map((emp) => (
+                            <CommandItem
+                              key={emp.id}
+                              value={`${emp.name} ${emp.familyName} ${
+                                emp.position || ""
+                              } ${emp.role || ""}`}
+                              onSelect={() => {
+                                setSelectedEmployeeId(emp.id);
+                                setComboboxOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  selectedEmployeeId === emp.id
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              <div className="flex flex-col">
+                                <span>
+                                  {getFullName(emp.name, emp.familyName)}
+                                </span>
+                                <div className="flex gap-2 text-xs text-muted-foreground">
+                                  {emp.position && <span>{emp.position}</span>}
+                                  {emp.position && emp.role && <span>•</span>}
+                                  {emp.role && <span>{emp.role}</span>}
                                 </div>
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  {availableEmployees.length === 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      All project team members are already assigned to this
-                      milestone
-                    </p>
-                  )}
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="role">Role (Optional)</Label>
-                  <Select value={role} onValueChange={setRole}>
-                    <SelectTrigger id="role">
-                      <SelectValue placeholder="Select role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {PROJECT_ROLES.map((roleOption) => (
-                        <SelectItem
-                          key={roleOption.value}
-                          value={roleOption.value}
-                        >
-                          {roleOption.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                              </div>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                {availableEmployees.length === 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    All project team members are already assigned to this
+                    milestone
+                  </p>
+                )}
               </div>
 
               <Button

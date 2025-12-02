@@ -42,6 +42,9 @@ import {
 } from "@/shared/components/ui/select";
 import { cn } from "@/shared/utils/cn";
 import { PROJECT_ROLES } from "@/shared/const/roles";
+import { useMilestones } from "@/features/milestone/ui/hooks/useMilestone";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 
 interface TeamMember {
   id: string;
@@ -68,8 +71,27 @@ export function ManageTeamDialog({
   const [comboboxOpen, setComboboxOpen] = useState(false);
 
   const { data: employeesData, isLoading: isLoadingEmployees } = useEmployees();
+  const { data: milestonesData } = useMilestones({ projectId });
   const addMember = useAddProjectMember();
   const removeMember = useRemoveProjectMember();
+
+  const milestones = milestonesData?.data || [];
+
+  // Check if an employee is assigned to any milestone
+  const isEmployeeInMilestone = (employeeId: string) => {
+    return milestones.some((milestone) =>
+      milestone.members?.some((member) => member.id === employeeId)
+    );
+  };
+
+  // Get milestone names where employee is assigned
+  const getMilestoneNames = (employeeId: string) => {
+    return milestones
+      .filter((milestone) =>
+        milestone.members?.some((member) => member.id === employeeId)
+      )
+      .map((milestone) => milestone.name);
+  };
 
   const employees = employeesData?.data || [];
   const currentMemberIds = currentMembers.map((m) => m.id);
@@ -100,6 +122,17 @@ export function ManageTeamDialog({
   };
 
   const handleRemoveMember = (employeeId: string) => {
+    if (isEmployeeInMilestone(employeeId)) {
+      const milestoneNames = getMilestoneNames(employeeId);
+      toast.error(
+        `Cannot remove this member. They are assigned to: ${milestoneNames.join(
+          ", "
+        )}. Please remove them from all milestones first.`,
+        { duration: 5000 }
+      );
+      return;
+    }
+
     removeMember.mutate(
       {
         projectId,
@@ -270,42 +303,76 @@ export function ManageTeamDialog({
               </p>
             ) : (
               <div className="space-y-2">
-                {currentMembers.map((member) => (
-                  <div
-                    key={member.id}
-                    className="flex items-center justify-between p-3 border rounded-lg"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                          {getInitials(member.name, member.familyName)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">
-                          {getFullName(member.name, member.familyName)}
+                {currentMembers.map((member) => {
+                  const inMilestone = isEmployeeInMilestone(member.id);
+                  const milestoneNames = inMilestone
+                    ? getMilestoneNames(member.id)
+                    : [];
+
+                  return (
+                    <div key={member.id}>
+                      <div className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center gap-3 flex-1">
+                          <Avatar>
+                            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                              {getInitials(member.name, member.familyName)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <div className="font-medium">
+                              {getFullName(member.name, member.familyName)}
+                            </div>
+                            <div className="flex gap-2 mt-1">
+                              {member.role && (
+                                <Badge variant="secondary" className="text-xs">
+                                  {member.role}
+                                </Badge>
+                              )}
+                              {inMilestone && (
+                                <Badge variant="outline" className="text-xs">
+                                  In {milestoneNames.length} milestone
+                                  {milestoneNames.length > 1 ? "s" : ""}
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        {member.role && (
-                          <Badge variant="secondary" className="text-xs mt-1">
-                            {member.role}
-                          </Badge>
-                        )}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRemoveMember(member.id)}
+                          disabled={removeMember.isPending || inMilestone}
+                          title={
+                            inMilestone
+                              ? `Remove from milestones first: ${milestoneNames.join(
+                                  ", "
+                                )}`
+                              : "Remove member"
+                          }
+                        >
+                          {removeMember.isPending ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <X
+                              className={cn(
+                                "h-4 w-4",
+                                inMilestone && "text-muted-foreground"
+                              )}
+                            />
+                          )}
+                        </Button>
                       </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleRemoveMember(member.id)}
-                      disabled={removeMember.isPending}
-                    >
-                      {removeMember.isPending ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <X className="h-4 w-4" />
+                      {inMilestone && (
+                        <Alert variant="default" className="mt-2">
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription className="text-xs">
+                            Assigned to: {milestoneNames.join(", ")}
+                          </AlertDescription>
+                        </Alert>
                       )}
-                    </Button>
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
