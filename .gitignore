@@ -55,3 +55,6 @@ src/__test-results__/
 
 # Internal Docs
 docs/internal/
+
+# migrations
+src/shared/lib/supabase/migrations/*
