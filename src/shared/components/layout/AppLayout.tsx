@@ -44,7 +44,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         )}
       >
         <Header />
-        <main className="px-4 py-4 sm:px-6 sm:py-6">{children}</main>
+        <main className="px-4 py-2 sm:px-6 sm:py-2">{children}</main>
       </div>
     </div>
   );

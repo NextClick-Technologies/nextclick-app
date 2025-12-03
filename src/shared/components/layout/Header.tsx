@@ -9,7 +9,7 @@ import { useSidebar } from "@/shared/contexts";
 export function Header() {
   const { toggleMobile } = useSidebar();
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
+    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur">
       <div className="flex h-16 items-center gap-4 px-6">
         {/* Mobile Menu Button */}
         <Button
