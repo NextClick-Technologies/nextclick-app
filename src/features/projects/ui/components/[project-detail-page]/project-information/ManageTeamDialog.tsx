@@ -45,7 +45,7 @@ import { PROJECT_ROLES } from "@/shared/const/roles";
 import { useMilestones } from "@/features/milestone/ui/hooks/useMilestone";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
-import { useMilestonePermissions } from "@/shared/hooks/useMilestonePermissions";
+import { useProjectMembersPermissions } from "@/shared/hooks/useProjectMembersPermissions";
 
 interface TeamMember {
   id: string;
@@ -76,10 +76,10 @@ export function ManageTeamDialog({
   const addMember = useAddProjectMember();
   const removeMember = useRemoveProjectMember();
 
-  // Check if user can manage team (admin, manager, or project manager)
-  const { canUpdate, isLoading: isLoadingPermissions } =
-    useMilestonePermissions(projectId);
-  const canManageTeam = canUpdate;
+  // Check if user can manage team members (admin, manager, or project manager)
+  const { canManage, isLoading: isLoadingPermissions } =
+    useProjectMembersPermissions(projectId);
+  const canManageTeam = canManage;
 
   const milestones = milestonesData?.data || [];
 

@@ -14,17 +14,26 @@ import {
 import {
   requireAdmin,
   requireAdminOrManager,
+  requireAuth,
 } from "@/shared/lib/api/auth-middleware";
 import * as employeeService from "../domain/services";
 
 /**
  * GET /api/employee - Get all employees with pagination
- * Permissions: Admin and Manager can read (for selecting project managers and team members)
+ * Permissions: Admin, Manager, and Employee can read (employees need to check project manager status)
+ * RLS policies enforce actual data access control
  */
 export async function getEmployees(request: NextRequest) {
   try {
-    const authResult = await requireAdminOrManager(request);
+    const authResult = await requireAuth(request);
     if (authResult instanceof NextResponse) return authResult;
+
+    const { userRole } = authResult;
+
+    // Only admin, manager, and employee can read employees
+    if (userRole === "viewer") {
+      return apiError("Forbidden: Viewers cannot access employee data", 403);
+    }
 
     const searchParams = request.nextUrl.searchParams;
     const { page, pageSize } = parsePagination(searchParams);
