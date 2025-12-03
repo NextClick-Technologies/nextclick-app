@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { getUserByEmail, updateUser } from "@/shared/lib/supabase/auth-client";
+import { supabaseAdmin } from "@/shared/lib/supabase/server";
 import { verifyPassword } from "@/shared/lib/auth/password";
 import { getRolePermissions } from "@/shared/lib/auth/permissions";
 import type { UserRole } from "@/shared/types/auth.types";
@@ -54,9 +55,34 @@ export const authConfig: NextAuthConfig = {
         // Update last login timestamp
         await updateUser(user.id, { last_login: new Date().toISOString() });
 
+        // Fetch employee data if user has an employee record
+        const { data: employeeData } = await supabaseAdmin
+          .from("employees")
+          .select("preferred_name, name, family_name")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        // Use preferred_name if available, otherwise fall back to name or email
+        let displayName: string | undefined;
+        if (employeeData) {
+          const empData = employeeData as {
+            preferred_name?: string | null;
+            name?: string;
+            family_name?: string;
+          };
+          displayName =
+            empData.preferred_name ||
+            (empData.name && empData.family_name
+              ? `${empData.name} ${empData.family_name}`
+              : undefined);
+        }
+
+        const finalName = displayName || user.email?.split("@")[0] || "User";
+
         return {
           id: user.id,
           email: user.email,
+          name: finalName,
           role: user.role as UserRole,
         };
       },
@@ -70,6 +96,7 @@ export const authConfig: NextAuthConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.name = user.name;
         token.role = user.role as UserRole;
         token.permissions = getRolePermissions(user.role as UserRole);
       }
@@ -78,6 +105,7 @@ export const authConfig: NextAuthConfig = {
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
+        session.user.name = token.name as string;
         session.user.role = token.role as UserRole;
         session.user.permissions = token.permissions as string[];
       }
