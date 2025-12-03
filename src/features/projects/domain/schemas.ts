@@ -7,22 +7,16 @@ import { PaymentTerms, ProjectStatus, ProjectPriority } from "./types";
 export const projectSchema = z.object({
   name: z.string().min(2, "Project name must be at least 2 characters"),
   type: z.string().optional(),
-  startDate: z.string().optional().nullable(),
-  finishDate: z.string().optional().nullable(),
-  budget: z.number().optional(),
-  paymentTerms: z
-    .nativeEnum(PaymentTerms)
-    .optional()
-    .default(PaymentTerms.NET_30D),
-  status: z.nativeEnum(ProjectStatus).optional().default(ProjectStatus.ACTIVE),
-  priority: z
-    .nativeEnum(ProjectPriority)
-    .optional()
-    .default(ProjectPriority.MEDIUM),
+  startDate: z.string().min(1, "Start date is required"),
+  finishDate: z.string().min(1, "Finish date is required"),
+  budget: z.number().min(0, "Budget must be 0 or greater").default(0),
+  paymentTerms: z.nativeEnum(PaymentTerms).default(PaymentTerms.NET_30D),
+  status: z.nativeEnum(ProjectStatus).default(ProjectStatus.ACTIVE),
+  priority: z.nativeEnum(ProjectPriority).default(ProjectPriority.MEDIUM),
   description: z.string().optional(),
   completionDate: z.string().optional().nullable(),
   clientId: z.string().uuid("Please select a client"),
-  projectManager: z.string().uuid().optional().nullable(),
+  projectManager: z.string().uuid("Please select a project manager"),
 });
 
 export const updateProjectSchema = projectSchema.partial();

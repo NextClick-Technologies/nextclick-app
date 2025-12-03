@@ -107,8 +107,11 @@ export async function updateCompany(id: string, request: NextRequest) {
 /**
  * DELETE /api/company/[id] - Delete a company
  */
-export async function deleteCompany(id: string) {
+export async function deleteCompany(id: string, request: NextRequest) {
   try {
+    const authResult = await requireAdminOrManager(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     await companyService.deleteCompany(id);
     return new Response(null, { status: 204 });
   } catch (error) {

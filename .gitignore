@@ -58,3 +58,6 @@ docs/internal/
 
 # migrations
 src/shared/lib/supabase/migrations/*
+
+# mcp
+.vscode/mcp.json

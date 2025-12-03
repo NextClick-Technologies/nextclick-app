@@ -14,7 +14,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  return getEmployeeById(id);
+  return getEmployeeById(id, request);
 }
 
 export async function PATCH(
@@ -30,5 +30,5 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  return deleteEmployee(id);
+  return deleteEmployee(id, request);
 }

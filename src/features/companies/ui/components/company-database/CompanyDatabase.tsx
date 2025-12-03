@@ -16,6 +16,7 @@ interface CompanyDatabaseProps {
   isLoading: boolean;
   error: Error | null;
   onAddClick: () => void;
+  canCreate?: boolean;
 }
 
 export function CompanyDatabase({
@@ -27,6 +28,7 @@ export function CompanyDatabase({
   isLoading,
   error,
   onAddClick,
+  canCreate = true,
 }: CompanyDatabaseProps) {
   return (
     <Card className="p-4 sm:p-6">
@@ -34,14 +36,16 @@ export function CompanyDatabase({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-lg font-semibold sm:text-xl">Company Database</h2>
           <div className="flex flex-col gap-2 w-full sm:w-auto sm:flex-row sm:items-center sm:gap-3">
-            <Button
-              onClick={onAddClick}
-              size="sm"
-              className="hidden sm:flex sm:shrink-0"
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              Add New Company
-            </Button>
+            {canCreate && (
+              <Button
+                onClick={onAddClick}
+                size="sm"
+                className="hidden sm:flex sm:shrink-0"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                Add New Company
+              </Button>
+            )}
             <CompanyFilters
               searchQuery={searchQuery}
               onSearchChange={onSearchChange}
@@ -50,10 +54,12 @@ export function CompanyDatabase({
             />
           </div>
         </div>
-        <Button onClick={onAddClick} className="w-full sm:hidden">
-          <Plus className="h-4 w-4 mr-2" />
-          Add New Company
-        </Button>
+        {canCreate && (
+          <Button onClick={onAddClick} className="w-full sm:hidden">
+            <Plus className="h-4 w-4 mr-2" />
+            Add New Company
+          </Button>
+        )}
 
         {error && (
           <div className="text-center py-8 text-destructive">

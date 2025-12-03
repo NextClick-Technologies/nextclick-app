@@ -49,6 +49,9 @@ export function AddProjectDialog({
   const { data: employeesData } = useEmployees({ pageSize: 100 });
   const employees = employeesData?.data || [];
 
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split("T")[0];
+
   const {
     register,
     handleSubmit,
@@ -57,6 +60,19 @@ export function AddProjectDialog({
     formState: { errors, isSubmitting },
   } = useForm<ProjectInput>({
     resolver: zodResolver(projectSchema),
+    defaultValues: {
+      name: "",
+      type: "",
+      startDate: today,
+      finishDate: today,
+      budget: 0,
+      paymentTerms: "net_30d",
+      status: "active",
+      priority: "medium",
+      description: "",
+      clientId: "",
+      projectManager: "",
+    },
   });
 
   const onSubmit = async (data: ProjectInput) => {
@@ -88,6 +104,7 @@ export function AddProjectDialog({
                 placeholder="Enter project name"
                 register={register}
                 error={errors.name}
+                required
               />
 
               <Controller
@@ -121,6 +138,7 @@ export function AddProjectDialog({
                     value={field.value ?? ""}
                     employees={employees}
                     onChange={field.onChange}
+                    required
                   />
                 )}
               />
@@ -136,11 +154,12 @@ export function AddProjectDialog({
             {/* Budget and Payment Terms inline */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
-                label="Budget (Optional)"
+                label="Budget"
                 id="budget"
                 type="number"
                 placeholder="Enter budget"
                 register={register}
+                required
               />
 
               <div className="space-y-2">
@@ -149,7 +168,10 @@ export function AddProjectDialog({
                   control={control}
                   render={({ field }) => (
                     <>
-                      <Label htmlFor="paymentTerms">Payment Terms</Label>
+                      <Label htmlFor="paymentTerms">
+                        Payment Terms{" "}
+                        <span className="text-destructive">*</span>
+                      </Label>
                       <Select
                         value={field.value}
                         onValueChange={field.onChange}
@@ -173,26 +195,30 @@ export function AddProjectDialog({
             {/* Start Date and Finish Date side-by-side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
-                label="Start Date (Optional)"
+                label="Start Date"
                 id="startDate"
                 type="date"
                 placeholder=""
                 register={register}
+                required
               />
 
               <FormField
-                label="Finish Date (Optional)"
+                label="Finish Date"
                 id="finishDate"
                 type="date"
                 placeholder=""
                 register={register}
+                required
               />
             </div>
 
             {/* Status and Priority side-by-side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">
+                  Status <span className="text-destructive">*</span>
+                </Label>
                 <Controller
                   name="status"
                   control={control}
@@ -221,7 +247,9 @@ export function AddProjectDialog({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="priority">Priority</Label>
+                <Label htmlFor="priority">
+                  Priority <span className="text-destructive">*</span>
+                </Label>
                 <Controller
                   name="priority"
                   control={control}

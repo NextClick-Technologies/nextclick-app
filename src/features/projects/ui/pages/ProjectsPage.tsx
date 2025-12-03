@@ -5,6 +5,7 @@ import { ProjectMetrics } from "../components/ProjectMetrics";
 import { ProjectDatabase } from "../components/project-database";
 import { AddProjectDialog } from "../components/add-project-dialog";
 import { useProjects } from "../hooks/useProject";
+import { usePermissions } from "@/shared/hooks/usePermissions";
 import type { Project } from "../../domain/types";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
 
@@ -12,6 +13,9 @@ export default function ProjectsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  const { canCreate } = usePermissions();
+  const canCreateProject = canCreate("projects");
 
   const { data, isLoading, error } = useProjects();
 
@@ -52,11 +56,14 @@ export default function ProjectsPage() {
           isLoading={isLoading}
           error={error}
           onAddClick={() => setIsAddDialogOpen(true)}
+          canCreate={canCreateProject}
         />
-        <AddProjectDialog
-          open={isAddDialogOpen}
-          onOpenChange={setIsAddDialogOpen}
-        />
+        {canCreateProject && (
+          <AddProjectDialog
+            open={isAddDialogOpen}
+            onOpenChange={setIsAddDialogOpen}
+          />
+        )}
       </div>
     </AppLayout>
   );

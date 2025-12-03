@@ -39,9 +39,23 @@ export function useMilestonePermissions(projectId?: string) {
           const response = await fetch(`/api/project/${projectId}`);
           if (response.ok) {
             const { data } = await response.json();
-            // Check if current user is the project manager
-            // Assuming project has projectManager field with employee ID
-            setIsProjectManager(data.projectManager === user.id);
+
+            // Project has projectManager field which is an employee ID
+            // We need to find the employee record that matches current user
+            // Then compare employee.id with data.projectManager
+
+            // Fetch all employees and find the one with matching user_id
+            const employeesResponse = await fetch("/api/employee");
+            if (employeesResponse.ok) {
+              const employeesData = await employeesResponse.json();
+              const currentEmployee = employeesData.data?.find(
+                (emp: any) => emp.userId === user.id
+              );
+
+              if (currentEmployee) {
+                setIsProjectManager(data.projectManager === currentEmployee.id);
+              }
+            }
           }
         } catch (error) {
           console.error("Error checking project manager:", error);

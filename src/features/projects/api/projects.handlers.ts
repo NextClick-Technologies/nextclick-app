@@ -14,9 +14,11 @@ import {
 import {
   requirePermission,
   requireAdminOrManager,
+  requireAuth,
 } from "@/shared/lib/api/auth-middleware";
 import * as projectService from "../domain/projects.service";
 import * as projectMembersService from "../domain/project-members.service";
+import { isProjectManager } from "../domain/projects.repository";
 
 /**
  * GET /api/project - Get all projects with pagination
@@ -108,8 +110,11 @@ export async function updateProject(id: string, request: NextRequest) {
 /**
  * DELETE /api/project/[id] - Delete a project
  */
-export async function deleteProject(id: string) {
+export async function deleteProject(id: string, request: NextRequest) {
   try {
+    const authResult = await requireAdminOrManager(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     await projectService.deleteProject(id);
     return new Response(null, { status: 204 });
   } catch (error) {
@@ -129,6 +134,26 @@ export async function addProjectTeamMember(
   request: NextRequest
 ) {
   try {
+    const authResult = await requireAuth(request);
+    if (authResult instanceof NextResponse) return authResult;
+
+    const { userRole, userId } = authResult;
+
+    // Check permissions: admin, manager, or project manager can add members
+    if (userRole === "viewer") {
+      return apiError("Forbidden: Viewers cannot manage team members", 403);
+    }
+
+    if (userRole === "employee") {
+      const isManager = await isProjectManager(userId, projectId);
+      if (!isManager) {
+        return apiError(
+          "Forbidden: Only project managers can add team members",
+          403
+        );
+      }
+    }
+
     const body = await request.json();
     const data = await projectMembersService.addProjectMember(projectId, body);
     return apiSuccess({ data }, 201);
@@ -154,9 +179,30 @@ export async function addProjectTeamMember(
  */
 export async function removeProjectTeamMember(
   projectId: string,
-  employeeId: string
+  employeeId: string,
+  request: NextRequest
 ) {
   try {
+    const authResult = await requireAuth(request);
+    if (authResult instanceof NextResponse) return authResult;
+
+    const { userRole, userId } = authResult;
+
+    // Check permissions: admin, manager, or project manager can remove members
+    if (userRole === "viewer") {
+      return apiError("Forbidden: Viewers cannot manage team members", 403);
+    }
+
+    if (userRole === "employee") {
+      const isManager = await isProjectManager(userId, projectId);
+      if (!isManager) {
+        return apiError(
+          "Forbidden: Only project managers can remove team members",
+          403
+        );
+      }
+    }
+
     await projectMembersService.removeProjectMember(projectId, employeeId);
     return new Response(null, { status: 204 });
   } catch (error) {

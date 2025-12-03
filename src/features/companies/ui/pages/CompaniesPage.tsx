@@ -5,6 +5,7 @@ import { CompanyMetrics } from "../components/CompanyMetrics";
 import { CompanyDatabase } from "../components/company-database";
 import { AddCompanyDialog } from "../components/add-company-dialog";
 import { useCompanies } from "../hooks/useCompany";
+import { usePermissions } from "@/shared/hooks/usePermissions";
 import type { Company } from "../../domain/types";
 import App from "next/app";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
@@ -13,6 +14,9 @@ export default function CompaniesPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  const { canCreate } = usePermissions();
+  const canCreateCompany = canCreate("companies");
 
   const { data, isLoading, error } = useCompanies();
 
@@ -54,11 +58,14 @@ export default function CompaniesPage() {
           isLoading={isLoading}
           error={error}
           onAddClick={() => setIsAddDialogOpen(true)}
+          canCreate={canCreateCompany}
         />
-        <AddCompanyDialog
-          open={isAddDialogOpen}
-          onOpenChange={setIsAddDialogOpen}
-        />
+        {canCreateCompany && (
+          <AddCompanyDialog
+            open={isAddDialogOpen}
+            onOpenChange={setIsAddDialogOpen}
+          />
+        )}
       </div>
     </AppLayout>
   );

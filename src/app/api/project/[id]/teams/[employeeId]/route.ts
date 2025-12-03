@@ -11,5 +11,5 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; employeeId: string }> }
 ) {
   const { id, employeeId } = await params;
-  return removeProjectTeamMember(id, employeeId);
+  return removeProjectTeamMember(id, employeeId, request);
 }

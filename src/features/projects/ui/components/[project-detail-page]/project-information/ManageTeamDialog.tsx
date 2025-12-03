@@ -45,6 +45,7 @@ import { PROJECT_ROLES } from "@/shared/const/roles";
 import { useMilestones } from "@/features/milestone/ui/hooks/useMilestone";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
+import { useMilestonePermissions } from "@/shared/hooks/useMilestonePermissions";
 
 interface TeamMember {
   id: string;
@@ -74,6 +75,11 @@ export function ManageTeamDialog({
   const { data: milestonesData } = useMilestones({ projectId });
   const addMember = useAddProjectMember();
   const removeMember = useRemoveProjectMember();
+
+  // Check if user can manage team (admin, manager, or project manager)
+  const { canUpdate, isLoading: isLoadingPermissions } =
+    useMilestonePermissions(projectId);
+  const canManageTeam = canUpdate;
 
   const milestones = milestonesData?.data || [];
 
@@ -171,128 +177,135 @@ export function ManageTeamDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Manage Team Members</DialogTitle>
+          <DialogTitle>
+            {canManageTeam ? "Manage Team Members" : "Team Members"}
+          </DialogTitle>
           <DialogDescription>
-            Add or remove team members from this project
+            {canManageTeam
+              ? "Add or remove team members from this project"
+              : "View team members assigned to this project"}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Add Member Section */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium">Add Team Member</h4>
+          {/* Add Member Section - Only show if user can manage team */}
+          {canManageTeam && (
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="employee">Employee</Label>
-                  <Popover open={comboboxOpen} onOpenChange={setComboboxOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={comboboxOpen}
-                        className="justify-between"
-                        disabled={
-                          isLoadingEmployees || availableEmployees.length === 0
-                        }
-                      >
-                        {selectedEmployeeId
-                          ? getFullName(
-                              availableEmployees.find(
-                                (emp) => emp.id === selectedEmployeeId
-                              )?.name || "",
-                              availableEmployees.find(
-                                (emp) => emp.id === selectedEmployeeId
-                              )?.familyName || ""
-                            )
-                          : "Select employee..."}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
-                      <Command>
-                        <CommandInput placeholder="Search employees..." />
-                        <CommandList>
-                          <CommandEmpty>No employee found.</CommandEmpty>
-                          <CommandGroup>
-                            {availableEmployees.map((emp) => (
-                              <CommandItem
-                                key={emp.id}
-                                value={`${emp.name} ${emp.familyName} ${
-                                  emp.position || ""
-                                }`}
-                                onSelect={() => {
-                                  setSelectedEmployeeId(emp.id);
-                                  setComboboxOpen(false);
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    selectedEmployeeId === emp.id
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                                <div className="flex flex-col">
-                                  <span>
-                                    {getFullName(emp.name, emp.familyName)}
-                                  </span>
-                                  {emp.position && (
-                                    <span className="text-xs text-muted-foreground">
-                                      {emp.position}
-                                    </span>
-                                  )}
-                                </div>
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  {availableEmployees.length === 0 && !isLoadingEmployees && (
-                    <p className="text-xs text-muted-foreground">
-                      All employees are already team members
-                    </p>
-                  )}
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="role">Role (Optional)</Label>
-                  <Select value={role} onValueChange={setRole}>
-                    <SelectTrigger id="role">
-                      <SelectValue placeholder="Select role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {PROJECT_ROLES.map((roleOption) => (
-                        <SelectItem
-                          key={roleOption.value}
-                          value={roleOption.value}
+              <h4 className="text-sm font-medium">Add Team Member</h4>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="employee">Employee</Label>
+                    <Popover open={comboboxOpen} onOpenChange={setComboboxOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={comboboxOpen}
+                          className="justify-between"
+                          disabled={
+                            isLoadingEmployees ||
+                            availableEmployees.length === 0
+                          }
                         >
-                          {roleOption.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+                          {selectedEmployeeId
+                            ? getFullName(
+                                availableEmployees.find(
+                                  (emp) => emp.id === selectedEmployeeId
+                                )?.name || "",
+                                availableEmployees.find(
+                                  (emp) => emp.id === selectedEmployeeId
+                                )?.familyName || ""
+                              )
+                            : "Select employee..."}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0" align="start">
+                        <Command>
+                          <CommandInput placeholder="Search employees..." />
+                          <CommandList>
+                            <CommandEmpty>No employee found.</CommandEmpty>
+                            <CommandGroup>
+                              {availableEmployees.map((emp) => (
+                                <CommandItem
+                                  key={emp.id}
+                                  value={`${emp.name} ${emp.familyName} ${
+                                    emp.position || ""
+                                  }`}
+                                  onSelect={() => {
+                                    setSelectedEmployeeId(emp.id);
+                                    setComboboxOpen(false);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      selectedEmployeeId === emp.id
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  <div className="flex flex-col">
+                                    <span>
+                                      {getFullName(emp.name, emp.familyName)}
+                                    </span>
+                                    {emp.position && (
+                                      <span className="text-xs text-muted-foreground">
+                                        {emp.position}
+                                      </span>
+                                    )}
+                                  </div>
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    {availableEmployees.length === 0 && !isLoadingEmployees && (
+                      <p className="text-xs text-muted-foreground">
+                        All employees are already team members
+                      </p>
+                    )}
+                  </div>
 
-              <Button
-                onClick={handleAddMember}
-                disabled={
-                  !selectedEmployeeId ||
-                  addMember.isPending ||
-                  isLoadingEmployees
-                }
-              >
-                {addMember.isPending && (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                )}
-                Add Member
-              </Button>
+                  <div className="grid gap-2">
+                    <Label htmlFor="role">Role (Optional)</Label>
+                    <Select value={role} onValueChange={setRole}>
+                      <SelectTrigger id="role">
+                        <SelectValue placeholder="Select role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PROJECT_ROLES.map((roleOption) => (
+                          <SelectItem
+                            key={roleOption.value}
+                            value={roleOption.value}
+                          >
+                            {roleOption.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handleAddMember}
+                  disabled={
+                    !selectedEmployeeId ||
+                    addMember.isPending ||
+                    isLoadingEmployees
+                  }
+                >
+                  {addMember.isPending && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
+                  Add Member
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Current Members Section */}
           <div className="space-y-4">
@@ -337,30 +350,32 @@ export function ManageTeamDialog({
                             </div>
                           </div>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleRemoveMember(member.id)}
-                          disabled={removeMember.isPending || inMilestone}
-                          title={
-                            inMilestone
-                              ? `Remove from milestones first: ${milestoneNames.join(
-                                  ", "
-                                )}`
-                              : "Remove member"
-                          }
-                        >
-                          {removeMember.isPending ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <X
-                              className={cn(
-                                "h-4 w-4",
-                                inMilestone && "text-muted-foreground"
-                              )}
-                            />
-                          )}
-                        </Button>
+                        {canManageTeam && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleRemoveMember(member.id)}
+                            disabled={removeMember.isPending || inMilestone}
+                            title={
+                              inMilestone
+                                ? `Remove from milestones first: ${milestoneNames.join(
+                                    ", "
+                                  )}`
+                                : "Remove member"
+                            }
+                          >
+                            {removeMember.isPending ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <X
+                                className={cn(
+                                  "h-4 w-4",
+                                  inMilestone && "text-muted-foreground"
+                                )}
+                              />
+                            )}
+                          </Button>
+                        )}
                       </div>
                       {inMilestone && (
                         <Alert variant="default" className="mt-2">

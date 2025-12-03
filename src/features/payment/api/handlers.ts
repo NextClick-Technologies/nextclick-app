@@ -2,7 +2,7 @@
  * API Route Handlers for Payments
  * Thin layer that handles HTTP requests/responses
  */
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/shared/lib/supabase/server";
 import {
   apiSuccess,
@@ -15,6 +15,10 @@ import {
   transformFromDb,
   transformColumnName,
 } from "@/shared/lib/api/api-utils";
+import {
+  requirePermission,
+  requireAdminOrManager,
+} from "@/shared/lib/api/auth-middleware";
 import { paymentSchema, updatePaymentSchema } from "../domain/schemas";
 
 /**
@@ -22,6 +26,9 @@ import { paymentSchema, updatePaymentSchema } from "../domain/schemas";
  */
 export async function getPayments(request: NextRequest) {
   try {
+    const authResult = await requirePermission(request, "payments:read");
+    if (authResult instanceof NextResponse) return authResult;
+
     const searchParams = request.nextUrl.searchParams;
     const { page, pageSize } = parsePagination(searchParams);
     const orderByParam = searchParams.get("orderBy");
@@ -66,6 +73,9 @@ export async function getPayments(request: NextRequest) {
  */
 export async function createPayment(request: NextRequest) {
   try {
+    const authResult = await requireAdminOrManager(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     const body = await request.json();
     const validatedData = paymentSchema.parse(body);
 
@@ -89,8 +99,11 @@ export async function createPayment(request: NextRequest) {
 /**
  * GET /api/payment/[id] - Get a specific payment
  */
-export async function getPayment(id: string) {
+export async function getPayment(id: string, request: NextRequest) {
   try {
+    const authResult = await requirePermission(request, "payments:read");
+    if (authResult instanceof NextResponse) return authResult;
+
     const { data, error } = await supabaseAdmin
       .from("payments")
       .select("*")
@@ -112,6 +125,9 @@ export async function getPayment(id: string) {
  */
 export async function updatePayment(id: string, request: NextRequest) {
   try {
+    const authResult = await requireAdminOrManager(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     const body = await request.json();
     const validatedData = updatePaymentSchema.parse(body);
 
@@ -139,8 +155,11 @@ export async function updatePayment(id: string, request: NextRequest) {
 /**
  * DELETE /api/payment/[id] - Delete a payment
  */
-export async function deletePayment(id: string) {
+export async function deletePayment(id: string, request: NextRequest) {
   try {
+    const authResult = await requireAdminOrManager(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     const { error } = await supabaseAdmin
       .from("payments")
       .delete()

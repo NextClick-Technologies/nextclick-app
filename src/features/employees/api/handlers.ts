@@ -2,7 +2,7 @@
  * API Route Handlers for Employees
  * Thin layer that handles HTTP requests/responses and delegates to service layer
  */
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {
   apiSuccess,
   apiError,
@@ -11,13 +11,21 @@ import {
   parseOrderBy,
   buildPaginatedResponse,
 } from "@/shared/lib/api/api-utils";
+import {
+  requireAdmin,
+  requireAdminOrManager,
+} from "@/shared/lib/api/auth-middleware";
 import * as employeeService from "../domain/services";
 
 /**
  * GET /api/employee - Get all employees with pagination
+ * Permissions: Admin and Manager can read (for selecting project managers and team members)
  */
 export async function getEmployees(request: NextRequest) {
   try {
+    const authResult = await requireAdminOrManager(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     const searchParams = request.nextUrl.searchParams;
     const { page, pageSize } = parsePagination(searchParams);
     const orderByParam = searchParams.get("orderBy");
@@ -41,6 +49,9 @@ export async function getEmployees(request: NextRequest) {
  */
 export async function createEmployee(request: NextRequest) {
   try {
+    const authResult = await requireAdmin(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     const body = await request.json();
     const data = await employeeService.createEmployee(body);
     return apiSuccess(data, 201);
@@ -51,9 +62,13 @@ export async function createEmployee(request: NextRequest) {
 
 /**
  * GET /api/employee/[id] - Get a single employee by ID
+ * Permissions: Admin and Manager can read
  */
-export async function getEmployeeById(id: string) {
+export async function getEmployeeById(id: string, request: NextRequest) {
   try {
+    const authResult = await requireAdminOrManager(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     const data = await employeeService.getEmployeeById(id);
     return apiSuccess({ data });
   } catch (error) {
@@ -69,6 +84,9 @@ export async function getEmployeeById(id: string) {
  */
 export async function updateEmployee(id: string, request: NextRequest) {
   try {
+    const authResult = await requireAdmin(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     const body = await request.json();
     const data = await employeeService.updateEmployee(id, body);
     return apiSuccess({ data });
@@ -83,8 +101,11 @@ export async function updateEmployee(id: string, request: NextRequest) {
 /**
  * DELETE /api/employee/[id] - Delete an employee
  */
-export async function deleteEmployee(id: string) {
+export async function deleteEmployee(id: string, request: NextRequest) {
   try {
+    const authResult = await requireAdmin(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     await employeeService.deleteEmployee(id);
     return new Response(null, { status: 204 });
   } catch (error) {
