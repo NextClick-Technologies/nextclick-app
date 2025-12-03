@@ -12,6 +12,7 @@ import {
   TrendingUp,
   PanelLeftClose,
   PanelLeftOpen,
+  X,
 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils/cn";
@@ -113,19 +114,20 @@ function NavItem({
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { isCollapsed, toggleCollapse } = useSidebar();
+  const { isCollapsed, toggleCollapse, closeMobile } = useSidebar();
 
   return (
     <aside
       className={cn(
-        "fixed inset-y-0 left-0 z-50 flex flex-col border-r bg-card transition-all duration-300",
-        isCollapsed ? "w-16" : "w-56"
+        "fixed inset-y-0 left-0 z-50 flex flex-col border-r bg-card",
+        "w-full lg:w-56 lg:transition-all lg:duration-300",
+        isCollapsed && "lg:w-16"
       )}
     >
       <div
         className={cn(
           "flex h-16 items-center border-b px-6",
-          isCollapsed && "justify-center px-0"
+          isCollapsed && "lg:justify-center lg:px-0"
         )}
       >
         {!isCollapsed ? (
@@ -133,11 +135,21 @@ export function Sidebar() {
             <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
               <span className="text-sm font-bold">NC</span>
             </div>
+            {/* Mobile close button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={closeMobile}
+              className="h-10 w-10 lg:hidden"
+            >
+              <X className="h-6 w-6" />
+            </Button>
+            {/* Desktop collapse toggle */}
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleCollapse}
-              className="h-10 w-10"
+              className="hidden h-10 w-10 lg:flex"
             >
               <PanelLeftClose className="h-6 w-6" />
             </Button>
@@ -147,7 +159,7 @@ export function Sidebar() {
             variant="ghost"
             size="icon"
             onClick={toggleCollapse}
-            className="h-10 w-10"
+            className="hidden h-10 w-10 lg:flex"
           >
             <PanelLeftOpen className="h-6 w-6" />
           </Button>

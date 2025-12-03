@@ -10,16 +10,16 @@ export function Header() {
   const { toggleMobile } = useSidebar();
   return (
     <header className="sticky top-0 z-40 bg-background/95 backdrop-blur">
-      <div className="flex h-16 items-center gap-4 px-6">
+      <div className="flex h-16 items-center gap-4 px-4">
         {/* Mobile Menu Button */}
         <Button
           variant="ghost"
           size="icon"
-          className="lg:hidden"
+          className="lg:hidden p-5"
           onClick={toggleMobile}
           aria-label="Open menu"
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-6 w-6" />
         </Button>
 
         <div className="flex flex-1 items-center gap-4 justify-end">

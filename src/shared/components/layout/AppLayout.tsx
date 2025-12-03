@@ -2,9 +2,7 @@
 
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
-import { Sheet, SheetContent, SheetTitle } from "@/shared/components/ui/sheet";
 import { cn } from "@/shared/utils/cn";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useSidebar } from "@/shared/contexts";
 
 interface AppLayoutProps {
@@ -27,15 +25,12 @@ export function AppLayout({ children }: AppLayoutProps) {
         <Sidebar />
       </div>
 
-      {/* Mobile Sidebar Sheet */}
-      <Sheet open={isMobileOpen} onOpenChange={closeMobile}>
-        <SheetContent side="left" className="w-64 p-0">
-          <VisuallyHidden>
-            <SheetTitle>Navigation Menu</SheetTitle>
-          </VisuallyHidden>
+      {/* Mobile Sidebar Overlay */}
+      {isMobileOpen && (
+        <div className="lg:hidden">
           <Sidebar />
-        </SheetContent>
-      </Sheet>
+        </div>
+      )}
 
       <div
         className={cn(
