@@ -18,6 +18,7 @@ import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils/cn";
 import { UserMenu } from "@/shared/components/UserMenu";
 import { useSidebar } from "@/shared/contexts";
+import { usePermissions } from "@/shared/hooks/usePermissions";
 import {
   Tooltip,
   TooltipContent,
@@ -29,6 +30,7 @@ interface SectionNavItem {
   name: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
+  permission?: string; // Resource permission needed (e.g., 'clients', 'employees')
 }
 
 interface NavSection {
@@ -51,17 +53,42 @@ const navigation: NavSection[] = [
   {
     section: "Client Management",
     items: [
-      { name: "Clients", href: "/clients", icon: Users },
-      { name: "Projects", href: "/projects", icon: FolderKanban },
-      { name: "Companies", href: "/companies", icon: Building2 },
+      { name: "Clients", href: "/clients", icon: Users, permission: "clients" },
+      {
+        name: "Projects",
+        href: "/projects",
+        icon: FolderKanban,
+        permission: "projects",
+      },
+      {
+        name: "Companies",
+        href: "/companies",
+        icon: Building2,
+        permission: "companies",
+      },
     ],
   },
   {
     section: "HR Management",
     items: [
-      { name: "Employees", href: "/employees", icon: UserCog },
-      { name: "Payroll", href: "/payroll", icon: Wallet },
-      { name: "Performance", href: "/performance", icon: TrendingUp },
+      {
+        name: "Employees",
+        href: "/employees",
+        icon: UserCog,
+        permission: "employees",
+      },
+      {
+        name: "Payroll",
+        href: "/payroll",
+        icon: Wallet,
+        permission: "payments",
+      },
+      {
+        name: "Performance",
+        href: "/performance",
+        icon: TrendingUp,
+        permission: "employees",
+      },
     ],
   },
 ];
@@ -115,6 +142,20 @@ function NavItem({
 export function Sidebar() {
   const pathname = usePathname();
   const { isCollapsed, toggleCollapse, closeMobile } = useSidebar();
+  const { canRead } = usePermissions();
+
+  // Filter navigation items based on permissions
+  const filteredNavigation = navigation
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => {
+        // If no permission specified, show to everyone
+        if (!item.permission) return true;
+        // Check if user has read permission for this resource
+        return canRead(item.permission);
+      }),
+    }))
+    .filter((section) => section.items.length > 0); // Remove empty sections
 
   return (
     <aside
@@ -167,7 +208,7 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 overflow-y-auto px-3 py-4">
-        {navigation.map((section, idx) => (
+        {filteredNavigation.map((section, idx) => (
           <div key={idx} className={cn(idx > 0 && "mt-6")}>
             {section.section && !isCollapsed && (
               <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">

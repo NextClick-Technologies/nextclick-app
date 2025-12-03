@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AddClientDialog, ClientMetrics, ClientDatabase } from "../components";
 import { useClients } from "../hooks/useClient";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
+import { usePermissions } from "@/shared/hooks/usePermissions";
 
 export default function ClientsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -11,6 +12,9 @@ export default function ClientsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const page = 1;
   const pageSize = 20;
+
+  const { canCreate } = usePermissions();
+  const canCreateClient = canCreate("clients");
 
   const { data, isLoading, error } = useClients({ page, pageSize });
 
@@ -51,12 +55,15 @@ export default function ClientsPage() {
           isLoading={isLoading}
           error={error}
           onAddClick={() => setIsAddDialogOpen(true)}
+          canCreate={canCreateClient}
         />
 
-        <AddClientDialog
-          open={isAddDialogOpen}
-          onOpenChange={setIsAddDialogOpen}
-        />
+        {canCreateClient && (
+          <AddClientDialog
+            open={isAddDialogOpen}
+            onOpenChange={setIsAddDialogOpen}
+          />
+        )}
       </div>
     </AppLayout>
   );

@@ -19,6 +19,8 @@ interface ContactInformationProps {
   companyId: string | null;
   onEdit: () => void;
   onDelete: () => void;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 export function ContactInformation({
@@ -33,6 +35,8 @@ export function ContactInformation({
   companyId,
   onEdit,
   onDelete,
+  canEdit = true,
+  canDelete = true,
 }: ContactInformationProps) {
   const getStatusColor = (status: ClientStatus) => {
     switch (status) {
@@ -60,37 +64,49 @@ export function ContactInformation({
               {clientName} {familyName}
             </h2>
           </div>
-          <div className="hidden sm:flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={onEdit}>
-              <Pencil className="h-4 w-4 mr-2" />
-              Edit
-            </Button>
-            <Button variant="destructive" size="sm" onClick={onDelete}>
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
-            </Button>
+          {(canEdit || canDelete) && (
+            <div className="hidden sm:flex items-center gap-2">
+              {canEdit && (
+                <Button variant="outline" size="sm" onClick={onEdit}>
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
+              )}
+              {canDelete && (
+                <Button variant="destructive" size="sm" onClick={onDelete}>
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+        {(canEdit || canDelete) && (
+          <div className="flex sm:hidden items-center gap-2">
+            {canEdit && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onEdit}
+                className="flex-1"
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+            )}
+            {canDelete && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={onDelete}
+                className="flex-1"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </Button>
+            )}
           </div>
-        </div>
-        <div className="flex sm:hidden items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onEdit}
-            className="flex-1"
-          >
-            <Pencil className="h-4 w-4 mr-2" />
-            Edit
-          </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={onDelete}
-            className="flex-1"
-          >
-            <Trash2 className="h-4 w-4 mr-2" />
-            Delete
-          </Button>
-        </div>
+        )}
       </div>
       <div className="space-y-3">
         <div>

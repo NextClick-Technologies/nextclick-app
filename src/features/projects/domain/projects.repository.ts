@@ -66,3 +66,34 @@ export async function update(id: string, data: Record<string, any>) {
 export async function deleteProject(id: string) {
   return await supabaseAdmin.from("projects").delete().eq("id", id);
 }
+
+/**
+ * Get project IDs accessible to an employee (as member or manager)
+ * Uses the employee_project_access materialized view for performance
+ */
+export async function getEmployeeProjectIds(userId: string) {
+  const { data } = await supabaseAdmin
+    .from("employee_project_access")
+    .select("project_id")
+    .eq("user_id", userId);
+
+  return (
+    (data as { project_id: string }[] | null)?.map((d) => d.project_id) || []
+  );
+}
+
+/**
+ * Check if employee is the manager of a specific project
+ * Uses the employee_project_access materialized view for performance
+ */
+export async function isProjectManager(userId: string, projectId: string) {
+  const { data } = await supabaseAdmin
+    .from("employee_project_access")
+    .select("access_type")
+    .eq("user_id", userId)
+    .eq("project_id", projectId)
+    .eq("access_type", "manager")
+    .maybeSingle();
+
+  return !!data;
+}

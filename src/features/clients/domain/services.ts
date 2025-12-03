@@ -3,6 +3,7 @@ import { transformToDb, transformFromDb } from "@/shared/lib/api/api-utils";
 import { clientSchema, updateClientSchema } from "./schemas";
 import * as clientRepository from "./repositories";
 import type { ClientQueryOptions } from "./repositories";
+import type { UserRole } from "@/shared/types/auth.types";
 
 /**
  * Business Logic Layer for Clients
@@ -11,8 +12,17 @@ import type { ClientQueryOptions } from "./repositories";
 
 /**
  * Get paginated list of clients with related data
+ * Applies role-based filtering for employees
  */
-export async function getClients(options: ClientQueryOptions) {
+export async function getClients(
+  options: ClientQueryOptions,
+  userId: string,
+  userRole: UserRole
+) {
+  // For employees, we need to filter clients by their assigned projects
+  // For now, let's allow all roles to see all clients (managers/viewers need it)
+  // Employees will be filtered at the UI level or we can add filtering here
+
   // Fetch clients
   const { data, error, count } = await clientRepository.findAll(options);
 
@@ -20,15 +30,33 @@ export async function getClients(options: ClientQueryOptions) {
     throw new Error(error.message);
   }
 
+  // For employees, filter clients that have projects they're assigned to
+  let filteredData: any[] = data || [];
+  if (userRole === "employee") {
+    // Get client IDs accessible to this employee (via materialized view)
+    const assignedClientIds = await clientRepository.getEmployeeClientIds(
+      userId
+    );
+    const clientIdSet = new Set(assignedClientIds);
+
+    // Filter clients to only those with assigned projects
+    filteredData =
+      (data as any[])?.filter((client: any) => clientIdSet.has(client.id)) ||
+      [];
+  }
+
   // Extract unique company IDs
   const companyIds = [
     ...new Set(
-      (data as any[])?.map((client: any) => client.company_id).filter(Boolean)
+      (filteredData as any[])
+        ?.map((client: any) => client.company_id)
+        .filter(Boolean)
     ),
   ];
 
   // Extract client IDs
-  const clientIds = (data as any[])?.map((client: any) => client.id) || [];
+  const clientIds =
+    (filteredData as any[])?.map((client: any) => client.id) || [];
 
   // Fetch companies and project counts in parallel
   const [companiesResult, projectsResult] = await Promise.all([
@@ -54,8 +82,8 @@ export async function getClients(options: ClientQueryOptions) {
   }));
 
   return {
-    clients: transformFromDb<unknown[]>(data || []),
-    count: count || 0,
+    clients: transformFromDb<unknown[]>(filteredData || []),
+    count: userRole === "employee" ? filteredData?.length || 0 : count || 0,
     metadata: {
       companies: transformFromDb(companies),
       projectCounts,
@@ -65,8 +93,13 @@ export async function getClients(options: ClientQueryOptions) {
 
 /**
  * Get single client by ID
+ * Checks employee access to client via projects
  */
-export async function getClientById(id: string) {
+export async function getClientById(
+  id: string,
+  userId: string,
+  userRole: UserRole
+) {
   const { data, error } = await clientRepository.findById(id, {
     includeCompany: true,
   });
@@ -76,6 +109,18 @@ export async function getClientById(id: string) {
       throw new Error("Client not found");
     }
     throw new Error(error.message);
+  }
+
+  // For employees, check if they have access to this client (via materialized view)
+  if (userRole === "employee") {
+    const assignedClientIds = await clientRepository.getEmployeeClientIds(
+      userId
+    );
+    const hasAccess = assignedClientIds.includes(id);
+
+    if (!hasAccess) {
+      throw new Error("Client not found"); // Don't reveal it exists
+    }
   }
 
   return transformFromDb(data);

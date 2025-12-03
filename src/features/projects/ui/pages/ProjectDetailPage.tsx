@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/shared/components/ui/button";
+import { usePermissions } from "@/shared/hooks/usePermissions";
 import {
   Tabs,
   TabsContent,
@@ -26,6 +27,10 @@ export default function ProjectDetailPage() {
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const { canUpdate, canDelete } = usePermissions();
+  const canEdit = canUpdate("projects");
+  const canRemove = canDelete("projects");
 
   const { data, isLoading, error, refetch } = useProject(projectId);
   const deleteProject = useDeleteProject();
@@ -128,6 +133,8 @@ export default function ProjectDetailPage() {
                   members={project.members}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
+                  canEdit={canEdit}
+                  canDelete={canRemove}
                 />
               </div>
 

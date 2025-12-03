@@ -114,3 +114,21 @@ export async function update(id: string, data: Record<string, any>) {
 export async function deleteClient(id: string) {
   return await supabaseAdmin.from("clients").delete().eq("id", id);
 }
+
+/**
+ * Get client IDs accessible to an employee (via their assigned projects)
+ * Uses the employee_project_access materialized view for performance
+ */
+export async function getEmployeeClientIds(userId: string) {
+  const { data } = await supabaseAdmin
+    .from("employee_project_access")
+    .select("client_id")
+    .eq("user_id", userId)
+    .not("client_id", "is", null);
+
+  return (
+    (data as { client_id: string }[] | null)
+      ?.map((d) => d.client_id)
+      .filter((id): id is string => id !== null) || []
+  );
+}

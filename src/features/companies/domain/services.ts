@@ -3,25 +3,45 @@ import { transformToDb, transformFromDb } from "@/shared/lib/api/api-utils";
 import { companySchema, updateCompanySchema } from "./schemas";
 import * as companyRepository from "./repositories";
 import type { CompanyQueryOptions } from "./repositories";
+import type { UserRole } from "@/shared/types/auth.types";
 
 /**
  * Business Logic Layer for Companies
  */
 
-export async function getCompanies(options: CompanyQueryOptions) {
+export async function getCompanies(
+  options: CompanyQueryOptions,
+  userId: string,
+  userRole: UserRole
+) {
   const { data, error, count } = await companyRepository.findAll(options);
 
   if (error) {
     throw new Error(error.message);
   }
 
+  // For employees, filter to only companies from their assigned projects (via materialized view)
+  let filteredData: any[] = data || [];
+  if (userRole === "employee") {
+    const companyIds = await companyRepository.getEmployeeCompanyIds(userId);
+    const companyIdSet = new Set(companyIds);
+
+    filteredData =
+      (data as any[])?.filter((company: any) => companyIdSet.has(company.id)) ||
+      [];
+  }
+
   return {
-    companies: transformFromDb<unknown[]>(data || []),
-    count: count || 0,
+    companies: transformFromDb<unknown[]>(filteredData || []),
+    count: userRole === "employee" ? filteredData?.length || 0 : count || 0,
   };
 }
 
-export async function getCompanyById(id: string) {
+export async function getCompanyById(
+  id: string,
+  userId: string,
+  userRole: UserRole
+) {
   const { data, error } = await companyRepository.findById(id);
 
   if (error) {
@@ -29,6 +49,16 @@ export async function getCompanyById(id: string) {
       throw new Error("Company not found");
     }
     throw new Error(error.message);
+  }
+
+  // For employees, check if they have access to this company (via materialized view)
+  if (userRole === "employee") {
+    const companyIds = await companyRepository.getEmployeeCompanyIds(userId);
+    const hasAccess = companyIds.includes(id);
+
+    if (!hasAccess) {
+      throw new Error("Company not found"); // Don't reveal it exists
+    }
   }
 
   return transformFromDb(data);

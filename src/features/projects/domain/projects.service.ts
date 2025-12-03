@@ -3,25 +3,45 @@ import { transformToDb, transformFromDb } from "@/shared/lib/api/api-utils";
 import { projectSchema, updateProjectSchema } from "./schemas";
 import * as projectRepository from "./projects.repository";
 import type { ProjectQueryOptions } from "./projects.repository";
+import type { UserRole } from "@/shared/types/auth.types";
 
 /**
  * Business Logic Layer for Projects
  */
 
-export async function getProjects(options: ProjectQueryOptions) {
+export async function getProjects(
+  options: ProjectQueryOptions,
+  userId: string,
+  userRole: UserRole
+) {
   const { data, error, count } = await projectRepository.findAll(options);
 
   if (error) {
     throw new Error(error.message);
   }
 
+  // For employees, filter to only their assigned projects (via materialized view)
+  let filteredData: any[] = data || [];
+  if (userRole === "employee") {
+    const projectIds = await projectRepository.getEmployeeProjectIds(userId);
+    const projectIdSet = new Set(projectIds);
+
+    filteredData =
+      (data as any[])?.filter((project: any) => projectIdSet.has(project.id)) ||
+      [];
+  }
+
   return {
-    projects: transformFromDb<unknown[]>(data || []),
-    count: count || 0,
+    projects: transformFromDb<unknown[]>(filteredData || []),
+    count: userRole === "employee" ? filteredData?.length || 0 : count || 0,
   };
 }
 
-export async function getProjectById(id: string) {
+export async function getProjectById(
+  id: string,
+  userId: string,
+  userRole: UserRole
+) {
   const { data, error } = await projectRepository.findById(id);
 
   if (error) {
@@ -33,6 +53,16 @@ export async function getProjectById(id: string) {
 
   if (!data) {
     throw new Error("Project not found");
+  }
+
+  // For employees, check if they have access to this project (via materialized view)
+  if (userRole === "employee") {
+    const projectIds = await projectRepository.getEmployeeProjectIds(userId);
+    const hasAccess = projectIds.includes(id);
+
+    if (!hasAccess) {
+      throw new Error("Project not found"); // Don't reveal it exists
+    }
   }
 
   // Transform project_members array if it exists

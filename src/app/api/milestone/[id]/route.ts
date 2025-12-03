@@ -30,5 +30,5 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  return deleteMilestone(id);
+  return deleteMilestone(id, request);
 }

@@ -2,7 +2,7 @@
  * API Route Handlers for Projects
  * Thin layer that handles HTTP requests/responses and delegates to service layer
  */
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {
   apiSuccess,
   apiError,
@@ -11,6 +11,10 @@ import {
   parseOrderBy,
   buildPaginatedResponse,
 } from "@/shared/lib/api/api-utils";
+import {
+  requirePermission,
+  requireAdminOrManager,
+} from "@/shared/lib/api/auth-middleware";
 import * as projectService from "../domain/projects.service";
 import * as projectMembersService from "../domain/project-members.service";
 
@@ -19,15 +23,22 @@ import * as projectMembersService from "../domain/project-members.service";
  */
 export async function getProjects(request: NextRequest) {
   try {
+    const authResult = await requirePermission(request, "projects:read");
+    if (authResult instanceof NextResponse) return authResult;
+
     const searchParams = request.nextUrl.searchParams;
     const { page, pageSize } = parsePagination(searchParams);
     const orderByParam = searchParams.get("orderBy");
 
-    const result = await projectService.getProjects({
-      page,
-      pageSize,
-      orderBy: parseOrderBy(orderByParam),
-    });
+    const result = await projectService.getProjects(
+      {
+        page,
+        pageSize,
+        orderBy: parseOrderBy(orderByParam),
+      },
+      authResult.userId,
+      authResult.userRole
+    );
 
     return apiSuccess(
       buildPaginatedResponse(result.projects, page, pageSize, result.count)
@@ -42,6 +53,9 @@ export async function getProjects(request: NextRequest) {
  */
 export async function createProject(request: NextRequest) {
   try {
+    const authResult = await requireAdminOrManager(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     const body = await request.json();
     const data = await projectService.createProject(body);
     return apiSuccess(data, 201);
@@ -53,9 +67,16 @@ export async function createProject(request: NextRequest) {
 /**
  * GET /api/project/[id] - Get a single project by ID
  */
-export async function getProjectById(id: string) {
+export async function getProjectById(id: string, request: NextRequest) {
   try {
-    const data = await projectService.getProjectById(id);
+    const authResult = await requirePermission(request, "projects:read");
+    if (authResult instanceof NextResponse) return authResult;
+
+    const data = await projectService.getProjectById(
+      id,
+      authResult.userId,
+      authResult.userRole
+    );
     return apiSuccess({ data });
   } catch (error) {
     if (error instanceof Error && error.message === "Project not found") {
@@ -70,6 +91,9 @@ export async function getProjectById(id: string) {
  */
 export async function updateProject(id: string, request: NextRequest) {
   try {
+    const authResult = await requireAdminOrManager(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     const body = await request.json();
     const data = await projectService.updateProject(id, body);
     return apiSuccess({ data });

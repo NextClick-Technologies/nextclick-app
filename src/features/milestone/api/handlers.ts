@@ -2,7 +2,7 @@
  * API Route Handlers for Milestones
  * Thin layer that handles HTTP requests/responses
  */
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/shared/lib/supabase/server";
 import {
   apiSuccess,
@@ -15,6 +15,11 @@ import {
   transformFromDb,
   transformColumnName,
 } from "@/shared/lib/api/api-utils";
+import {
+  requirePermission,
+  requireAuth,
+} from "@/shared/lib/api/auth-middleware";
+import { isProjectManager } from "@/features/projects/domain/projects.repository";
 import { milestoneSchema, updateMilestoneSchema } from "../domain/schemas";
 
 /**
@@ -22,6 +27,9 @@ import { milestoneSchema, updateMilestoneSchema } from "../domain/schemas";
  */
 export async function getMilestones(request: NextRequest) {
   try {
+    const authResult = await requirePermission(request, "milestones:read");
+    if (authResult instanceof NextResponse) return authResult;
+
     const searchParams = request.nextUrl.searchParams;
     const { page, pageSize } = parsePagination(searchParams);
     const orderByParam = searchParams.get("orderBy");
@@ -92,8 +100,32 @@ export async function getMilestones(request: NextRequest) {
  */
 export async function createMilestone(request: NextRequest) {
   try {
+    const authResult = await requireAuth(request);
+    if (authResult instanceof NextResponse) return authResult;
+
     const body = await request.json();
     const validatedData = milestoneSchema.parse(body);
+
+    // Check if user can create milestones for this project
+    // Only admin, manager, or project manager can create milestones
+    const { userRole, userId } = authResult;
+    if (userRole === "viewer" || userRole === "employee") {
+      // For employee, check if they're the project manager
+      if (userRole === "employee" && validatedData.projectId) {
+        const isManager = await isProjectManager(
+          userId,
+          validatedData.projectId
+        );
+        if (!isManager) {
+          return apiError(
+            "Forbidden: Only project managers can create milestones",
+            403
+          );
+        }
+      } else {
+        return apiError("Forbidden: Insufficient permissions", 403);
+      }
+    }
 
     const { data, error } = await supabaseAdmin
       .from("milestones")
@@ -165,6 +197,40 @@ export async function getMilestone(id: string) {
  */
 export async function updateMilestone(id: string, request: NextRequest) {
   try {
+    const authResult = await requireAuth(request);
+    if (authResult instanceof NextResponse) return authResult;
+
+    // Get milestone to check project
+    const { data: milestone } = await supabaseAdmin
+      .from("milestones")
+      .select("project_id")
+      .eq("id", id)
+      .single();
+
+    if (!milestone) {
+      return apiError("Milestone not found", 404);
+    }
+
+    // Check if user can update this milestone
+    const { userRole, userId } = authResult;
+    if (userRole === "viewer" || userRole === "employee") {
+      // For employee, check if they're the project manager
+      if (userRole === "employee") {
+        const isManager = await isProjectManager(
+          userId,
+          (milestone as any).project_id
+        );
+        if (!isManager) {
+          return apiError(
+            "Forbidden: Only project managers can update milestones",
+            403
+          );
+        }
+      } else {
+        return apiError("Forbidden: Insufficient permissions", 403);
+      }
+    }
+
     const body = await request.json();
     const validatedData = updateMilestoneSchema.parse(body);
 
@@ -192,8 +258,42 @@ export async function updateMilestone(id: string, request: NextRequest) {
 /**
  * DELETE /api/milestone/[id] - Delete a milestone
  */
-export async function deleteMilestone(id: string) {
+export async function deleteMilestone(id: string, request: NextRequest) {
   try {
+    const authResult = await requireAuth(request);
+    if (authResult instanceof NextResponse) return authResult;
+
+    // Get milestone to check project
+    const { data: milestone } = await supabaseAdmin
+      .from("milestones")
+      .select("project_id")
+      .eq("id", id)
+      .single();
+
+    if (!milestone) {
+      return apiError("Milestone not found", 404);
+    }
+
+    // Check if user can delete this milestone
+    const { userRole, userId } = authResult;
+    if (userRole === "viewer" || userRole === "employee") {
+      // For employee, check if they're the project manager
+      if (userRole === "employee") {
+        const isManager = await isProjectManager(
+          userId,
+          (milestone as any).project_id
+        );
+        if (!isManager) {
+          return apiError(
+            "Forbidden: Only project managers can delete milestones",
+            403
+          );
+        }
+      } else {
+        return apiError("Forbidden: Insufficient permissions", 403);
+      }
+    }
+
     const { error } = await supabaseAdmin
       .from("milestones")
       .delete()

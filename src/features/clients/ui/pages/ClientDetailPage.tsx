@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AppLayout } from "@/shared/components/layout/AppLayout";
 import { Button } from "@/shared/components/ui/button";
+import { usePermissions } from "@/shared/hooks/usePermissions";
 import {
   Tabs,
   TabsContent,
@@ -26,6 +27,10 @@ export default function ClientDetailPage() {
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const { canUpdate, canDelete } = usePermissions();
+  const canEdit = canUpdate("clients");
+  const canRemove = canDelete("clients");
 
   const { data, isLoading, error, refetch } = useClient(clientId);
   const deleteClient = useDeleteClient();
@@ -111,6 +116,8 @@ export default function ClientDetailPage() {
                   companyId={client.company?.id || null}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
+                  canEdit={canEdit}
+                  canDelete={canRemove}
                 />
               </div>
 
