@@ -85,20 +85,10 @@ export default function ClientDetailPage() {
         className="flex flex-col -mx-4 -my-4 sm:-mx-6 sm:-my-6 h-[calc(100vh-5rem)]"
       >
         {/* Tabs Header - Fixed */}
-        <div className="shrink-0 pb-2 px-4 pt-4 sm:px-6 sm:pt-6 bg-background border-b">
-          <TabsList className="bg-transparent h-auto p-0">
-            <TabsTrigger
-              value="detail"
-              className="px-4 py-2 data-[state=active]:bg-gray-50 border-none"
-            >
-              Detail
-            </TabsTrigger>
-            <TabsTrigger
-              value="activity"
-              className="px-4 py-2 data-[state=active]:bg-gray-50 border-none"
-            >
-              Activity
-            </TabsTrigger>
+        <div className="shrink-0 px-4 pt-4 sm:px-6 sm:pt-6 bg-background border-b">
+          <TabsList>
+            <TabsTrigger value="detail">Detail</TabsTrigger>
+            <TabsTrigger value="activity">Activity</TabsTrigger>
           </TabsList>
         </div>
 
