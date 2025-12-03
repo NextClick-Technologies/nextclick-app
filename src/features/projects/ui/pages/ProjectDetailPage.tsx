@@ -142,7 +142,7 @@ export default function ProjectDetailPage() {
 
           {/* Milestones Tab */}
           <TabsContent value="milestones" className="mt-6 space-y-6">
-            <div className="grid gap-6 lg:grid-cols-5">
+            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-5">
               <div className="lg:col-span-2">
                 <ProjectMilestones
                   projectId={projectId}

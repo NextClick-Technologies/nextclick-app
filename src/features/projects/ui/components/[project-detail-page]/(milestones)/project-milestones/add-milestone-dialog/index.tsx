@@ -40,7 +40,7 @@ export function AddMilestoneDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl sm:mx-8 sm:my-8 flex flex-col max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Add New Milestone</DialogTitle>
           <DialogDescription>
@@ -48,25 +48,30 @@ export function AddMilestoneDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <AddMilestoneBasicFields register={register} errors={errors} />
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col flex-1 min-h-0"
+        >
+          <div className="flex-1 overflow-y-auto space-y-4 pr-1">
+            <AddMilestoneBasicFields register={register} errors={errors} />
 
-          <AddMilestoneDateFields
-            register={register}
-            errors={errors}
-            showCompletionDate={status === "completed"}
-          />
+            <AddMilestoneDateFields
+              register={register}
+              errors={errors}
+              showCompletionDate={status === "completed"}
+            />
 
-          <AddMilestoneStatusField
-            status={status}
-            onStatusChange={(value) =>
-              setValue("status", value as MilestoneInput["status"])
-            }
-          />
+            <AddMilestoneStatusField
+              status={status}
+              onStatusChange={(value) =>
+                setValue("status", value as MilestoneInput["status"])
+              }
+            />
 
-          <AddMilestoneRemarksField register={register} />
+            <AddMilestoneRemarksField register={register} />
+          </div>
 
-          <DialogFooter>
+          <DialogFooter className="mt-4">
             <Button
               type="button"
               variant="outline"

@@ -38,8 +38,8 @@ export function MilestoneCard({
           "border-red-300 bg-red-50/50 dark:border-red-900 dark:bg-red-950/20"
       )}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 space-y-2">
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0 space-y-2">
           {/* Header with status badge */}
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-lg font-semibold">{milestone.name}</h3>
@@ -99,7 +99,7 @@ export function MilestoneCard({
         </div>
 
         {/* Action buttons */}
-        <div className="flex gap-1">
+        <div className="flex shrink-0 gap-1">
           <Button
             variant="ghost"
             size="icon"
