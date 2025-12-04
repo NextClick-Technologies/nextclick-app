@@ -45,9 +45,7 @@ export function EmployeeSelectFields({ control }: EmployeeSelectFieldsProps) {
         control={control}
         render={({ field }) => (
           <div className="space-y-2">
-            <Label htmlFor="gender">
-              Gender<span className="text-destructive ml-1">*</span>
-            </Label>
+            <Label htmlFor="gender">Gender</Label>
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a gender" />

@@ -17,7 +17,6 @@ import { Employee } from "@/features/employees/domain/types";
 import { useState } from "react";
 import { EmployeeFormFields } from "./EmployeeFormFields";
 import { FormActions } from "./FormActions";
-import { transformEmployeeToDb } from "./transform";
 
 interface EditEmployeeDialogProps {
   open: boolean;
@@ -70,12 +69,9 @@ export function EditEmployeeDialog({
 
   const onSubmit = async (data: EmployeeInput) => {
     try {
-      const dbData = transformEmployeeToDb(data);
-
       await updateEmployee.mutateAsync({
         id: employee.id,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        data: dbData as any,
+        data: data,
       });
       onSuccess();
       onOpenChange(false);
