@@ -36,7 +36,7 @@ export function ProjectManagerSelect({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="projectManager">Project Manager (Optional)</Label>
+      <Label htmlFor="projectManager">Project Manager</Label>
       <Controller
         name="projectManager"
         control={control}
