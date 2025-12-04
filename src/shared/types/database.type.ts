@@ -5,9 +5,6 @@ import type { PaymentTerms } from "@/features/projects/domain/types";
 import type { ProjectStatus } from "@/features/projects/domain/types";
 import type { ProjectPriority } from "@/features/projects/domain/types";
 import type { MilestoneStatus } from "@/features/milestone/domain/types";
-import type { PaymentStatus } from "@/features/payment/domain/types";
-import type { PaymentMethod } from "@/features/payment/domain/types";
-import type { CommunicationChannel } from "@/features/communication-log/domain/types";
 import type { UserRole } from "./auth.types";
 
 export type Json =
@@ -305,41 +302,6 @@ export interface Database {
           created_at?: string;
         };
       };
-      payments: {
-        Row: {
-          id: string;
-          description: string;
-          amount: string;
-          status: PaymentStatus;
-          date: string;
-          method: PaymentMethod;
-          project_id: string;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          description: string;
-          amount: string;
-          status: PaymentStatus;
-          date: string;
-          method: PaymentMethod;
-          project_id: string;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          description?: string;
-          amount?: string;
-          status?: PaymentStatus;
-          date?: string;
-          method?: PaymentMethod;
-          project_id?: string;
-          created_at?: string;
-          updated_at?: string;
-        };
-      };
       employees: {
         Row: {
           id: string;
@@ -420,44 +382,6 @@ export interface Database {
           updated_at?: string;
         };
       };
-      communication_logs: {
-        Row: {
-          id: string;
-          date: string;
-          channel: CommunicationChannel;
-          summary: string;
-          follow_up_required: boolean;
-          follow_up_date: string | null;
-          client_id: string;
-          employee_id: string;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          date: string;
-          channel: CommunicationChannel;
-          summary: string;
-          follow_up_required: boolean;
-          follow_up_date?: string | null;
-          client_id: string;
-          employee_id: string;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          date?: string;
-          channel?: CommunicationChannel;
-          summary?: string;
-          follow_up_required?: boolean;
-          follow_up_date?: string | null;
-          client_id?: string;
-          employee_id?: string;
-          created_at?: string;
-          updated_at?: string;
-        };
-      };
       project_members: {
         Row: {
           id: string;
@@ -520,22 +444,11 @@ export type MilestoneMemberInsert =
 export type MilestoneMemberUpdate =
   Database["public"]["Tables"]["milestone_members"]["Update"];
 
-export type Payment = Database["public"]["Tables"]["payments"]["Row"];
-export type PaymentInsert = Database["public"]["Tables"]["payments"]["Insert"];
-export type PaymentUpdate = Database["public"]["Tables"]["payments"]["Update"];
-
 export type Employee = Database["public"]["Tables"]["employees"]["Row"];
 export type EmployeeInsert =
   Database["public"]["Tables"]["employees"]["Insert"];
 export type EmployeeUpdate =
   Database["public"]["Tables"]["employees"]["Update"];
-
-export type CommunicationLog =
-  Database["public"]["Tables"]["communication_logs"]["Row"];
-export type CommunicationLogInsert =
-  Database["public"]["Tables"]["communication_logs"]["Insert"];
-export type CommunicationLogUpdate =
-  Database["public"]["Tables"]["communication_logs"]["Update"];
 
 export type ProjectMember =
   Database["public"]["Tables"]["project_members"]["Row"];
