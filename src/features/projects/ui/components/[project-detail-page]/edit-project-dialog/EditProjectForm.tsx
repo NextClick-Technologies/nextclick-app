@@ -1,7 +1,7 @@
 "use client";
 
 import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
-import { UpdateProjectInput } from "@/features/projects/domain/schemas";
+import { UpdateProjectFormValues } from "@/features/projects/domain/schemas";
 import { Label } from "@/shared/components/ui/label";
 import { Input } from "@/shared/components/ui/input";
 import { Textarea } from "@/shared/components/ui/textarea";
@@ -10,9 +10,9 @@ import { ProjectManagerSelect } from "./ProjectManagerSelect";
 import { ProjectSelects } from "./ProjectSelects";
 
 interface EditProjectFormProps {
-  register: UseFormRegister<UpdateProjectInput>;
-  errors: FieldErrors<UpdateProjectInput>;
-  control: Control<UpdateProjectInput>;
+  register: UseFormRegister<UpdateProjectFormValues>;
+  errors: FieldErrors<UpdateProjectFormValues>;
+  control: Control<UpdateProjectFormValues>;
 }
 
 export function EditProjectForm({

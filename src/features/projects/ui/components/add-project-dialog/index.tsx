@@ -65,7 +65,7 @@ export function AddProjectDialog({
       type: "",
       startDate: today,
       finishDate: today,
-      // budget: 0,
+      budget: "",
       paymentTerms: "net_30d",
       status: "active",
       priority: "medium",
@@ -169,7 +169,7 @@ export function AddProjectDialog({
                 register={register}
                 required
                 error={errors.budget}
-                validation={{ valueAsNumber: true }}
+                // validation={{ valueAsNumber: true }}
               />
 
               <div className="space-y-2">

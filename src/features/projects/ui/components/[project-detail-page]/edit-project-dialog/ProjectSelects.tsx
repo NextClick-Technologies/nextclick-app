@@ -6,7 +6,7 @@ import {
   FieldErrors,
   UseFormRegister,
 } from "react-hook-form";
-import { UpdateProjectInput } from "@/features/projects/domain/schemas";
+import { UpdateProjectFormValues } from "@/features/projects/domain/schemas";
 import { Label } from "@/shared/components/ui/label";
 import { Input } from "@/shared/components/ui/input";
 import {
@@ -18,9 +18,9 @@ import {
 } from "@/shared/components/ui/select";
 
 interface ProjectSelectsProps {
-  control: Control<UpdateProjectInput>;
-  register: UseFormRegister<UpdateProjectInput>;
-  errors: FieldErrors<UpdateProjectInput>;
+  control: Control<UpdateProjectFormValues>;
+  register: UseFormRegister<UpdateProjectFormValues>;
+  errors: FieldErrors<UpdateProjectFormValues>;
 }
 
 export function ProjectSelects({
@@ -34,11 +34,7 @@ export function ProjectSelects({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="budget">Budget</Label>
-          <Input
-            id="budget"
-            type="number"
-            {...register("budget", { valueAsNumber: true })}
-          />
+          <Input id="budget" type="number" {...register("budget")} />
           {errors.budget && (
             <p className="text-sm text-destructive">{errors.budget.message}</p>
           )}

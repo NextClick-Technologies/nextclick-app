@@ -192,7 +192,7 @@ export interface Database {
           type: string;
           start_date: string | null;
           finish_date: string | null;
-          budget: string;
+          budget: number;
           payment_terms: PaymentTerms;
           status: ProjectStatus;
           priority: ProjectPriority;
@@ -209,7 +209,7 @@ export interface Database {
           type: string;
           start_date?: string | null;
           finish_date?: string | null;
-          budget: string;
+          budget: number;
           payment_terms: PaymentTerms;
           status: ProjectStatus;
           priority: ProjectPriority;
@@ -226,7 +226,7 @@ export interface Database {
           type?: string;
           start_date?: string | null;
           finish_date?: string | null;
-          budget?: string;
+          budget?: number;
           payment_terms?: PaymentTerms;
           status?: ProjectStatus;
           priority?: ProjectPriority;

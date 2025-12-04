@@ -9,10 +9,14 @@ export const projectSchema = z.object({
   type: z.string().optional(),
   startDate: z.string().min(1, "Start date is required"),
   finishDate: z.string().min(1, "Finish date is required"),
-  budget: z.number().min(0, "Budget must be 0 or greater").default(0),
-  paymentTerms: z.nativeEnum(PaymentTerms).default(PaymentTerms.NET_30D),
-  status: z.nativeEnum(ProjectStatus).default(ProjectStatus.ACTIVE),
-  priority: z.nativeEnum(ProjectPriority).default(ProjectPriority.MEDIUM),
+  budget: z
+    .union([z.string(), z.number()])
+    .refine((val) => val !== "", "Budget is required")
+    .transform((val) => Number(val))
+    .refine((val) => !isNaN(val) && val >= 0, "Budget must be 0 or greater"),
+  paymentTerms: z.enum(PaymentTerms).default(PaymentTerms.NET_30D),
+  status: z.enum(ProjectStatus).default(ProjectStatus.ACTIVE),
+  priority: z.enum(ProjectPriority).default(ProjectPriority.MEDIUM),
   description: z.string().optional(),
   completionDate: z.string().optional().nullable(),
   clientId: z.string().uuid("Please select a client"),
@@ -23,6 +27,7 @@ export const updateProjectSchema = projectSchema.partial();
 
 export type ProjectInput = z.input<typeof projectSchema>;
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
+export type UpdateProjectFormValues = z.input<typeof updateProjectSchema>;
 
 /**
  * Project Members Schemas

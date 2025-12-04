@@ -1,7 +1,7 @@
 "use client";
 
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { UpdateProjectInput } from "@/features/projects/domain/schemas";
+import { UpdateProjectFormValues } from "@/features/projects/domain/schemas";
 import { Label } from "@/shared/components/ui/label";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -22,8 +22,8 @@ import { useEmployees } from "@/features/employees/ui/hooks/useEmployee";
 import { useState } from "react";
 
 interface ProjectManagerSelectProps {
-  control: Control<UpdateProjectInput>;
-  errors: FieldErrors<UpdateProjectInput>;
+  control: Control<UpdateProjectFormValues>;
+  errors: FieldErrors<UpdateProjectFormValues>;
 }
 
 export function ProjectManagerSelect({

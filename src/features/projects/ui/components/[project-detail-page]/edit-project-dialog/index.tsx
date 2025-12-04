@@ -12,7 +12,7 @@ import {
 import { Project } from "@/features/projects/domain/types";
 import {
   updateProjectSchema,
-  UpdateProjectInput,
+  UpdateProjectFormValues,
 } from "@/features/projects/domain/schemas";
 import { useUpdateProject } from "@/features/projects/ui/hooks/useProject";
 import { EditProjectForm } from "./EditProjectForm";
@@ -44,14 +44,14 @@ export function EditProjectDialog({
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<UpdateProjectInput>({
+  } = useForm<UpdateProjectFormValues>({
     resolver: zodResolver(updateProjectSchema),
     defaultValues: {
       name: project.name || "",
       type: project.type || "",
       startDate: formatDateForInput(project.startDate),
       finishDate: formatDateForInput(project.finishDate),
-      budget: Number(project.budget || 0),
+      budget: project.budget || 0,
       paymentTerms: project.paymentTerms || "net_30d",
       status: project.status || "active",
       priority: project.priority || "medium",
@@ -68,7 +68,7 @@ export function EditProjectDialog({
       type: project.type || "",
       startDate: formatDateForInput(project.startDate),
       finishDate: formatDateForInput(project.finishDate),
-      budget: Number(project.budget || 0),
+      budget: project.budget || 0,
       paymentTerms: project.paymentTerms || "net_30d",
       status: project.status || "active",
       priority: project.priority || "medium",
@@ -78,7 +78,7 @@ export function EditProjectDialog({
     });
   }, [project, reset]);
 
-  const onSubmit = async (data: UpdateProjectInput) => {
+  const onSubmit = async (data: UpdateProjectFormValues) => {
     try {
       await updateProject.mutateAsync({ id: project.id, data });
       onOpenChange(false);
