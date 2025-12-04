@@ -15,8 +15,8 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { useProject, useDeleteProject } from "../hooks/useProject";
 import { ProjectInformation } from "../components/[project-detail-page]/project-information";
 import { BudgetInformation } from "../components/[project-detail-page]/BudgetInformation";
-import { ProjectMilestones } from "../components/[project-detail-page]/(milestones)/project-milestones";
-import { MilestoneStats } from "../components/[project-detail-page]/(milestones)/milestone-progress";
+import { ProjectMilestones } from "@/features/milestone/ui/components/project-milestones";
+import { MilestoneStats } from "@/features/milestone/ui/components/milestone-progress";
 import { EditProjectDialog } from "../components/[project-detail-page]/edit-project-dialog";
 import { DeleteProjectDialog } from "../components/[project-detail-page]/DeleteProjectDialog";
 

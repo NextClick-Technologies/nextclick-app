@@ -45,7 +45,7 @@ import { PROJECT_ROLES } from "@/shared/const/roles";
 import { useMilestones } from "@/features/milestone/ui/hooks/useMilestone";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
-import { useProjectMembersPermissions } from "@/shared/hooks/useProjectMembersPermissions";
+import { useProjectMembersPermissions } from "../../../hooks/useProjectMembersPermissions";
 
 interface TeamMember {
   id: string;

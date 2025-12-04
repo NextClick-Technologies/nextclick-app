@@ -1,6 +1,6 @@
 "use client";
 
-import { TeamMembers } from "./TeamMembers";
+import { TeamMembers } from "../../TeamMembers";
 import { formatDate } from "./projectInfoUtils";
 import { sanitizeHtml } from "@/shared/utils/sanitize";
 
