@@ -21,9 +21,7 @@ export function MilestoneDateFields({
       {/* Start and Finish Dates */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="edit-startDate">
-            Start Date <span className="text-destructive">*</span>
-          </Label>
+          <Label htmlFor="edit-startDate">Start Date</Label>
           <Input id="edit-startDate" type="date" {...register("startDate")} />
           {errors.startDate && (
             <p className="text-sm text-destructive">
@@ -33,9 +31,7 @@ export function MilestoneDateFields({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="edit-finishDate">
-            Target Finish Date <span className="text-destructive">*</span>
-          </Label>
+          <Label htmlFor="edit-finishDate">Target Finish Date</Label>
           <Input id="edit-finishDate" type="date" {...register("finishDate")} />
           {errors.finishDate && (
             <p className="text-sm text-destructive">

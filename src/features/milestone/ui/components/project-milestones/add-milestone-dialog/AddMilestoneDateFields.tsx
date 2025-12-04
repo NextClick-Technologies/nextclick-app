@@ -21,9 +21,7 @@ export function AddMilestoneDateFields({
       {/* Start and Finish Dates */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="startDate">
-            Start Date <span className="text-destructive">*</span>
-          </Label>
+          <Label htmlFor="startDate">Start Date</Label>
           <Input id="startDate" type="date" {...register("startDate")} />
           {errors.startDate && (
             <p className="text-sm text-destructive">
@@ -33,9 +31,7 @@ export function AddMilestoneDateFields({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="finishDate">
-            Target Finish Date <span className="text-destructive">*</span>
-          </Label>
+          <Label htmlFor="finishDate">Target Finish Date</Label>
           <Input id="finishDate" type="date" {...register("finishDate")} />
           {errors.finishDate && (
             <p className="text-sm text-destructive">

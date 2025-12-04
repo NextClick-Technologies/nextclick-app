@@ -19,9 +19,7 @@ export function AddMilestoneBasicFields({
     <>
       {/* Name */}
       <div className="space-y-2">
-        <Label htmlFor="name">
-          Milestone Name <span className="text-destructive">*</span>
-        </Label>
+        <Label htmlFor="name">Milestone Name</Label>
         <Input
           id="name"
           placeholder="e.g., Project Planning, Backend Development"
@@ -34,9 +32,7 @@ export function AddMilestoneBasicFields({
 
       {/* Description */}
       <div className="space-y-2">
-        <Label htmlFor="description">
-          Description <span className="text-destructive">*</span>
-        </Label>
+        <Label htmlFor="description">Description</Label>
         <Textarea
           id="description"
           placeholder="Describe what needs to be accomplished in this milestone"
