@@ -18,7 +18,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import {
   useAddMilestoneMember,
   useRemoveMilestoneMember,
-} from "@/features/milestone/application/hooks/useMilestoneMembers";
+} from "@/features/milestone/ui/hooks/useMilestoneMembers";
 import {
   Popover,
   PopoverContent,

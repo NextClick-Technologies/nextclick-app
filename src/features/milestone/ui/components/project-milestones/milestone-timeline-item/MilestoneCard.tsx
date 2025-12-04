@@ -9,7 +9,7 @@ import { sanitizeHtml } from "@/shared/utils/sanitize";
 import { Clock, Pencil, Trash2 } from "lucide-react";
 import { StatusConfig } from "./MilestoneStatusConfig";
 import { formatDate, getDateRange } from "./MilestoneDateUtils";
-import { TeamMembers } from "../../TeamMembers";
+import { TeamMembers } from "../TeamMembers";
 
 interface MilestoneCardProps {
   milestone: Milestone;
