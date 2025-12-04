@@ -41,10 +41,7 @@ export function ProjectManagerSelect({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="projectManager">
-        Project Manager{" "}
-        {required && <span className="text-destructive">*</span>}
-      </Label>
+      <Label htmlFor="projectManager">Project Manager</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

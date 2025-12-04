@@ -35,9 +35,7 @@ export function ClientSelect({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="clientId">
-        Client <span className="text-destructive">*</span>
-      </Label>
+      <Label htmlFor="clientId">Client</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

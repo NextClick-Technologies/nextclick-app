@@ -65,7 +65,7 @@ export function AddProjectDialog({
       type: "",
       startDate: today,
       finishDate: today,
-      budget: 0,
+      // budget: 0,
       paymentTerms: "net_30d",
       status: "active",
       priority: "medium",
@@ -134,12 +134,19 @@ export function AddProjectDialog({
                 name="projectManager"
                 control={control}
                 render={({ field }) => (
-                  <ProjectManagerSelect
-                    value={field.value ?? ""}
-                    employees={employees}
-                    onChange={field.onChange}
-                    required
-                  />
+                  <div className="space-y-2">
+                    <ProjectManagerSelect
+                      value={field.value ?? ""}
+                      employees={employees}
+                      onChange={field.onChange}
+                      required
+                    />
+                    {errors.projectManager && (
+                      <p className="text-sm text-destructive">
+                        {errors.projectManager.message}
+                      </p>
+                    )}
+                  </div>
                 )}
               />
 
@@ -148,6 +155,7 @@ export function AddProjectDialog({
                 id="type"
                 placeholder="e.g., web-development"
                 register={register}
+                error={errors.type}
               />
             </div>
 
@@ -160,6 +168,8 @@ export function AddProjectDialog({
                 placeholder="Enter budget"
                 register={register}
                 required
+                error={errors.budget}
+                validation={{ valueAsNumber: true }}
               />
 
               <div className="space-y-2">
@@ -168,10 +178,7 @@ export function AddProjectDialog({
                   control={control}
                   render={({ field }) => (
                     <>
-                      <Label htmlFor="paymentTerms">
-                        Payment Terms{" "}
-                        <span className="text-destructive">*</span>
-                      </Label>
+                      <Label htmlFor="paymentTerms">Payment Terms</Label>
                       <Select
                         value={field.value}
                         onValueChange={field.onChange}
@@ -189,6 +196,11 @@ export function AddProjectDialog({
                     </>
                   )}
                 />
+                {errors.paymentTerms && (
+                  <p className="text-sm text-destructive">
+                    {errors.paymentTerms.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -201,6 +213,7 @@ export function AddProjectDialog({
                 placeholder=""
                 register={register}
                 required
+                error={errors.startDate}
               />
 
               <FormField
@@ -210,15 +223,14 @@ export function AddProjectDialog({
                 placeholder=""
                 register={register}
                 required
+                error={errors.finishDate}
               />
             </div>
 
             {/* Status and Priority side-by-side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="status">
-                  Status <span className="text-destructive">*</span>
-                </Label>
+                <Label htmlFor="status">Status</Label>
                 <Controller
                   name="status"
                   control={control}
@@ -244,12 +256,15 @@ export function AddProjectDialog({
                     </Select>
                   )}
                 />
+                {errors.status && (
+                  <p className="text-sm text-destructive">
+                    {errors.status.message}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="priority">
-                  Priority <span className="text-destructive">*</span>
-                </Label>
+                <Label htmlFor="priority">Priority</Label>
                 <Controller
                   name="priority"
                   control={control}
@@ -273,6 +288,11 @@ export function AddProjectDialog({
                     </Select>
                   )}
                 />
+                {errors.priority && (
+                  <p className="text-sm text-destructive">
+                    {errors.priority.message}
+                  </p>
+                )}
               </div>
             </div>
 

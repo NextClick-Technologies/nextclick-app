@@ -26,10 +26,7 @@ export function FormField({
 }: FormFieldProps) {
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>
-        {label}
-        {required && <span className="text-destructive ml-1">*</span>}
-      </Label>
+      <Label htmlFor={id}>{label}</Label>
       <Input
         id={id}
         type={type}
