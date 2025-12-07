@@ -23,6 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 interface SectionNavItem {
   name: string;
@@ -40,7 +41,6 @@ interface NavItemProps {
   name: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  isActive: boolean;
   isCollapsed?: boolean;
 }
 
@@ -51,18 +51,16 @@ const navigation: NavSection[] = [
   {
     section: "Client Management",
     items: [
-      { name: "Clients", href: "/clients", icon: Users, permission: "clients" },
+      { name: "Clients", href: "/clients", icon: Users },
       {
         name: "Projects",
         href: "/projects",
         icon: FolderKanban,
-        permission: "projects",
       },
       {
         name: "Companies",
         href: "/companies",
         icon: Building2,
-        permission: "companies",
       },
     ],
   },
@@ -79,11 +77,28 @@ const navigation: NavSection[] = [
   },
 ];
 
+function SidebarItemSkeleton({
+  isCollapsed = false,
+}: {
+  isCollapsed?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-3 rounded-lg px-3 py-2.5",
+        isCollapsed && "justify-center px-2"
+      )}
+    >
+      <Skeleton className="h-4 w-4 shrink-0" />
+      {!isCollapsed && <Skeleton className="h-4 flex-1" />}
+    </div>
+  );
+}
+
 function NavItem({
   name,
   href,
   icon: Icon,
-  isActive,
   isCollapsed = false,
 }: NavItemProps) {
   const { closeMobile } = useSidebar();
@@ -126,22 +141,33 @@ function NavItem({
 }
 
 export function Sidebar() {
-  const pathname = usePathname();
   const { isCollapsed, toggleCollapse, closeMobile } = useSidebar();
-  const { canRead } = usePermissions();
+  const { canRead, isLoading } = usePermissions();
 
-  // Filter navigation items based on permissions
-  const filteredNavigation = navigation
+  // Split navigation into public and permission-gated
+  const publicNavigation = navigation
     .map((section) => ({
       ...section,
-      items: section.items.filter((item) => {
-        // If no permission specified, show to everyone
-        if (!item.permission) return true;
-        // Check if user has read permission for this resource
-        return canRead(item.permission);
-      }),
+      items: section.items.filter((item) => !item.permission), // Items WITHOUT permission
     }))
-    .filter((section) => section.items.length > 0); // Remove empty sections
+    .filter((section) => section.items.length > 0);
+
+  const permissionGatedNavigation = navigation
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => item.permission), // Items WITH permission
+    }))
+    .filter((section) => section.items.length > 0);
+
+  // Filter permission-gated items (only if not loading)
+  const filteredPermissionNavigation = isLoading
+    ? []
+    : permissionGatedNavigation
+        .map((section) => ({
+          ...section,
+          items: section.items.filter((item) => canRead(item.permission!)),
+        }))
+        .filter((section) => section.items.length > 0);
 
   return (
     <aside
@@ -194,7 +220,8 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 overflow-y-auto px-3 py-4">
-        {filteredNavigation.map((section, idx) => (
+        {/* Render public navigation (always visible) */}
+        {publicNavigation.map((section, idx) => (
           <div key={idx} className={cn(idx > 0 && "mt-6")}>
             {section.section && !isCollapsed && (
               <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
@@ -208,10 +235,42 @@ export function Sidebar() {
                   name={item.name}
                   href={item.href}
                   icon={item.icon}
-                  isActive={pathname === item.href}
                   isCollapsed={isCollapsed}
                 />
               ))}
+            </div>
+          </div>
+        ))}
+
+        {/* Render permission-gated navigation or skeleton */}
+        {permissionGatedNavigation.map((section, idx) => (
+          <div key={`permission-${idx}`} className="mt-6">
+            {section.section && !isCollapsed && (
+              <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+                {section.section}
+              </h3>
+            )}
+            <div className="space-y-1">
+              {isLoading
+                ? // Show skeleton while loading
+                  section.items.map((item, itemIdx) => (
+                    <SidebarItemSkeleton
+                      key={itemIdx}
+                      isCollapsed={isCollapsed}
+                    />
+                  ))
+                : // Show filtered items after loading
+                  filteredPermissionNavigation
+                    .find((s) => s.section === section.section)
+                    ?.items.map((item) => (
+                      <NavItem
+                        key={item.href}
+                        name={item.name}
+                        href={item.href}
+                        icon={item.icon}
+                        isCollapsed={isCollapsed}
+                      />
+                    ))}
             </div>
           </div>
         ))}
