@@ -10,7 +10,6 @@ import {
 } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
 import { toast } from "sonner";
-import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Avatar, AvatarFallback } from "@/shared/components/ui/avatar";
 import { X, Loader2, Check, ChevronsUpDown } from "lucide-react";
