@@ -46,6 +46,7 @@ import { useMilestones } from "@/features/milestone/ui/hooks/useMilestone";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import { useProjectMembersPermissions } from "../../../hooks/useProjectMembersPermissions";
+import { DeleteTeamMemberDialog } from "./DeleteTeamMemberDialog";
 
 interface TeamMember {
   id: string;
@@ -70,6 +71,8 @@ export function ManageTeamDialog({
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [comboboxOpen, setComboboxOpen] = useState(false);
+  const [memberToDelete, setMemberToDelete] = useState<TeamMember | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const { data: employeesData, isLoading: isLoadingEmployees } = useEmployees();
   const { data: milestonesData } = useMilestones({ projectId });
@@ -139,14 +142,26 @@ export function ManageTeamDialog({
       return;
     }
 
+    const member = currentMembers.find((m) => m.id === employeeId);
+    if (member) {
+      setMemberToDelete(member);
+      setDeleteDialogOpen(true);
+    }
+  };
+
+  const confirmRemoveMember = () => {
+    if (!memberToDelete) return;
+
     removeMember.mutate(
       {
         projectId,
-        employeeId,
+        employeeId: memberToDelete.id,
       },
       {
         onSuccess: () => {
           toast.success("Team member removed successfully");
+          setDeleteDialogOpen(false);
+          setMemberToDelete(null);
         },
         onError: (error) => {
           toast.error(error.message || "Failed to remove team member");
@@ -393,6 +408,13 @@ export function ManageTeamDialog({
           </div>
         </div>
       </DialogContent>
+      <DeleteTeamMemberDialog
+        member={memberToDelete}
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={confirmRemoveMember}
+        isPending={removeMember.isPending}
+      />
     </Dialog>
   );
 }

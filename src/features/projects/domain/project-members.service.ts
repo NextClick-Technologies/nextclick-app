@@ -111,12 +111,13 @@ export async function removeProjectMember(
 
   const { error } = await supabaseAdmin
     .from("project_members")
-    .delete()
+    .update({ deleted_at: new Date().toISOString() } as never)
     .eq("project_id", projectId)
-    .eq("employee_id", employeeId);
+    .eq("employee_id", employeeId)
+    .is("deleted_at", null);
 
   if (error) {
-    logger.error({ err: error }, "Delete error");
+    logger.error({ err: error }, "Soft delete error");
     throw new Error(error.message);
   }
 

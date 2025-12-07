@@ -116,13 +116,14 @@ export async function createProjectMember(member: ProjectMemberInsert) {
 }
 
 /**
- * Delete a project member
+ * Delete a project member (soft delete)
  */
 export async function deleteProjectMember(id: string) {
   const { error } = await supabaseAdmin
     .from("project_members")
-    .delete()
-    .eq("id", id);
+    .update({ deleted_at: new Date().toISOString() } as never)
+    .eq("id", id)
+    .is("deleted_at", null);
 
   return { error };
 }

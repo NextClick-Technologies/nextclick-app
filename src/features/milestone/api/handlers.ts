@@ -35,13 +35,16 @@ export async function getMilestones(request: NextRequest) {
     const orderByParam = searchParams.get("orderBy");
     const projectId = searchParams.get("projectId");
 
-    let query = supabaseAdmin.from("milestones").select(
-      `
+    let query = supabaseAdmin
+      .from("milestones")
+      .select(
+        `
         *,
         milestone_members (
           id,
           employee_id,
           role,
+          deleted_at,
           employees (
             id,
             name,
@@ -49,8 +52,9 @@ export async function getMilestones(request: NextRequest) {
           )
         )
       `,
-      { count: "exact" }
-    );
+        { count: "exact" }
+      )
+      .is("deleted_at", null);
 
     if (projectId) {
       query = query.eq(transformColumnName("projectId"), projectId);
@@ -75,14 +79,16 @@ export async function getMilestones(request: NextRequest) {
     const transformedData = (data || []).map((milestone: any) => {
       const transformed = transformFromDb(milestone) as any;
       if (milestone.milestone_members) {
-        transformed.members = milestone.milestone_members.map(
-          (member: any) => ({
-            id: member.employees.id,
-            name: member.employees.name,
-            familyName: member.employees.family_name,
-            role: member.role,
-          })
+        // Filter out soft-deleted members
+        const activeMembers = milestone.milestone_members.filter(
+          (member: any) => !member.deleted_at
         );
+        transformed.members = activeMembers.map((member: any) => ({
+          id: member.employees.id,
+          name: member.employees.name,
+          familyName: member.employees.family_name,
+          role: member.role,
+        }));
       }
       return transformed;
     });
@@ -158,6 +164,7 @@ export async function getMilestone(id: string) {
           id,
           employee_id,
           role,
+          deleted_at,
           employees (
             id,
             name,
@@ -167,6 +174,7 @@ export async function getMilestone(id: string) {
       `
       )
       .eq("id", id)
+      .is("deleted_at", null)
       .single();
 
     if (error) {
@@ -176,14 +184,16 @@ export async function getMilestone(id: string) {
     // Transform milestone members to camelCase
     const transformed: any = transformFromDb(data);
     if ((data as any).milestone_members) {
-      transformed.members = (data as any).milestone_members.map(
-        (member: any) => ({
-          id: member.employees.id,
-          name: member.employees.name,
-          familyName: member.employees.family_name,
-          role: member.role,
-        })
+      // Filter out soft-deleted members
+      const activeMembers = (data as any).milestone_members.filter(
+        (member: any) => !member.deleted_at
       );
+      transformed.members = activeMembers.map((member: any) => ({
+        id: member.employees.id,
+        name: member.employees.name,
+        familyName: member.employees.family_name,
+        role: member.role,
+      }));
     }
 
     return apiSuccess(transformed);
@@ -205,6 +215,7 @@ export async function updateMilestone(id: string, request: NextRequest) {
       .from("milestones")
       .select("project_id")
       .eq("id", id)
+      .is("deleted_at", null)
       .single();
 
     if (!milestone) {
@@ -268,6 +279,7 @@ export async function deleteMilestone(id: string, request: NextRequest) {
       .from("milestones")
       .select("project_id")
       .eq("id", id)
+      .is("deleted_at", null)
       .single();
 
     if (!milestone) {
@@ -296,8 +308,9 @@ export async function deleteMilestone(id: string, request: NextRequest) {
 
     const { error } = await supabaseAdmin
       .from("milestones")
-      .delete()
-      .eq("id", id);
+      .update({ deleted_at: new Date().toISOString() } as never)
+      .eq("id", id)
+      .is("deleted_at", null);
 
     if (error) {
       return apiError(error.message, error.code === "PGRST116" ? 404 : 500);

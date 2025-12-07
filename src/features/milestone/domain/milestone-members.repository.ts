@@ -2,16 +2,19 @@
 import { supabaseAdmin } from "@/shared/lib/supabase/server";
 
 /**
- * Data Access Layer for Project Members
+ * Data Access Layer for Milestone Members
  */
 
-export async function findAllMembers(projectId?: string, employeeId?: string) {
+export async function findAllMembers(
+  milestoneId?: string,
+  employeeId?: string
+) {
   let query = supabaseAdmin
-    .from("project_members")
+    .from("milestone_members")
     .select(
       `
       id,
-      project_id,
+      milestone_id,
       employee_id,
       role,
       created_at,
@@ -20,7 +23,7 @@ export async function findAllMembers(projectId?: string, employeeId?: string) {
         name,
         family_name
       ),
-      projects:project_id (
+      milestones:milestone_id (
         id,
         name
       )
@@ -28,12 +31,10 @@ export async function findAllMembers(projectId?: string, employeeId?: string) {
     )
     .is("deleted_at", null);
 
-  // Filter by project if provided
-  if (projectId) {
-    query = query.eq("project_id", projectId);
+  if (milestoneId) {
+    query = query.eq("milestone_id", milestoneId);
   }
 
-  // Filter by employee if provided
   if (employeeId) {
     query = query.eq("employee_id", employeeId);
   }
@@ -43,14 +44,14 @@ export async function findAllMembers(projectId?: string, employeeId?: string) {
 
 export async function findMemberById(memberId: string) {
   return await supabaseAdmin
-    .from("project_members")
+    .from("milestone_members")
     .select(
       `
       id,
-      project_id,
+      milestone_id,
       employee_id,
       employees:employee_id (id, name, family_name),
-      projects:project_id (name)
+      milestones:milestone_id (name)
     `
     )
     .eq("id", memberId)
@@ -58,21 +59,24 @@ export async function findMemberById(memberId: string) {
     .single();
 }
 
-export async function checkMemberExists(projectId: string, employeeId: string) {
+export async function checkMemberExists(
+  milestoneId: string,
+  employeeId: string
+) {
   return await supabaseAdmin
-    .from("project_members")
+    .from("milestone_members")
     .select("id")
-    .eq("project_id", projectId)
+    .eq("milestone_id", milestoneId)
     .eq("employee_id", employeeId)
     .is("deleted_at", null)
     .single();
 }
 
-export async function findProjectById(projectId: string) {
+export async function findMilestoneById(milestoneId: string) {
   return await supabaseAdmin
-    .from("projects")
+    .from("milestones")
     .select("id, name")
-    .eq("id", projectId)
+    .eq("id", milestoneId)
     .is("deleted_at", null)
     .single();
 }
@@ -87,12 +91,13 @@ export async function findEmployeeById(employeeId: string) {
 }
 
 /**
- * Soft delete a project member
+ * Soft delete a milestone member
  */
-export async function deleteMember(memberId: string) {
+export async function deleteMember(milestoneId: string, employeeId: string) {
   return await supabaseAdmin
-    .from("project_members")
+    .from("milestone_members")
     .update({ deleted_at: new Date().toISOString() } as never)
-    .eq("id", memberId)
+    .eq("milestone_id", milestoneId)
+    .eq("employee_id", employeeId)
     .is("deleted_at", null);
 }

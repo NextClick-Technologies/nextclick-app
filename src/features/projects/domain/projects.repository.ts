@@ -15,7 +15,10 @@ export interface ProjectQueryOptions {
 export async function findAll(options: ProjectQueryOptions) {
   const { page, pageSize, orderBy = [] } = options;
 
-  let query = supabaseAdmin.from("projects").select("*", { count: "exact" });
+  let query = supabaseAdmin
+    .from("projects")
+    .select("*", { count: "exact" })
+    .is("deleted_at", null);
 
   orderBy.forEach(({ column, ascending }) => {
     query = query.order(transformColumnName(column), { ascending });
@@ -35,9 +38,10 @@ export async function findById(id: string) {
       `*, 
        client:clients(id, name, family_name), 
        employee:employees(id, name, family_name), 
-       project_members(id, role, employee_id, employees(id, name, family_name))`
+       project_members(id, role, employee_id, deleted_at, employees(id, name, family_name))`
     )
     .eq("id", id)
+    .is("deleted_at", null)
     .single();
 }
 
@@ -64,7 +68,11 @@ export async function update(id: string, data: Record<string, any>) {
 }
 
 export async function deleteProject(id: string) {
-  return await supabaseAdmin.from("projects").delete().eq("id", id);
+  return await supabaseAdmin
+    .from("projects")
+    .update({ deleted_at: new Date().toISOString() } as never)
+    .eq("id", id)
+    .is("deleted_at", null);
 }
 
 /**

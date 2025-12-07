@@ -15,7 +15,10 @@ export interface CompanyQueryOptions {
 export async function findAll(options: CompanyQueryOptions) {
   const { page, pageSize, orderBy = [] } = options;
 
-  let query = supabaseAdmin.from("companies").select("*", { count: "exact" });
+  let query = supabaseAdmin
+    .from("companies")
+    .select("*", { count: "exact" })
+    .is("deleted_at", null);
 
   orderBy.forEach(({ column, ascending }) => {
     query = query.order(transformColumnName(column), { ascending });
@@ -33,6 +36,7 @@ export async function findById(id: string) {
     .from("companies")
     .select("*")
     .eq("id", id)
+    .is("deleted_at", null)
     .single();
 }
 
@@ -59,7 +63,11 @@ export async function update(id: string, data: Record<string, any>) {
 }
 
 export async function deleteCompany(id: string) {
-  return await supabaseAdmin.from("companies").delete().eq("id", id);
+  return await supabaseAdmin
+    .from("companies")
+    .update({ deleted_at: new Date().toISOString() } as never)
+    .eq("id", id)
+    .is("deleted_at", null);
 }
 
 /**
@@ -91,7 +99,8 @@ export async function getEmployeeCompanyIds(userId: string) {
     .from("clients")
     .select("company_id")
     .in("id", clientIds)
-    .not("company_id", "is", null);
+    .not("company_id", "is", null)
+    .is("deleted_at", null);
 
   return (
     (clientsData as { company_id: string | null }[] | null)

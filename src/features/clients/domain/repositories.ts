@@ -22,7 +22,10 @@ export interface ClientQueryOptions {
 export async function findAll(options: ClientQueryOptions) {
   const { page, pageSize, orderBy = [], filters = {} } = options;
 
-  let query = supabaseAdmin.from("clients").select("*", { count: "exact" });
+  let query = supabaseAdmin
+    .from("clients")
+    .select("*", { count: "exact" })
+    .is("deleted_at", null);
 
   // Apply filters
   if (filters.gender) {
@@ -57,6 +60,7 @@ export async function findById(
     .from("clients")
     .select(select)
     .eq("id", id)
+    .is("deleted_at", null)
     .single();
 }
 
@@ -69,7 +73,8 @@ export async function findCompaniesByIds(companyIds: string[]) {
   return await supabaseAdmin
     .from("companies")
     .select("id, name")
-    .in("id", companyIds);
+    .in("id", companyIds)
+    .is("deleted_at", null);
 }
 
 /**
@@ -81,7 +86,8 @@ export async function countProjectsByClientIds(clientIds: string[]) {
   return await supabaseAdmin
     .from("projects")
     .select("client_id")
-    .in("client_id", clientIds);
+    .in("client_id", clientIds)
+    .is("deleted_at", null);
 }
 
 /**
@@ -109,10 +115,14 @@ export async function update(id: string, data: Record<string, any>) {
 }
 
 /**
- * Delete client by ID
+ * Delete client by ID (soft delete)
  */
 export async function deleteClient(id: string) {
-  return await supabaseAdmin.from("clients").delete().eq("id", id);
+  return await supabaseAdmin
+    .from("clients")
+    .update({ deleted_at: new Date().toISOString() } as never)
+    .eq("id", id)
+    .is("deleted_at", null);
 }
 
 /**

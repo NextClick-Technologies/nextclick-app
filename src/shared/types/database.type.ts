@@ -33,6 +33,7 @@ export interface Database {
           last_login: string | null;
           created_at: string;
           updated_at: string;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -48,6 +49,7 @@ export interface Database {
           last_login?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -63,6 +65,7 @@ export interface Database {
           last_login?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
       };
       audit_logs: {
@@ -115,6 +118,7 @@ export interface Database {
           status: string;
           created_at: string;
           updated_at: string;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -130,6 +134,7 @@ export interface Database {
           status?: string;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -145,6 +150,7 @@ export interface Database {
           status?: string;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
       };
       companies: {
@@ -159,6 +165,7 @@ export interface Database {
           status: string;
           created_at: string;
           updated_at: string;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -171,6 +178,7 @@ export interface Database {
           status?: string;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -183,6 +191,7 @@ export interface Database {
           status?: string;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
       };
       projects: {
@@ -202,6 +211,7 @@ export interface Database {
           project_manager: string | null;
           created_at: string;
           updated_at: string;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -219,6 +229,7 @@ export interface Database {
           project_manager?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -236,6 +247,7 @@ export interface Database {
           project_manager?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
       };
       milestones: {
@@ -251,6 +263,7 @@ export interface Database {
           project_id: string;
           created_at: string;
           updated_at: string;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -264,6 +277,7 @@ export interface Database {
           project_id: string;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -277,6 +291,7 @@ export interface Database {
           project_id?: string;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
       };
       milestone_members: {
@@ -286,6 +301,7 @@ export interface Database {
           employee_id: string;
           role: string | null;
           created_at: string;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -293,6 +309,7 @@ export interface Database {
           employee_id: string;
           role?: string | null;
           created_at?: string;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -300,6 +317,7 @@ export interface Database {
           employee_id?: string;
           role?: string | null;
           created_at?: string;
+          deleted_at?: string | null;
         };
       };
       employees: {
@@ -328,6 +346,7 @@ export interface Database {
           country: string | null;
           created_at: string;
           updated_at: string;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -354,6 +373,7 @@ export interface Database {
           country?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -380,6 +400,7 @@ export interface Database {
           country?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
       };
       project_members: {
@@ -389,6 +410,7 @@ export interface Database {
           employee_id: string;
           role: string | null;
           created_at: string;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -396,6 +418,7 @@ export interface Database {
           employee_id: string;
           role?: string | null;
           created_at?: string;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -403,6 +426,7 @@ export interface Database {
           employee_id?: string;
           role?: string | null;
           created_at?: string;
+          deleted_at?: string | null;
         };
       };
     };

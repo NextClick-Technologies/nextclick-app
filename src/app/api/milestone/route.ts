@@ -1,12 +1,12 @@
 /**
  * API Route: /api/milestone
- * Delegates to feature-based handlers in features/(crm)/milestone/api/handlers.ts
+ * Delegates to feature-based handlers in features/milestone/api/milestones.handlers.ts
  */
 import { NextRequest } from "next/server";
 import {
   getMilestones,
   createMilestone,
-} from "@/features/milestone/api/handlers";
+} from "@/features/milestone/api/milestones.handlers";
 
 export async function GET(request: NextRequest) {
   return getMilestones(request);

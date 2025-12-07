@@ -70,6 +70,7 @@ export async function getProjectById(
   return {
     ...baseData,
     members: (data as any).project_members
+      ?.filter((pm: any) => !pm.deleted_at) // Filter out soft-deleted members
       ?.map((pm: any) => {
         const employee = pm.employees;
         return employee

@@ -136,7 +136,8 @@ export function useRemoveMilestoneMember() {
         throw new Error(error.error || "Failed to remove team member");
       }
 
-      return response.json();
+      // 204 No Content response has no body
+      return null;
     },
     onMutate: async ({ milestoneId, employeeId }) => {
       // Cancel outgoing refetches
