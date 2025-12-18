@@ -142,17 +142,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-/* .nav-item-active {
-  background-color: var(--cc-primary);
-  color: white;
-}
-
-.nav-item-hover:hover {
-  background-color: color-mix(in srgb, var(--cc-accent) 30%, transparent);
-}
-
-.btn-primary {
-  background-color: var(--cc-primary);
-  color: white;
-} */
