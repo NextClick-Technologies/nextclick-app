@@ -35,17 +35,17 @@ export default function RootLayout({
       >
         <ErrorBoundary>
           <GlobalErrorHandler />
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <AppProviders>
-              <QueryProvider>{children}</QueryProvider>
-              <Toaster />
-            </AppProviders>
-          </ThemeProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <AppProviders>
+                <QueryProvider>{children}</QueryProvider>
+                <Toaster />
+              </AppProviders>
+            </ThemeProvider>
         </ErrorBoundary>
       </body>
     </html>
