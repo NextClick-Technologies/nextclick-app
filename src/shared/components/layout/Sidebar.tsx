@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 import {
   AudioWaveform,
   BadgeCheck,
@@ -10,13 +11,14 @@ import {
   Building2,
   ChevronsUpDown,
   Command,
-  CreditCard,
   FolderKanban,
   GalleryVerticalEnd,
   LayoutDashboard,
   LogOut,
+  Moon,
   Plus,
   Sparkles,
+  Sun,
   UserCog,
   Users,
 } from "lucide-react";
@@ -51,33 +53,27 @@ import {
   useSidebar,
 } from "@/shared/components/ui/sidebar";
 import { usePermissions } from "@/shared/hooks/usePermissions";
+import { useAuth } from "@/shared/contexts";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
-// Mock Data
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+// Mock Data for Teams
+const teamsData = [
+  {
+    name: "Acme Inc",
+    logo: GalleryVerticalEnd,
+    plan: "Enterprise",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-};
+  {
+    name: "Acme Corp.",
+    logo: AudioWaveform,
+    plan: "Startup",
+  },
+  {
+    name: "Evil Corp.",
+    logo: Command,
+    plan: "Free",
+  },
+];
 
 // Navigation Configuration
 interface SectionNavItem {
@@ -194,16 +190,14 @@ function TeamSwitcher({
   );
 }
 
-function NavUser({
-  user,
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}) {
+function NavUser() {
   const { isMobile } = useSidebar();
+  const { user, signOut } = useAuth();
+  const { theme, setTheme } = useTheme();
+
+  // Get display name from email (first part before @)
+  const displayName = user?.email?.split("@")[0] || "User";
+  const initial = displayName.charAt(0).toUpperCase();
 
   return (
     <SidebarMenu>
@@ -215,12 +209,14 @@ function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarImage src="" alt={displayName} />
+                <AvatarFallback className="rounded-lg">
+                  {initial}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-semibold">{displayName}</span>
+                <span className="truncate text-xs">{user?.email || ""}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -234,12 +230,14 @@ function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage src="" alt={displayName} />
+                  <AvatarFallback className="rounded-lg">
+                    {initial}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">{displayName}</span>
+                  <span className="truncate text-xs">{user?.email || ""}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -256,9 +254,16 @@ function NavUser({
                 <BadgeCheck className="mr-2 h-4 w-4" />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard className="mr-2 h-4 w-4" />
-                Billing
+              <DropdownMenuItem
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              >
+                {theme === "dark" ? (
+                  <Sun className="mr-2 h-4 w-4" />
+                ) : (
+                  <Moon className="mr-2 h-4 w-4" />
+                )}
+                Toggle Theme
+                <DropdownMenuShortcut>M</DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell className="mr-2 h-4 w-4" />
@@ -266,7 +271,7 @@ function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={signOut}>
               <LogOut className="mr-2 h-4 w-4" />
               Log out
             </DropdownMenuItem>
@@ -296,7 +301,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher teams={teamsData} />
       </SidebarHeader>
       <SidebarContent>
         {filteredNavigation.map((section, idx) => (
@@ -338,7 +343,7 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
