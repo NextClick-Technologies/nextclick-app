@@ -6,28 +6,26 @@ import {
   ReactNode,
   useEffect,
   useState,
+  useCallback,
 } from "react";
-import { useSession, signOut as nextAuthSignOut } from "next-auth/react";
-import { Session } from "next-auth";
+import { createSupabaseBrowserClient } from "@/shared/lib/supabase/client";
+import type { User, Session } from "@supabase/supabase-js";
 import type { UserRole, Permission } from "@/shared/types/auth.types";
 import {
   hasPermission,
   canAccessResource,
-  isAdmin,
-  isAdminOrManager,
+  isAdmin as checkIsAdmin,
 } from "@/shared/lib/auth/permissions";
 
-interface User {
+interface UserWithRole {
   id: string;
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
+  email: string | undefined;
   role: UserRole;
-  permissions: string[];
+  isActive: boolean;
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: UserWithRole | null;
   session: Session | null;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -48,26 +46,86 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { data: session, status } = useSession();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserWithRole | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const supabase = createSupabaseBrowserClient();
+
+  const fetchUserRole = useCallback(
+    async (authUser: User) => {
+      try {
+        const { data } = await supabase
+          .from("users")
+          .select("role, is_active")
+          .eq("id", authUser.id)
+          .single();
+
+        if (data) {
+          const userData = data as { role: string; is_active: boolean };
+          setUser({
+            id: authUser.id,
+            email: authUser.email,
+            role: userData.role as UserRole,
+            isActive: userData.is_active,
+          });
+        } else {
+          // User exists in auth but not in public.users (shouldn't happen with trigger)
+          console.error("User not found in public.users table");
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+        setUser(null);
+      }
+      setIsLoading(false);
+    },
+    [supabase]
+  );
 
   useEffect(() => {
-    if (session?.user) {
-      setUser({
-        id: session.user.id || "",
-        name: session.user.name,
-        email: session.user.email,
-        image: session.user.image,
-        role: session.user.role,
-        permissions: session.user.permissions || [],
-      });
-    } else {
-      setUser(null);
-    }
-  }, [session]);
+    // Get initial session
+    const initializeAuth = async () => {
+      const {
+        data: { session: initialSession },
+      } = await supabase.auth.getSession();
+
+      setSession(initialSession);
+
+      if (initialSession?.user) {
+        await fetchUserRole(initialSession.user);
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    initializeAuth();
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+      setSession(currentSession);
+
+      if (event === "SIGNED_IN" && currentSession?.user) {
+        await fetchUserRole(currentSession.user);
+      } else if (event === "SIGNED_OUT") {
+        setUser(null);
+        setIsLoading(false);
+      } else if (event === "TOKEN_REFRESHED" && currentSession?.user) {
+        // Refresh user data on token refresh
+        await fetchUserRole(currentSession.user);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth, fetchUserRole]);
 
   const signOut = async () => {
-    await nextAuthSignOut({ callbackUrl: "/auth/signin" });
+    await supabase.auth.signOut();
+    setUser(null);
+    setSession(null);
+    window.location.href = "/auth/signin";
   };
 
   // Permission helper: Check if user has specific permission
@@ -86,7 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   // Role helper: Check if user has specific role(s)
-  const hasRole = (role: UserRole | UserRole[]): boolean => {
+  const hasRoleCheck = (role: UserRole | UserRole[]): boolean => {
     if (!user) return false;
     if (Array.isArray(role)) {
       return role.includes(user.role);
@@ -94,24 +152,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return user.role === role;
   };
 
-  // Calculate admin status directly from session to avoid timing issues
-  const userRole = session?.user?.role || user?.role;
+  // Calculate role flags
+  const userRole = user?.role;
 
   return (
     <AuthContext.Provider
       value={{
         user,
         session,
-        isLoading: status === "loading",
-        isAuthenticated: !!session,
+        isLoading,
+        isAuthenticated: !!session && !!user,
         signOut,
         can,
         canAccess,
-        hasRole,
-        isAdmin: userRole ? isAdmin(userRole) : false,
-        isManager: userRole ? userRole === "manager" : false,
-        isEmployee: userRole ? userRole === "employee" : false,
-        isViewer: userRole ? userRole === "viewer" : false,
+        hasRole: hasRoleCheck,
+        isAdmin: userRole ? checkIsAdmin(userRole) : false,
+        isManager: userRole === "manager",
+        isEmployee: userRole === "employee",
+        isViewer: userRole === "viewer",
       }}
     >
       {children}

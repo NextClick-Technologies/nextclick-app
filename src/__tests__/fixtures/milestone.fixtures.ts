@@ -55,6 +55,7 @@ export const mockDbMilestone: DbMilestone = {
   remarks: "Completed ahead of schedule",
   created_at: "2024-01-20T10:00:00.000Z",
   updated_at: "2024-02-15T10:00:00.000Z",
+  deleted_at: null,
 };
 
 /**

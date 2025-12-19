@@ -4,15 +4,12 @@
  */
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useAuth } from "@/shared/contexts/AuthContext";
 import type { Permission } from "@/shared/types/auth.types";
 
 export function usePermissions() {
-  const { status } = useSession();
-  const { user, can, canAccess, hasRole, isAdmin, isManager } = useAuth();
-
-  const isLoading = status === "loading" || !user;
+  const { user, isLoading, can, canAccess, hasRole, isAdmin, isManager } =
+    useAuth();
 
   /**
    * Check if user can perform action on a resource

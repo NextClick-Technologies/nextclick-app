@@ -1,26 +1,47 @@
 /**
  * Create User Handler
- * Admin-only endpoint to create new users
+ * Admin-only endpoint to create new users using Supabase Auth Admin API
  */
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/shared/lib/auth/auth";
 import {
-  getUserByEmail,
-  createUser,
-  createAuditLog,
-} from "@/shared/lib/supabase/auth-client";
-import {
-  hashPassword,
-  generateRandomPassword,
-  generateSecureToken,
-  getTokenExpiration,
-} from "../domain/password";
-import {
-  sendWelcomeEmail,
-  sendVerificationEmail,
-} from "@/shared/lib/email/auth-emails";
-import type { CreateUserInput } from "@/shared/types/auth.types";
+  createSupabaseServerClient,
+  supabaseAdmin,
+} from "@/shared/lib/supabase/server";
+import { createAuditLog } from "@/shared/lib/supabase/auth-client";
+import { sendWelcomeEmail } from "@/shared/lib/email/auth-emails";
+import type { UserRole } from "@/shared/types/auth.types";
 import { logger } from "@/shared/lib/logs/logger";
+
+interface CreateUserInput {
+  email: string;
+  role: UserRole;
+  password?: string; // Optional - if not provided, a random one will be generated
+}
+
+/**
+ * Generate a random password
+ */
+function generateRandomPassword(): string {
+  const length = 16;
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+  let password = "";
+
+  // Ensure at least one of each required type
+  password += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)];
+  password += "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)];
+  password += "0123456789"[Math.floor(Math.random() * 10)];
+  password += "!@#$%^&*"[Math.floor(Math.random() * 8)];
+
+  for (let i = password.length; i < length; i++) {
+    password += charset[Math.floor(Math.random() * charset.length)];
+  }
+
+  return password
+    .split("")
+    .sort(() => Math.random() - 0.5)
+    .join("");
+}
 
 /**
  * POST /api/auth/create-user
@@ -30,17 +51,29 @@ export async function createUserHandler(request: NextRequest) {
   try {
     logger.info("CREATE USER REQUEST RECEIVED");
 
-    // Check authentication and admin role
-    const session = await auth();
+    // Get current user session
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { user: currentUser },
+    } = await supabase.auth.getUser();
 
-    if (!session?.user) {
+    if (!currentUser) {
       logger.warn("Unauthorized create-user attempt - no session");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.role !== "admin") {
+    // Check if current user is admin
+    const { data: userData } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", currentUser.id)
+      .single();
+
+    const userRecord = userData as { role: string } | null;
+
+    if (!userRecord || userRecord.role !== "admin") {
       logger.warn(
-        { userId: session.user.id, role: session.user.role },
+        { userId: currentUser.id, role: userRecord?.role },
         "Forbidden - non-admin tried to create user"
       );
       return NextResponse.json(
@@ -51,7 +84,7 @@ export async function createUserHandler(request: NextRequest) {
 
     // Parse request body
     const body: CreateUserInput = await request.json();
-    const { email, role } = body;
+    const { email, role, password } = body;
 
     // Validate input
     if (!email || !role) {
@@ -61,8 +94,17 @@ export async function createUserHandler(request: NextRequest) {
       );
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Invalid email format" },
+        { status: 400 }
+      );
+    }
+
     // Validate role
-    const validRoles = ["admin", "manager", "employee", "viewer"];
+    const validRoles: UserRole[] = ["admin", "manager", "employee", "viewer"];
     if (!validRoles.includes(role)) {
       return NextResponse.json(
         {
@@ -73,58 +115,55 @@ export async function createUserHandler(request: NextRequest) {
       );
     }
 
-    // Check if user already exists
-    const { data: existingUser } = await getUserByEmail(email);
+    // Generate password if not provided
+    const userPassword = password || generateRandomPassword();
 
-    if (existingUser) {
-      return NextResponse.json(
-        { error: "User with this email already exists" },
-        { status: 409 }
+    // Create user in Supabase Auth
+    // The trigger will automatically create the record in public.users
+    const { data: authData, error: createError } =
+      await supabaseAdmin.auth.admin.createUser({
+        email,
+        password: userPassword,
+        email_confirm: true, // Auto-confirm email for admin-created users
+        user_metadata: { role }, // This will be picked up by the trigger
+      });
+
+    if (createError || !authData.user) {
+      logger.error(
+        { err: createError },
+        "Error creating user in Supabase Auth"
       );
-    }
 
-    // Generate random password
-    const tempPassword = generateRandomPassword();
-    const passwordHash = await hashPassword(tempPassword);
+      // Handle specific error cases
+      if (createError?.message?.includes("already been registered")) {
+        return NextResponse.json(
+          { error: "User with this email already exists" },
+          { status: 409 }
+        );
+      }
 
-    // Generate email verification token
-    const verificationToken = generateSecureToken();
-    const verificationExpires = getTokenExpiration(24); // 24 hours
-
-    // Create user in database
-    const { data: newUser, error: createError } = await createUser({
-      email,
-      password_hash: passwordHash,
-      role,
-      is_active: true,
-      email_verified: false,
-      email_verification_token: verificationToken,
-      email_verification_expires: verificationExpires.toISOString(),
-    });
-
-    if (createError || !newUser) {
-      logger.error({ err: createError }, "Error creating user in database");
       return NextResponse.json(
-        { error: "Failed to create user" },
+        { error: createError?.message || "Failed to create user" },
         { status: 500 }
       );
     }
 
-    // Send welcome email with temporary password and verification link
+    const newUser = authData.user;
+
+    // Send welcome email with temporary password
     try {
-      await sendWelcomeEmail(email, tempPassword);
-      await sendVerificationEmail(email, verificationToken);
+      await sendWelcomeEmail(email, userPassword);
     } catch (emailError) {
       logger.warn(
         { err: emailError, email },
-        "Error sending welcome/verification emails"
+        "Error sending welcome email - user was still created"
       );
       // Don't fail the request if email fails - user was created
     }
 
     // Log audit trail
     await createAuditLog({
-      user_id: session.user.id,
+      user_id: currentUser.id,
       action: "create_user",
       resource_type: "user",
       resource_id: newUser.id,
@@ -146,12 +185,11 @@ export async function createUserHandler(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message:
-          "User created successfully. Welcome and verification emails sent.",
+        message: "User created successfully. Welcome email sent.",
         user: {
           id: newUser.id,
           email: newUser.email,
-          role: newUser.role,
+          role: role,
         },
       },
       { status: 201 }

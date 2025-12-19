@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { supabaseAdmin } from "@/shared/lib/supabase/server";
+import { createSupabaseServerClient } from "@/shared/lib/supabase/server";
 import { transformColumnName } from "@/shared/lib/api/api-utils";
 
 /**
  * Data Access Layer for Clients
- * Handles all database interactions
+ * Uses user-scoped Supabase client to respect RLS policies
  */
 
 export interface ClientQueryOptions {
@@ -21,8 +21,9 @@ export interface ClientQueryOptions {
  */
 export async function findAll(options: ClientQueryOptions) {
   const { page, pageSize, orderBy = [], filters = {} } = options;
+  const supabase = await createSupabaseServerClient();
 
-  let query = supabaseAdmin
+  let query = supabase
     .from("clients")
     .select("*", { count: "exact" })
     .is("deleted_at", null);
@@ -52,11 +53,12 @@ export async function findById(
   id: string,
   options?: { includeCompany?: boolean }
 ) {
+  const supabase = await createSupabaseServerClient();
   const select = options?.includeCompany
     ? "*, company:companies(id, name)"
     : "*";
 
-  return await supabaseAdmin
+  return await supabase
     .from("clients")
     .select(select)
     .eq("id", id)
@@ -69,8 +71,9 @@ export async function findById(
  */
 export async function findCompaniesByIds(companyIds: string[]) {
   if (companyIds.length === 0) return { data: [], error: null };
+  const supabase = await createSupabaseServerClient();
 
-  return await supabaseAdmin
+  return await supabase
     .from("companies")
     .select("id, name")
     .in("id", companyIds)
@@ -82,8 +85,9 @@ export async function findCompaniesByIds(companyIds: string[]) {
  */
 export async function countProjectsByClientIds(clientIds: string[]) {
   if (clientIds.length === 0) return { data: [], error: null };
+  const supabase = await createSupabaseServerClient();
 
-  return await supabaseAdmin
+  return await supabase
     .from("projects")
     .select("client_id")
     .in("client_id", clientIds)
@@ -94,15 +98,17 @@ export async function countProjectsByClientIds(clientIds: string[]) {
  * Create a new client
  */
 export async function create(data: Record<string, any>) {
+  const supabase = await createSupabaseServerClient();
   // @ts-expect-error - Supabase type inference issue
-  return await supabaseAdmin.from("clients").insert([data]).select().single();
+  return await supabase.from("clients").insert([data]).select().single();
 }
 
 /**
  * Update client by ID
  */
 export async function update(id: string, data: Record<string, any>) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("clients")
     // @ts-expect-error - Supabase type inference issue
     .update({
@@ -118,7 +124,8 @@ export async function update(id: string, data: Record<string, any>) {
  * Delete client by ID (soft delete)
  */
 export async function deleteClient(id: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("clients")
     .update({ deleted_at: new Date().toISOString() } as never)
     .eq("id", id)
@@ -130,7 +137,8 @@ export async function deleteClient(id: string) {
  * Uses the employee_project_access materialized view for performance
  */
 export async function getEmployeeClientIds(userId: string) {
-  const { data } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
     .from("employee_project_access")
     .select("client_id")
     .eq("user_id", userId)

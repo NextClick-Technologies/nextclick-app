@@ -70,7 +70,7 @@ export const mockDbProject: DbProject = {
   type: "Web Development",
   start_date: "2024-01-20",
   finish_date: "2024-04-20",
-  budget: "50000",
+  budget: 50000,
   payment_terms: PaymentTerms.NET_30D,
   status: ProjectStatus.ACTIVE,
   priority: ProjectPriority.HIGH,
@@ -80,6 +80,7 @@ export const mockDbProject: DbProject = {
   project_manager: "Sarah Manager",
   created_at: "2024-01-20T10:00:00.000Z",
   updated_at: "2024-01-20T10:00:00.000Z",
+  deleted_at: null,
 };
 
 export const mockDbProjects: DbProject[] = [
@@ -90,7 +91,7 @@ export const mockDbProjects: DbProject[] = [
     type: "Mobile Development",
     start_date: "2024-02-01",
     finish_date: "2024-06-01",
-    budget: "100000",
+    budget: 100000,
     payment_terms: PaymentTerms.NET_60D,
     status: ProjectStatus.ACTIVE,
     priority: ProjectPriority.URGENT,
@@ -100,6 +101,7 @@ export const mockDbProjects: DbProject[] = [
     project_manager: "Mike Lead",
     created_at: "2024-02-01T10:00:00.000Z",
     updated_at: "2024-02-01T10:00:00.000Z",
+    deleted_at: null,
   },
 ];
 
@@ -111,7 +113,7 @@ export const mockProjectInsert: DbProjectInsert = {
   type: "Backend Development",
   start_date: "2024-03-01",
   finish_date: "2024-05-01",
-  budget: "75000",
+  budget: 75000,
   payment_terms: PaymentTerms.NET_30D,
   status: ProjectStatus.ACTIVE,
   priority: ProjectPriority.MEDIUM,

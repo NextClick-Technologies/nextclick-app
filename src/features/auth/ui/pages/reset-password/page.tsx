@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { createSupabaseBrowserClient } from "@/shared/lib/supabase/client";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
@@ -17,9 +18,8 @@ import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import { Lock, Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
 
 function ResetPasswordForm() {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const token = searchParams.get("token");
+  const supabase = createSupabaseBrowserClient();
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,6 +29,31 @@ function ResetPasswordForm() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [hasSession, setHasSession] = useState<boolean | null>(null);
+
+  // Check if user has a valid session (from the reset link)
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setHasSession(!!session);
+    };
+    checkSession();
+
+    // Listen for auth state changes (when user clicks reset link, they get a session)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setHasSession(true);
+      } else if (session) {
+        setHasSession(true);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
 
   const validatePassword = (password: string) => {
     const errors: string[] = [];
@@ -57,12 +82,6 @@ function ResetPasswordForm() {
     setIsLoading(true);
     setError("");
 
-    if (!token) {
-      setError("Invalid reset token");
-      setIsLoading(false);
-      return;
-    }
-
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match");
       setIsLoading(false);
@@ -76,35 +95,42 @@ function ResetPasswordForm() {
     }
 
     try {
-      const response = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token, newPassword }),
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (updateError) {
+        setError(updateError.message);
+      } else {
         setSuccess(true);
+        // Sign out and redirect to sign in
+        await supabase.auth.signOut();
         setTimeout(() => {
           router.push("/auth/signin");
         }, 3000);
-      } else {
-        setError(data.error || "Failed to reset password");
-        if (data.errors) {
-          setValidationErrors(data.errors);
-        }
       }
-    } catch (error) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (!token) {
+  // Loading state while checking session
+  if (hasSession === null) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4">
+        <Card className="w-full max-w-md">
+          <CardContent className="flex items-center justify-center py-12">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // No valid session - invalid or expired link
+  if (!hasSession) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4">
         <Card className="w-full max-w-md">

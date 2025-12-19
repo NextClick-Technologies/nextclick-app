@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { supabaseAdmin } from "@/shared/lib/supabase/server";
+import { createSupabaseServerClient } from "@/shared/lib/supabase/server";
 
 /**
  * Data Access Layer for Project Members
+ * Uses user-scoped Supabase client to respect RLS policies
  */
 
 export async function findAllMembers(projectId?: string, employeeId?: string) {
-  let query = supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  let query = supabase
     .from("project_members")
     .select(
       `
@@ -42,7 +44,8 @@ export async function findAllMembers(projectId?: string, employeeId?: string) {
 }
 
 export async function findMemberById(memberId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("project_members")
     .select(
       `
@@ -59,7 +62,8 @@ export async function findMemberById(memberId: string) {
 }
 
 export async function checkMemberExists(projectId: string, employeeId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("project_members")
     .select("id")
     .eq("project_id", projectId)
@@ -69,7 +73,8 @@ export async function checkMemberExists(projectId: string, employeeId: string) {
 }
 
 export async function findProjectById(projectId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("projects")
     .select("id, name")
     .eq("id", projectId)
@@ -78,7 +83,8 @@ export async function findProjectById(projectId: string) {
 }
 
 export async function findEmployeeById(employeeId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("employees")
     .select("id, name, family_name")
     .eq("id", employeeId)
@@ -90,7 +96,8 @@ export async function findEmployeeById(employeeId: string) {
  * Soft delete a project member
  */
 export async function deleteMember(memberId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("project_members")
     .update({ deleted_at: new Date().toISOString() } as never)
     .eq("id", memberId)

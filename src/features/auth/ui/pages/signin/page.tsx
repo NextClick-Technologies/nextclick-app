@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { createSupabaseBrowserClient } from "@/shared/lib/supabase/client";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
@@ -11,8 +11,11 @@ import { Card } from "@/shared/components/ui/card";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import { Loader2, Mail, Lock, AlertCircle } from "lucide-react";
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -20,26 +23,35 @@ export default function SignInPage() {
     password: "",
   });
 
+  const supabase = createSupabaseBrowserClient();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
     try {
-      const result = await signIn("credentials", {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
-        redirect: false,
       });
 
-      if (result?.error) {
-        // Display specific error messages from auth config
-        setError(result.error);
+      if (signInError) {
+        // Handle specific error cases
+        if (signInError.message.includes("Invalid login credentials")) {
+          setError("Invalid email or password");
+        } else if (signInError.message.includes("Email not confirmed")) {
+          setError("Please verify your email address before signing in.");
+        } else {
+          setError(signInError.message);
+        }
         setIsLoading(false);
-      } else {
-        router.push("/dashboard");
-        router.refresh();
+        return;
       }
+
+      // Successfully signed in - redirect to callback URL
+      router.push(callbackUrl);
+      router.refresh();
     } catch {
       setError("An error occurred. Please try again.");
       setIsLoading(false);
@@ -130,5 +142,23 @@ export default function SignInPage() {
         </div>
       </Card>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4">
+          <Card className="w-full max-w-md p-8">
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+            </div>
+          </Card>
+        </div>
+      }
+    >
+      <SignInForm />
+    </Suspense>
   );
 }

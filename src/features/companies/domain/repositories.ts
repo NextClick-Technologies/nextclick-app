@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { supabaseAdmin } from "@/shared/lib/supabase/server";
+import { createSupabaseServerClient } from "@/shared/lib/supabase/server";
 import { transformColumnName } from "@/shared/lib/api/api-utils";
 
 /**
  * Data Access Layer for Companies
+ * Uses user-scoped Supabase client to respect RLS policies
  */
 
 export interface CompanyQueryOptions {
@@ -14,8 +15,9 @@ export interface CompanyQueryOptions {
 
 export async function findAll(options: CompanyQueryOptions) {
   const { page, pageSize, orderBy = [] } = options;
+  const supabase = await createSupabaseServerClient();
 
-  let query = supabaseAdmin
+  let query = supabase
     .from("companies")
     .select("*", { count: "exact" })
     .is("deleted_at", null);
@@ -32,7 +34,8 @@ export async function findAll(options: CompanyQueryOptions) {
 }
 
 export async function findById(id: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("companies")
     .select("*")
     .eq("id", id)
@@ -41,7 +44,8 @@ export async function findById(id: string) {
 }
 
 export async function create(data: Record<string, any>) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("companies")
     // @ts-expect-error - Supabase type inference issue
     .insert([data])
@@ -50,7 +54,8 @@ export async function create(data: Record<string, any>) {
 }
 
 export async function update(id: string, data: Record<string, any>) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("companies")
     // @ts-expect-error - Supabase type inference issue
     .update({
@@ -63,7 +68,8 @@ export async function update(id: string, data: Record<string, any>) {
 }
 
 export async function deleteCompany(id: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("companies")
     .update({ deleted_at: new Date().toISOString() } as never)
     .eq("id", id)
@@ -75,8 +81,10 @@ export async function deleteCompany(id: string) {
  * Uses the employee_project_access materialized view for performance
  */
 export async function getEmployeeCompanyIds(userId: string) {
+  const supabase = await createSupabaseServerClient();
+
   // Get client IDs from employee's projects
-  const { data: projectData } = await supabaseAdmin
+  const { data: projectData } = await supabase
     .from("employee_project_access")
     .select("client_id")
     .eq("user_id", userId)
@@ -95,7 +103,7 @@ export async function getEmployeeCompanyIds(userId: string) {
   }
 
   // Get company IDs from those clients
-  const { data: clientsData } = await supabaseAdmin
+  const { data: clientsData } = await supabase
     .from("clients")
     .select("company_id")
     .in("id", clientIds)

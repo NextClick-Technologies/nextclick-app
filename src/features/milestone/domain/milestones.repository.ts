@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { supabaseAdmin } from "@/shared/lib/supabase/server";
+import { createSupabaseServerClient } from "@/shared/lib/supabase/server";
 import { transformColumnName } from "@/shared/lib/api/api-utils";
 
 /**
  * Data Access Layer for Milestones
+ * Uses user-scoped Supabase client to respect RLS policies
  */
 
 export interface MilestoneQueryOptions {
@@ -15,8 +16,9 @@ export interface MilestoneQueryOptions {
 
 export async function findAll(options: MilestoneQueryOptions) {
   const { page, pageSize, orderBy = [], projectId } = options;
+  const supabase = await createSupabaseServerClient();
 
-  let query = supabaseAdmin
+  let query = supabase
     .from("milestones")
     .select(
       `
@@ -53,7 +55,8 @@ export async function findAll(options: MilestoneQueryOptions) {
 }
 
 export async function findById(id: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("milestones")
     .select(
       `
@@ -77,7 +80,8 @@ export async function findById(id: string) {
 }
 
 export async function findProjectIdByMilestoneId(milestoneId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("milestones")
     .select("project_id")
     .eq("id", milestoneId)
@@ -86,7 +90,8 @@ export async function findProjectIdByMilestoneId(milestoneId: string) {
 }
 
 export async function create(data: Record<string, any>) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("milestones")
     // @ts-expect-error - Supabase type inference issue
     .insert([data])
@@ -95,7 +100,8 @@ export async function create(data: Record<string, any>) {
 }
 
 export async function update(id: string, data: Record<string, any>) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("milestones")
     // @ts-expect-error - Supabase type inference issue
     .update({
@@ -108,7 +114,8 @@ export async function update(id: string, data: Record<string, any>) {
 }
 
 export async function deleteMilestone(id: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("milestones")
     .update({ deleted_at: new Date().toISOString() } as never)
     .eq("id", id)

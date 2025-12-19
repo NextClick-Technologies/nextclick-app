@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@/shared/styles/globals.css";
 import { ThemeProvider } from "@/shared/components/ThemeProvider";
 import { QueryProvider } from "@/shared/providers/QueryProvider";
-import { SessionProvider } from "@/shared/providers/SessionProvider";
 import { AppProviders } from "@/shared/providers/AppProviders";
 import { Toaster } from "@/shared/components/ui/sonner";
 import { ErrorBoundary } from "@/shared/components/ErrorBoundary";
@@ -36,19 +35,17 @@ export default function RootLayout({
       >
         <ErrorBoundary>
           <GlobalErrorHandler />
-          <SessionProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <AppProviders>
-                <QueryProvider>{children}</QueryProvider>
-                <Toaster />
-              </AppProviders>
-            </ThemeProvider>
-          </SessionProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AppProviders>
+              <QueryProvider>{children}</QueryProvider>
+              <Toaster />
+            </AppProviders>
+          </ThemeProvider>
         </ErrorBoundary>
       </body>
     </html>

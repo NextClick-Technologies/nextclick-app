@@ -72,6 +72,7 @@ export const mockDbClient: DbClient = {
   status: ClientStatus.ACTIVE,
   created_at: "2024-01-15T10:00:00.000Z",
   updated_at: "2024-01-15T10:00:00.000Z",
+  deleted_at: null,
 };
 
 export const mockDbClients: DbClient[] = [
@@ -90,6 +91,7 @@ export const mockDbClients: DbClient[] = [
     status: ClientStatus.ACTIVE,
     created_at: "2024-02-20T10:00:00.000Z",
     updated_at: "2024-02-20T10:00:00.000Z",
+    deleted_at: null,
   },
 ];
 

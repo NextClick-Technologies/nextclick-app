@@ -3,10 +3,11 @@
  * Handles global project member operations with authentication and audit logging
  */
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/shared/lib/auth/auth";
+import { createSupabaseServerClient } from "@/shared/lib/supabase/server";
 import { createAuditLog } from "@/shared/lib/supabase/auth-client";
 import { logger } from "@/shared/lib/logs/logger";
 import * as projectMembersService from "../domain/project-members.service";
+import type { UserRole } from "@/shared/types/auth.types";
 
 /**
  * GET /api/project/project-members
@@ -14,11 +15,27 @@ import * as projectMembersService from "../domain/project-members.service";
  */
 export async function getProjectMembers(request: NextRequest) {
   try {
-    const session = await auth();
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    if (!session?.user) {
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Get user role
+    const { data: userData } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (!userData) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const userRecord = userData as { role: string };
 
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId") || undefined;
@@ -28,8 +45,8 @@ export async function getProjectMembers(request: NextRequest) {
     // You may need to adjust this based on your auth structure
     const members = await projectMembersService.listProjectMembers(
       projectId,
-      session.user.id, // This should be employee_id for employee role
-      session.user.role
+      user.id, // This should be employee_id for employee role
+      userRecord.role as UserRole
     );
 
     return NextResponse.json({ members }, { status: 200 });
@@ -49,14 +66,30 @@ export async function getProjectMembers(request: NextRequest) {
  */
 export async function assignUserToProject(request: NextRequest) {
   try {
-    const session = await auth();
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    if (!session?.user) {
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Get user role
+    const { data: userData } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (!userData) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const userRecord = userData as { role: string };
+
     // Only admins and managers can assign employees to projects
-    if (session.user.role !== "admin" && session.user.role !== "manager") {
+    if (userRecord.role !== "admin" && userRecord.role !== "manager") {
       return NextResponse.json(
         { error: "Forbidden - Admin or Manager access required" },
         { status: 403 }
@@ -73,16 +106,19 @@ export async function assignUserToProject(request: NextRequest) {
       );
     }
 
-    const { member, user, project } =
-      await projectMembersService.assignUserToProject({
-        projectId,
-        userId, // This gets mapped to employeeId in service
-        role,
-      });
+    const {
+      member,
+      user: assignedUser,
+      project,
+    } = await projectMembersService.assignUserToProject({
+      projectId,
+      userId, // This gets mapped to employeeId in service
+      role,
+    });
 
     // Log audit trail
     await createAuditLog({
-      user_id: session.user.id,
+      user_id: user.id,
       action: "assign_project_member",
       resource_type: "project_member",
       resource_id: (member as unknown as { id: string })?.id || "",
@@ -91,8 +127,8 @@ export async function assignUserToProject(request: NextRequest) {
         project_name: (project as unknown as { name: string })?.name,
         assigned_employee_id: userId,
         assigned_employee_name: `${
-          (user as unknown as { name: string })?.name
-        } ${(user as unknown as { family_name: string })?.family_name}`,
+          (assignedUser as unknown as { name: string })?.name
+        } ${(assignedUser as unknown as { family_name: string })?.family_name}`,
         member_role: role,
       },
       ip_address:
@@ -135,14 +171,30 @@ export async function assignUserToProject(request: NextRequest) {
  */
 export async function removeUserFromProject(request: NextRequest) {
   try {
-    const session = await auth();
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    if (!session?.user) {
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Get user role
+    const { data: userData } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (!userData) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const userRecord = userData as { role: string };
+
     // Only admins and managers can remove employees from projects
-    if (session.user.role !== "admin" && session.user.role !== "manager") {
+    if (userRecord.role !== "admin" && userRecord.role !== "manager") {
       return NextResponse.json(
         { error: "Forbidden - Admin or Manager access required" },
         { status: 403 }
@@ -163,7 +215,7 @@ export async function removeUserFromProject(request: NextRequest) {
 
     // Log audit trail
     await createAuditLog({
-      user_id: session.user.id,
+      user_id: user.id,
       action: "remove_project_member",
       resource_type: "project_member",
       resource_id: memberId,
