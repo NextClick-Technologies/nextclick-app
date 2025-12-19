@@ -2,45 +2,20 @@
 
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
-import { cn } from "@/shared/utils/cn";
-import { useSidebar } from "@/shared/contexts";
+import { SidebarProvider, SidebarInset } from "@/shared/components/ui/sidebar";
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const {
-    isCollapsed,
-    isMobileOpen,
-    toggleCollapse,
-    toggleMobile,
-    closeMobile,
-  } = useSidebar();
-
   return (
-    <div className="min-h-screen">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block">
-        <Sidebar />
-      </div>
-
-      {/* Mobile Sidebar Overlay */}
-      {isMobileOpen && (
-        <div className="lg:hidden">
-          <Sidebar />
-        </div>
-      )}
-
-      <div
-        className={cn(
-          "transition-all duration-300",
-          isCollapsed ? "lg:pl-16" : "lg:pl-56"
-        )}
-      >
+    <SidebarProvider>
+      <Sidebar />
+      <SidebarInset>
         <Header />
-        <main className="px-4 py-2 sm:px-6 sm:py-2">{children}</main>
-      </div>
-    </div>
+        <main className="flex-1 space-y-4 p-4 pt-0">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

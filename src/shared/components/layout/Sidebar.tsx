@@ -1,47 +1,95 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
-  Users,
-  FolderKanban,
+  AudioWaveform,
+  BadgeCheck,
+  Bell,
   Building2,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  FolderKanban,
+  GalleryVerticalEnd,
+  LayoutDashboard,
+  LogOut,
+  Plus,
+  Sparkles,
   UserCog,
-  PanelLeftClose,
-  PanelLeftOpen,
-  X,
+  Users,
 } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
-import { cn } from "@/shared/utils/cn";
-import { UserMenu } from "@/shared/components/UserMenu";
-import { useSidebar } from "@/shared/contexts";
-import { usePermissions } from "@/shared/hooks/usePermissions";
+
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/shared/components/ui/tooltip";
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/shared/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+  useSidebar,
+} from "@/shared/components/ui/sidebar";
+import { usePermissions } from "@/shared/hooks/usePermissions";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
+// Mock Data
+const data = {
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
+  teams: [
+    {
+      name: "Acme Inc",
+      logo: GalleryVerticalEnd,
+      plan: "Enterprise",
+    },
+    {
+      name: "Acme Corp.",
+      logo: AudioWaveform,
+      plan: "Startup",
+    },
+    {
+      name: "Evil Corp.",
+      logo: Command,
+      plan: "Free",
+    },
+  ],
+};
+
+// Navigation Configuration
 interface SectionNavItem {
   name: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  permission?: string; // Resource permission needed (e.g., 'clients', 'employees')
+  permission?: string;
 }
 
 interface NavSection {
   section?: string;
   items: SectionNavItem[];
-}
-
-interface NavItemProps {
-  name: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  isCollapsed?: boolean;
 }
 
 const navigation: NavSection[] = [
@@ -77,206 +125,225 @@ const navigation: NavSection[] = [
   },
 ];
 
-function SidebarItemSkeleton({
-  isCollapsed = false,
+function TeamSwitcher({
+  teams,
 }: {
-  isCollapsed?: boolean;
+  teams: {
+    name: string;
+    logo: React.ElementType;
+    plan: string;
+  }[];
 }) {
+  const { isMobile } = useSidebar();
+  const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+
   return (
-    <div
-      className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2.5",
-        isCollapsed && "justify-center px-2"
-      )}
-    >
-      <Skeleton className="h-4 w-4 shrink-0" />
-      {!isCollapsed && <Skeleton className="h-4 flex-1" />}
-    </div>
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <activeTeam.logo className="size-4" />
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">
+                  {activeTeam.name}
+                </span>
+                <span className="truncate text-xs">{activeTeam.plan}</span>
+              </div>
+              <ChevronsUpDown className="ml-auto" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            align="start"
+            side={isMobile ? "bottom" : "right"}
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="text-xs text-muted-foreground">
+              Teams
+            </DropdownMenuLabel>
+            {teams.map((team, index) => (
+              <DropdownMenuItem
+                key={team.name}
+                onClick={() => setActiveTeam(team)}
+                className="gap-2 p-2"
+              >
+                <div className="flex size-6 items-center justify-center rounded-sm border">
+                  <team.logo className="size-4 shrink-0" />
+                </div>
+                {team.name}
+                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="gap-2 p-2">
+              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+                <Plus className="size-4" />
+              </div>
+              <div className="font-medium text-muted-foreground">Add team</div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
   );
 }
 
-function NavItem({
-  name,
-  href,
-  icon: Icon,
-  isCollapsed = false,
-}: NavItemProps) {
-  const { closeMobile } = useSidebar();
+function NavUser({
+  user,
+}: {
+  user: {
+    name: string;
+    email: string;
+    avatar: string;
+  };
+}) {
+  const { isMobile } = useSidebar();
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">{user.name}</span>
+                <span className="truncate text-xs">{user.email}</span>
+              </div>
+              <ChevronsUpDown className="ml-auto size-4" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            side={isMobile ? "bottom" : "right"}
+            align="end"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate text-xs">{user.email}</span>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <Sparkles className="mr-2 h-4 w-4" />
+                Upgrade to Pro
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <BadgeCheck className="mr-2 h-4 w-4" />
+                Account
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <CreditCard className="mr-2 h-4 w-4" />
+                Billing
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Bell className="mr-2 h-4 w-4" />
+                Notifications
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogOut className="mr-2 h-4 w-4" />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  );
+}
+
+export function AppSidebar() {
   const pathname = usePathname();
-
-  // Check if current pathname starts with the href (for nested routes)
-  const isActiveRoute = pathname === href || pathname.startsWith(href + "/");
-
-  const linkContent = (
-    <Link
-      href={href}
-      onClick={closeMobile}
-      className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-        isActiveRoute
-          ? "bg-primary text-primary-foreground"
-          : "hover:bg-secondary hover:text-secondary-foreground",
-        isCollapsed && "justify-center px-2"
-      )}
-    >
-      <Icon className="h-4 w-4 shrink-0" />
-      {!isCollapsed && <span>{name}</span>}
-    </Link>
-  );
-
-  if (isCollapsed) {
-    return (
-      <TooltipProvider delayDuration={0}>
-        <Tooltip>
-          <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
-          <TooltipContent side="right" className="font-medium">
-            {name}
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    );
-  }
-
-  return linkContent;
-}
-
-export function Sidebar() {
-  const { isCollapsed, toggleCollapse, closeMobile } = useSidebar();
   const { canRead, isLoading } = usePermissions();
 
-  // Split navigation into public and permission-gated
-  const publicNavigation = navigation
+  // Filter navigation items based on permissions
+  const filteredNavigation = navigation
     .map((section) => ({
       ...section,
-      items: section.items.filter((item) => !item.permission), // Items WITHOUT permission
+      items: section.items.filter((item) => {
+        if (!item.permission) return true;
+        if (isLoading) return false; // Hide protected items while loading
+        return canRead(item.permission);
+      }),
     }))
     .filter((section) => section.items.length > 0);
-
-  const permissionGatedNavigation = navigation
-    .map((section) => ({
-      ...section,
-      items: section.items.filter((item) => item.permission), // Items WITH permission
-    }))
-    .filter((section) => section.items.length > 0);
-
-  // Filter permission-gated items (only if not loading)
-  const filteredPermissionNavigation = isLoading
-    ? []
-    : permissionGatedNavigation
-        .map((section) => ({
-          ...section,
-          items: section.items.filter((item) => canRead(item.permission!)),
-        }))
-        .filter((section) => section.items.length > 0);
 
   return (
-    <aside
-      className={cn(
-        "fixed inset-y-0 left-0 z-50 flex flex-col border-r bg-card",
-        "w-full lg:w-56 lg:transition-all lg:duration-300",
-        isCollapsed && "lg:w-16"
-      )}
-    >
-      <div
-        className={cn(
-          "flex h-16 items-center border-b px-6",
-          isCollapsed && "lg:justify-center lg:px-0"
-        )}
-      >
-        {!isCollapsed ? (
-          <div className="flex w-full items-center justify-between">
-            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
-              <span className="text-sm font-bold">NC</span>
-            </div>
-            {/* Mobile close button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={closeMobile}
-              className="h-10 w-10 lg:hidden"
-            >
-              <X className="h-6 w-6" />
-            </Button>
-            {/* Desktop collapse toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleCollapse}
-              className="hidden h-10 w-10 lg:flex"
-            >
-              <PanelLeftClose className="h-6 w-6" />
-            </Button>
-          </div>
-        ) : (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleCollapse}
-            className="hidden h-10 w-10 lg:flex"
-          >
-            <PanelLeftOpen className="h-6 w-6" />
-          </Button>
-        )}
-      </div>
-
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
-        {/* Render public navigation (always visible) */}
-        {publicNavigation.map((section, idx) => (
-          <div key={idx} className={cn(idx > 0 && "mt-6")}>
-            {section.section && !isCollapsed && (
-              <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
-                {section.section}
-              </h3>
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <TeamSwitcher teams={data.teams} />
+      </SidebarHeader>
+      <SidebarContent>
+        {filteredNavigation.map((section, idx) => (
+          <SidebarGroup key={idx}>
+            {section.section && (
+              <SidebarGroupLabel>{section.section}</SidebarGroupLabel>
             )}
-            <div className="space-y-1">
-              {section.items.map((item) => (
-                <NavItem
-                  key={item.href}
-                  name={item.name}
-                  href={item.href}
-                  icon={item.icon}
-                  isCollapsed={isCollapsed}
-                />
-              ))}
-            </div>
-          </div>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item) => {
+                  const isActive =
+                    pathname === item.href ||
+                    pathname.startsWith(item.href + "/");
+                  return (
+                    <SidebarMenuItem key={item.href}>
+                      {isLoading && item.permission ? (
+                        <div className="flex items-center gap-2 px-2 py-1.5">
+                          <Skeleton className="h-4 w-4" />
+                          <Skeleton className="h-4 flex-1" />
+                        </div>
+                      ) : (
+                        <SidebarMenuButton
+                          asChild
+                          isActive={isActive}
+                          tooltip={item.name}
+                        >
+                          <Link href={item.href}>
+                            <item.icon />
+                            <span>{item.name}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      )}
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
         ))}
-
-        {/* Render permission-gated navigation or skeleton */}
-        {permissionGatedNavigation.map((section, idx) => (
-          <div key={`permission-${idx}`} className="mt-6">
-            {section.section && !isCollapsed && (
-              <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
-                {section.section}
-              </h3>
-            )}
-            <div className="space-y-1">
-              {isLoading
-                ? // Show skeleton while loading
-                  section.items.map((item, itemIdx) => (
-                    <SidebarItemSkeleton
-                      key={itemIdx}
-                      isCollapsed={isCollapsed}
-                    />
-                  ))
-                : // Show filtered items after loading
-                  filteredPermissionNavigation
-                    .find((s) => s.section === section.section)
-                    ?.items.map((item) => (
-                      <NavItem
-                        key={item.href}
-                        name={item.name}
-                        href={item.href}
-                        icon={item.icon}
-                        isCollapsed={isCollapsed}
-                      />
-                    ))}
-            </div>
-          </div>
-        ))}
-      </nav>
-
-      <UserMenu isCollapsed={isCollapsed} />
-    </aside>
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={data.user} />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
   );
 }
+
+// Export as Sidebar for backward compatibility during refactor
+export { AppSidebar as Sidebar };
