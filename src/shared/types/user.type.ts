@@ -5,56 +5,43 @@ export interface User {
   email: string;
   role: UserRole;
   isActive: boolean;
-  emailVerified: boolean;
   lastLogin: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
+/**
+ * Database user type (matches public.users table)
+ * Note: With Supabase Auth, authentication is handled in auth.users.
+ * This table stores role and application-specific user data.
+ */
 export interface DbUser {
   id: string;
   email: string;
-  password_hash: string;
   role: UserRole;
   is_active: boolean;
-  email_verified: boolean;
-  email_verification_token: string | null;
-  email_verification_expires: string | null;
-  password_reset_token: string | null;
-  password_reset_expires: string | null;
   last_login: string | null;
   created_at: string;
   updated_at: string;
+  deleted_at: string | null;
 }
 
 export interface DbUserInsert {
-  id?: string;
+  id: string; // Required - must match auth.users.id
   email: string;
-  password_hash: string;
   role?: UserRole;
   is_active?: boolean;
-  email_verified?: boolean;
-  email_verification_token?: string | null;
-  email_verification_expires?: string | null;
-  password_reset_token?: string | null;
-  password_reset_expires?: string | null;
   last_login?: string | null;
   created_at?: string;
   updated_at?: string;
+  deleted_at?: string | null;
 }
 
 export interface DbUserUpdate {
-  id?: string;
   email?: string;
-  password_hash?: string;
   role?: UserRole;
   is_active?: boolean;
-  email_verified?: boolean;
-  email_verification_token?: string | null;
-  email_verification_expires?: string | null;
-  password_reset_token?: string | null;
-  password_reset_expires?: string | null;
   last_login?: string | null;
-  created_at?: string;
   updated_at?: string;
+  deleted_at?: string | null;
 }

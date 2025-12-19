@@ -1,8 +1,9 @@
-import { supabaseAdmin } from "@/shared/lib/supabase/server";
+import { createSupabaseServerClient } from "@/shared/lib/supabase/server";
 
 /**
  * Shared repository for employee project access using the materialized view
  * This provides high-performance lookups for employee permissions
+ * Uses user-scoped Supabase client to respect RLS policies
  */
 
 export interface EmployeeProjectAccess {
@@ -17,7 +18,8 @@ export interface EmployeeProjectAccess {
  * Uses the materialized view for optimal performance
  */
 export async function getEmployeeProjectAccess(userId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("employee_project_access")
     .select("*")
     .eq("user_id", userId);
@@ -27,7 +29,8 @@ export async function getEmployeeProjectAccess(userId: string) {
  * Get project IDs accessible to an employee
  */
 export async function getEmployeeProjectIds(userId: string): Promise<string[]> {
-  const { data } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
     .from("employee_project_access")
     .select("project_id")
     .eq("user_id", userId);
@@ -41,7 +44,8 @@ export async function getEmployeeProjectIds(userId: string): Promise<string[]> {
  * Get client IDs accessible to an employee (via their projects)
  */
 export async function getEmployeeClientIds(userId: string): Promise<string[]> {
-  const { data } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
     .from("employee_project_access")
     .select("client_id")
     .eq("user_id", userId)
@@ -61,7 +65,8 @@ export async function hasProjectAccess(
   userId: string,
   projectId: string
 ): Promise<boolean> {
-  const { data } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
     .from("employee_project_access")
     .select("project_id")
     .eq("user_id", userId)
@@ -78,7 +83,8 @@ export async function isProjectManager(
   userId: string,
   projectId: string
 ): Promise<boolean> {
-  const { data } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
     .from("employee_project_access")
     .select("access_type")
     .eq("user_id", userId)

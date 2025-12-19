@@ -5,10 +5,10 @@ import { Input } from "@/shared/components/ui/input";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { Upload, X, Loader2 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import Image from "next/image";
 import { compressImage, isImageFile } from "@/shared/utils/image-compress";
-import { supabase } from "@/shared/lib/supabase/client";
+import { createSupabaseBrowserClient } from "@/shared/lib/supabase/client";
 
 interface PhotoUploadProps {
   value: string | null;
@@ -24,6 +24,7 @@ export function PhotoUpload({
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(value);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const supabase = useMemo(() => createSupabaseBrowserClient(), []);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

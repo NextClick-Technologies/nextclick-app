@@ -1,15 +1,22 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createSupabaseBrowserClient } from "@/shared/lib/supabase/client";
 import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export default function SignOutPage() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const supabase = createSupabaseBrowserClient();
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/auth/signin" });
+    setIsLoading(true);
+    await supabase.auth.signOut();
+    router.push("/auth/signin");
+    router.refresh();
   };
 
   return (
@@ -28,11 +35,23 @@ export default function SignOutPage() {
               variant="outline"
               className="flex-1"
               onClick={() => router.back()}
+              disabled={isLoading}
             >
               Cancel
             </Button>
-            <Button className="flex-1" onClick={handleSignOut}>
-              Sign Out
+            <Button
+              className="flex-1"
+              onClick={handleSignOut}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing out...
+                </>
+              ) : (
+                "Sign Out"
+              )}
             </Button>
           </div>
         </div>

@@ -1,81 +1,182 @@
 # Authentication Feature
 
-## Overview
+This application uses **Supabase Auth** for authentication, integrated with Row Level Security (RLS) for database access control.
 
-Handles user authentication, session management, and security for the application.
+## Architecture
+
+### Three-Layer Security Model
+
+1. **Database RLS (First Line of Defense)**
+
+   - RLS policies automatically restrict data access based on user role
+   - Uses `auth.uid()` from Supabase Auth session
+   - Enforced at the database level - cannot be bypassed by application code
+
+2. **Backend Logic (Business Rules)**
+
+   - API middleware validates authentication and permissions
+   - Application-level permission checks for complex business rules
+   - Audit logging for security events
+
+3. **Frontend (User Experience)**
+   - Permission-based UI rendering
+   - Role-based navigation and component visibility
+   - Real-time auth state management
 
 ## Directory Structure
 
 ```
-auth/
-├── api/                    # API Layer
-│   ├── [...nextauth]/      # NextAuth.js configuration
-│   ├── create-user/        # User creation endpoint
-│   ├── request-reset/      # Password reset request
-│   ├── reset-password/     # Password reset handler
-│   └── verify-email/       # Email verification
-├── domain/                 # Domain/Business Logic Layer
-│   ├── password.ts         # Password hashing & validation
-│   ├── token.ts            # Secure token generation
-│   └── schemas/            # Zod validation schemas
-└── ui/                     # UI Layer (Frontend)
-    ├── components/         # Auth UI components
-    └── pages/              # Auth pages (signin, signup, etc.)
+src/features/auth/
+├── api/
+│   └── create-user.handler.ts    # Admin-only user creation
+├── domain/
+│   └── permissions.ts            # Role-permission mapping
+└── ui/
+    └── pages/
+        ├── signin/               # Sign in page
+        ├── signout/              # Sign out confirmation
+        ├── request-reset/        # Password reset request
+        └── reset-password/       # Password reset form
 ```
 
-### Layer Responsibilities
+## Authentication Flow
 
-**API Layer (`api/`)**: Authentication endpoints and NextAuth.js configuration.
+### Sign In
 
-**Domain Layer (`domain/`)**: Security utilities including:
+1. User enters email/password on `/auth/signin`
+2. Client calls `supabase.auth.signInWithPassword()`
+3. Supabase validates credentials and creates session
+4. Session stored in cookies (handled by `@supabase/ssr`)
+5. Middleware refreshes session on each request
 
-- `password.ts` - Bcrypt password hashing and verification
-- `token.ts` - Secure token generation for email verification and password reset
-- `schemas/` - Input validation schemas using Zod
+### Sign Out
 
-**UI Layer (`ui/`)**: Authentication forms and pages.
+1. User clicks sign out
+2. Client calls `supabase.auth.signOut()`
+3. Session cookies cleared
+4. User redirected to sign in page
 
-## Key Components
+### Password Reset
 
-- `SignInForm` - Sign in form
-- `SignUpForm` - User registration form
-- `ResetPasswordForm` - Password reset form
-- `VerifyEmailForm` - Email verification
+1. User requests reset on `/auth/request-reset`
+2. Client calls `supabase.auth.resetPasswordForEmail()`
+3. Supabase sends reset email with magic link
+4. User clicks link, redirected to `/auth/reset-password`
+5. Client calls `supabase.auth.updateUser({ password })`
 
-## API Endpoints
+### Admin User Creation
 
-- `POST /api/auth/signin` - User authentication
-- `POST /api/auth/signup` - User registration
-- `POST /api/auth/request-reset` - Request password reset
-- `POST /api/auth/reset-password` - Reset password
-- `POST /api/auth/verify-email` - Verify email address
+1. Admin submits new user form
+2. API handler validates admin role
+3. `supabaseAdmin.auth.admin.createUser()` creates auth user
+4. Database trigger creates `public.users` record with role
+5. Welcome email sent to new user
 
-## Key Functions
+## Environment Variables
 
-- `hashPassword` - Bcrypt password hashing
-- `verifyPassword` - Password verification
-- `generateSecureToken` - Token generation
-- `validatePasswordStrength` - Password validation
+```env
+# Required
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-## Dependencies
+# For password reset email redirects
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-- **External:** `next-auth`, `bcryptjs`, `zod`
-- **Internal:** `@/shared/lib/supabase`, `@/shared/components/ui`
+## Key Files
 
-## Security Features
+### Supabase Clients
 
-- Bcrypt password hashing (12 rounds)
-- Secure token generation
-- Password strength validation
-- Email verification
-- Session management
+- `src/shared/lib/supabase/server.ts` - Server-side client (respects RLS)
+- `src/shared/lib/supabase/client.ts` - Browser client (respects RLS)
 
-## Testing
+### Auth Helpers
 
-```bash
-# Run unit tests
-npm test features/auth
+- `src/shared/lib/auth/supabase-auth.ts` - Server-side auth utilities
+- `src/shared/lib/auth/permissions.ts` - Role-permission mapping
 
-# Run E2E tests
-npm run test:e2e -- --grep "auth"
+### Middleware
+
+- `src/middleware.ts` - Route protection and session refresh
+- `src/shared/lib/api/auth-middleware.ts` - API route protection
+
+### Context
+
+- `src/shared/contexts/AuthContext.tsx` - Client-side auth state
+
+## User Roles
+
+| Role       | Description                             |
+| ---------- | --------------------------------------- |
+| `admin`    | Full system access                      |
+| `manager`  | Can manage clients, projects, companies |
+| `employee` | Can view assigned projects              |
+| `viewer`   | Read-only access                        |
+
+## Database Schema
+
+### `public.users` Table
+
+- `id` - UUID (references `auth.users.id`)
+- `email` - User email
+- `role` - User role (admin/manager/employee/viewer)
+- `is_active` - Account status
+- `last_login` - Last login timestamp
+- `created_at`, `updated_at`, `deleted_at` - Timestamps
+
+### Triggers
+
+- `on_auth_user_created` - Creates `public.users` record when auth user created
+- `on_auth_user_deleted` - Soft-deletes `public.users` when auth user deleted
+- `on_auth_user_email_updated` - Syncs email changes
+
+## Usage Examples
+
+### Check Authentication (Server)
+
+```typescript
+import { getUser, getUserWithRole } from "@/shared/lib/auth/supabase-auth";
+
+// Get authenticated user
+const user = await getUser();
+
+// Get user with role
+const userWithRole = await getUserWithRole();
+if (userWithRole?.role === "admin") {
+  // Admin-specific logic
+}
+```
+
+### Check Permissions (Client)
+
+```typescript
+import { useAuth } from "@/shared/contexts/AuthContext";
+
+function MyComponent() {
+  const { can, isAdmin, user } = useAuth();
+
+  if (!can("clients:create")) {
+    return <AccessDenied />;
+  }
+
+  return <CreateClientForm />;
+}
+```
+
+### Protect API Route
+
+```typescript
+import { requirePermission } from "@/shared/lib/api/auth-middleware";
+
+export async function POST(request: NextRequest) {
+  const authResult = await requirePermission(request, "clients:create");
+  if (authResult instanceof NextResponse) {
+    return authResult; // Returns 401/403 error
+  }
+
+  // User is authenticated and has permission
+  const { userId, userRole } = authResult;
+  // ... handle request
+}
 ```

@@ -22,6 +22,10 @@ interface UserMenuProps {
 export function UserMenu({ isCollapsed = false }: UserMenuProps) {
   const { user, signOut } = useAuth();
 
+  // Get display name from email (first part before @)
+  const displayName = user?.email?.split("@")[0] || "User";
+  const initial = displayName.charAt(0).toUpperCase();
+
   return (
     <div className="border-t p-3">
       <div className="flex items-center gap-2">
@@ -35,14 +39,12 @@ export function UserMenu({ isCollapsed = false }: UserMenuProps) {
               )}
             >
               <Avatar className="h-8 w-8 bg-primary/10 flex items-center justify-center">
-                <span className="text-sm font-medium">
-                  {user?.name?.charAt(0) || "U"}
-                </span>
+                <span className="text-sm font-medium">{initial}</span>
               </Avatar>
               {!isCollapsed && (
                 <div className="ml-3 flex flex-col items-start overflow-hidden">
                   <p className="text-sm font-medium leading-none truncate w-full">
-                    {user?.name || "User"}
+                    {displayName}
                   </p>
                 </div>
               )}
@@ -52,7 +54,7 @@ export function UserMenu({ isCollapsed = false }: UserMenuProps) {
             <DropdownMenuLabel>
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">
-                  {user?.name || "User"}
+                  {displayName}
                 </p>
                 <p className="text-xs leading-none text-muted-foreground">
                   {user?.email || ""}

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { supabaseAdmin } from "@/shared/lib/supabase/server";
+import { createSupabaseServerClient } from "@/shared/lib/supabase/server";
 import { transformColumnName } from "@/shared/lib/api/api-utils";
 
 /**
  * Data Access Layer for Projects
+ * Uses user-scoped Supabase client to respect RLS policies
  */
 
 export interface ProjectQueryOptions {
@@ -14,8 +15,9 @@ export interface ProjectQueryOptions {
 
 export async function findAll(options: ProjectQueryOptions) {
   const { page, pageSize, orderBy = [] } = options;
+  const supabase = await createSupabaseServerClient();
 
-  let query = supabaseAdmin
+  let query = supabase
     .from("projects")
     .select("*", { count: "exact" })
     .is("deleted_at", null);
@@ -32,7 +34,8 @@ export async function findAll(options: ProjectQueryOptions) {
 }
 
 export async function findById(id: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("projects")
     .select(
       `*, 
@@ -46,7 +49,8 @@ export async function findById(id: string) {
 }
 
 export async function create(data: Record<string, any>) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("projects")
     // @ts-expect-error - Supabase type inference issue
     .insert([data])
@@ -55,7 +59,8 @@ export async function create(data: Record<string, any>) {
 }
 
 export async function update(id: string, data: Record<string, any>) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("projects")
     // @ts-expect-error - Supabase type inference issue
     .update({
@@ -68,7 +73,8 @@ export async function update(id: string, data: Record<string, any>) {
 }
 
 export async function deleteProject(id: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("projects")
     .update({ deleted_at: new Date().toISOString() } as never)
     .eq("id", id)
@@ -80,7 +86,8 @@ export async function deleteProject(id: string) {
  * Uses the employee_project_access materialized view for performance
  */
 export async function getEmployeeProjectIds(userId: string) {
-  const { data } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
     .from("employee_project_access")
     .select("project_id")
     .eq("user_id", userId);
@@ -95,7 +102,8 @@ export async function getEmployeeProjectIds(userId: string) {
  * Uses the employee_project_access materialized view for performance
  */
 export async function isProjectManager(userId: string, projectId: string) {
-  const { data } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
     .from("employee_project_access")
     .select("access_type")
     .eq("user_id", userId)

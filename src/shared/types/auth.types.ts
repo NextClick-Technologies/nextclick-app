@@ -30,21 +30,27 @@ export type Permission =
   | "communications:update"
   | "communications:delete";
 
+/**
+ * Application user interface
+ * Note: Email verification is handled by Supabase Auth
+ */
 export interface User {
   id: string;
   email: string;
   role: UserRole;
   isActive: boolean;
-  emailVerified: boolean;
   lastLogin: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
+/**
+ * Input for creating a new user (admin operation)
+ */
 export interface CreateUserInput {
   email: string;
-  password: string;
   role: UserRole;
+  password?: string; // Optional - if not provided, a random one will be generated
 }
 
 export interface ProjectMember {
@@ -61,21 +67,8 @@ export interface AuditLog {
   action: string;
   resourceType?: string;
   resourceId?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
   ipAddress?: string;
   userAgent?: string;
   createdAt: Date;
-}
-
-export interface PasswordResetRequest {
-  email: string;
-}
-
-export interface PasswordResetSubmit {
-  token: string;
-  newPassword: string;
-}
-
-export interface EmailVerification {
-  token: string;
 }

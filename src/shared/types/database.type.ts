@@ -22,30 +22,18 @@ export interface Database {
         Row: {
           id: string;
           email: string;
-          password_hash: string;
           role: UserRole;
           is_active: boolean;
-          email_verified: boolean;
-          email_verification_token: string | null;
-          email_verification_expires: string | null;
-          password_reset_token: string | null;
-          password_reset_expires: string | null;
           last_login: string | null;
           created_at: string;
           updated_at: string;
           deleted_at: string | null;
         };
         Insert: {
-          id?: string;
+          id: string; // Required - must match auth.users.id
           email: string;
-          password_hash: string;
           role?: UserRole;
           is_active?: boolean;
-          email_verified?: boolean;
-          email_verification_token?: string | null;
-          email_verification_expires?: string | null;
-          password_reset_token?: string | null;
-          password_reset_expires?: string | null;
           last_login?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -54,14 +42,8 @@ export interface Database {
         Update: {
           id?: string;
           email?: string;
-          password_hash?: string;
           role?: UserRole;
           is_active?: boolean;
-          email_verified?: boolean;
-          email_verification_token?: string | null;
-          email_verification_expires?: string | null;
-          password_reset_token?: string | null;
-          password_reset_expires?: string | null;
           last_login?: string | null;
           created_at?: string;
           updated_at?: string;

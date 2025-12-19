@@ -1,11 +1,5 @@
-import {
-  Employee,
-  EmployeeStatus,
-} from "@/features/employees/domain/types";
-import {
-  Title,
-  Gender,
-} from "@/features/clients/domain/types";
+import { Employee, EmployeeStatus } from "@/features/employees/domain/types";
+import { Title, Gender } from "@/features/clients/domain/types";
 import type {
   Employee as DbEmployee,
   EmployeeInsert as DbEmployeeInsert,
@@ -99,6 +93,7 @@ export const mockDbEmployee: DbEmployee = {
   country: "USA",
   created_at: "2024-01-15T10:00:00.000Z",
   updated_at: "2024-01-15T10:00:00.000Z",
+  deleted_at: null,
 };
 
 export const mockDbEmployee2: DbEmployee = {
@@ -126,6 +121,7 @@ export const mockDbEmployee2: DbEmployee = {
   country: "USA",
   created_at: "2024-02-01T10:00:00.000Z",
   updated_at: "2024-02-01T10:00:00.000Z",
+  deleted_at: null,
 };
 
 export const mockDbEmployees: DbEmployee[] = [mockDbEmployee, mockDbEmployee2];

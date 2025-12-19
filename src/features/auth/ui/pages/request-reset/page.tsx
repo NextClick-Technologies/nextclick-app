@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { createSupabaseBrowserClient } from "@/shared/lib/supabase/client";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
@@ -21,28 +22,27 @@ export default function RequestResetPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
+  const supabase = createSupabaseBrowserClient();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
     try {
-      const response = await fetch("/api/auth/request-reset", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+        email,
+        {
+          redirectTo: `${window.location.origin}/auth/reset-password`,
+        }
+      );
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSubmitted(true);
+      if (resetError) {
+        setError(resetError.message);
       } else {
-        setError(data.error || "Failed to send reset email");
+        setSubmitted(true);
       }
-    } catch (error) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -59,7 +59,7 @@ export default function RequestResetPage() {
             </div>
             <CardTitle className="text-2xl">Check Your Email</CardTitle>
             <CardDescription>
-              We`&apos;`ve sent password reset instructions
+              We&apos;ve sent password reset instructions
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

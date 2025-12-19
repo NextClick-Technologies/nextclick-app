@@ -1,7 +1,17 @@
-import { createClient } from "@supabase/supabase-js";
+"use client";
+
+import { createBrowserClient } from "@supabase/ssr";
 import type { Database } from "@/shared/types/database.type";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+/**
+ * Create a Supabase client for browser/client-side operations
+ * This client respects RLS policies based on the authenticated user's session
+ *
+ * Use this in client components for database operations and auth state management
+ */
+export function createSupabaseBrowserClient() {
+  return createBrowserClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}

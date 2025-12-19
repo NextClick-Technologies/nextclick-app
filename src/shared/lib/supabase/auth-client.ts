@@ -1,22 +1,26 @@
 /**
- * Type-safe Supabase client helpers for auth tables
- * This file provides properly typed functions for interacting with auth-related tables
+ * Type-safe Supabase client helpers for auth-related tables
+ * This file provides properly typed functions for interacting with user data
+ *
+ * Note: With Supabase Auth, authentication is handled by the auth.users table.
+ * The public.users table stores role and application-specific user data.
  */
 
-import { supabaseAdmin } from "./server";
+import { createSupabaseServerClient, supabaseAdmin } from "./server";
 import type {
   UserDB,
-  UserInsert,
   UserUpdate,
   AuditLogInsert,
   ProjectMemberInsert,
 } from "@/shared/types/database.type";
 
 /**
- * Get a user by ID
+ * Get a user by ID from public.users (includes role info)
+ * Uses user-scoped client to respect RLS
  */
 export async function getUserById(id: string) {
-  const { data, error } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
     .from("users")
     .select("*")
     .eq("id", id)
@@ -26,10 +30,12 @@ export async function getUserById(id: string) {
 }
 
 /**
- * Get a user by email
+ * Get a user by email from public.users
+ * Uses user-scoped client to respect RLS
  */
 export async function getUserByEmail(email: string) {
-  const { data, error } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
     .from("users")
     .select("*")
     .eq("email", email)
@@ -39,38 +45,15 @@ export async function getUserByEmail(email: string) {
 }
 
 /**
- * Get a user by email verification token
+ * Update a user in public.users
+ * Uses user-scoped client to respect RLS (users can only update their own data, admins can update all)
  */
-export async function getUserByVerificationToken(token: string) {
-  const { data, error } = await supabaseAdmin
+export async function updateUser(id: string, updates: UserUpdate) {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
     .from("users")
-    .select("*")
-    .eq("email_verification_token", token)
-    .maybeSingle();
-
-  return { data: data as UserDB | null, error };
-}
-
-/**
- * Get a user by password reset token
- */
-export async function getUserByResetToken(token: string) {
-  const { data, error } = await supabaseAdmin
-    .from("users")
-    .select("*")
-    .eq("password_reset_token", token)
-    .maybeSingle();
-
-  return { data: data as UserDB | null, error };
-}
-
-/**
- * Create a new user
- */
-export async function createUser(user: UserInsert) {
-  const { data, error } = await supabaseAdmin
-    .from("users")
-    .insert(user as unknown as never)
+    .update({ ...updates, updated_at: new Date().toISOString() } as never)
+    .eq("id", id)
     .select("*")
     .single();
 
@@ -78,12 +61,16 @@ export async function createUser(user: UserInsert) {
 }
 
 /**
- * Update a user
+ * Update user role (admin only)
+ * Uses admin client since this bypasses normal RLS for admin operations
  */
-export async function updateUser(id: string, updates: UserUpdate) {
+export async function updateUserRole(
+  id: string,
+  role: "admin" | "manager" | "employee" | "viewer"
+) {
   const { data, error } = await supabaseAdmin
     .from("users")
-    .update(updates as unknown as never)
+    .update({ role, updated_at: new Date().toISOString() } as never)
     .eq("id", id)
     .select("*")
     .single();
@@ -93,6 +80,7 @@ export async function updateUser(id: string, updates: UserUpdate) {
 
 /**
  * Create an audit log entry
+ * Uses admin client since audit logs should always be writable
  */
 export async function createAuditLog(log: AuditLogInsert) {
   const { error } = await supabaseAdmin
@@ -104,9 +92,11 @@ export async function createAuditLog(log: AuditLogInsert) {
 
 /**
  * Create a project member
+ * Uses user-scoped client to respect RLS
  */
 export async function createProjectMember(member: ProjectMemberInsert) {
-  const { data, error } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
     .from("project_members")
     .insert(member as unknown as never)
     .select("*")
@@ -117,9 +107,11 @@ export async function createProjectMember(member: ProjectMemberInsert) {
 
 /**
  * Delete a project member (soft delete)
+ * Uses user-scoped client to respect RLS
  */
 export async function deleteProjectMember(id: string) {
-  const { error } = await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase
     .from("project_members")
     .update({ deleted_at: new Date().toISOString() } as never)
     .eq("id", id)

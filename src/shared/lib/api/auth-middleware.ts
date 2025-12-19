@@ -1,9 +1,9 @@
 /**
  * API Permission Middleware
- * Enforces role-based access control at the API level
+ * Enforces role-based access control at the API level using Supabase Auth
  */
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/shared/lib/auth/auth";
+import { createSupabaseServerClient } from "@/shared/lib/supabase/server";
 import {
   hasPermission,
   isAdmin,
@@ -22,7 +22,7 @@ export interface AuthenticatedRequest extends NextRequest {
 
 /**
  * Require authentication for API route
- * Returns null if authenticated, error response if not
+ * Returns user info if authenticated, error response if not
  */
 export async function requireAuth(request: NextRequest): Promise<
   | {
@@ -32,16 +32,39 @@ export async function requireAuth(request: NextRequest): Promise<
     }
   | NextResponse
 > {
-  const session = await auth();
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!session?.user) {
+  if (!user) {
     return apiError("Unauthorized - Please sign in", 401);
   }
 
+  // Get user role from public.users
+  const { data: userData } = await supabase
+    .from("users")
+    .select("role, is_active")
+    .eq("id", user.id)
+    .single();
+
+  if (!userData) {
+    return apiError("User profile not found", 404);
+  }
+
+  const userRecord = userData as { role: string; is_active: boolean };
+
+  if (!userRecord.is_active) {
+    return apiError(
+      "Your account has been deactivated. Please contact an administrator.",
+      403
+    );
+  }
+
   return {
-    userId: session.user.id,
-    userRole: session.user.role,
-    userEmail: session.user.email || "",
+    userId: user.id,
+    userRole: userRecord.role as UserRole,
+    userEmail: user.email || "",
   };
 }
 

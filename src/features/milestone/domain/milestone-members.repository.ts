@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { supabaseAdmin } from "@/shared/lib/supabase/server";
+import { createSupabaseServerClient } from "@/shared/lib/supabase/server";
 
 /**
  * Data Access Layer for Milestone Members
+ * Uses user-scoped Supabase client to respect RLS policies
  */
 
 export async function findAllMembers(
   milestoneId?: string,
   employeeId?: string
 ) {
-  let query = supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  let query = supabase
     .from("milestone_members")
     .select(
       `
@@ -43,7 +45,8 @@ export async function findAllMembers(
 }
 
 export async function findMemberById(memberId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("milestone_members")
     .select(
       `
@@ -63,7 +66,8 @@ export async function checkMemberExists(
   milestoneId: string,
   employeeId: string
 ) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("milestone_members")
     .select("id")
     .eq("milestone_id", milestoneId)
@@ -73,7 +77,8 @@ export async function checkMemberExists(
 }
 
 export async function findMilestoneById(milestoneId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("milestones")
     .select("id, name")
     .eq("id", milestoneId)
@@ -82,7 +87,8 @@ export async function findMilestoneById(milestoneId: string) {
 }
 
 export async function findEmployeeById(employeeId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("employees")
     .select("id, name, family_name")
     .eq("id", employeeId)
@@ -94,7 +100,8 @@ export async function findEmployeeById(employeeId: string) {
  * Soft delete a milestone member
  */
 export async function deleteMember(milestoneId: string, employeeId: string) {
-  return await supabaseAdmin
+  const supabase = await createSupabaseServerClient();
+  return await supabase
     .from("milestone_members")
     .update({ deleted_at: new Date().toISOString() } as never)
     .eq("milestone_id", milestoneId)
