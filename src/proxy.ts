@@ -2,10 +2,10 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
- * Next.js Middleware for Supabase Auth
+ * Next.js Proxy for Supabase Auth
  *
- * This middleware:
- * 1. Refreshes the user's session on each request
+ * This proxy:
+ * 1. Refreshes the user's session on each request (CRITICAL for RLS to work)
  * 2. Protects routes based on authentication state
  * 3. Handles redirects for auth pages
  */
@@ -37,7 +37,8 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // Refresh session if expired - required for Server Components
+  // IMPORTANT: This refreshes the session and updates cookies
+  // Without this, auth.uid() won't work in RLS policies
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -64,7 +65,7 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/communication") ||
     pathname.startsWith("/admin");
 
-  // Skip middleware for static files
+  // Skip proxy for static files
   if (isStaticFile) {
     return response;
   }
@@ -77,7 +78,7 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  // Handle API routes - let API middleware handle auth
+  // Handle API routes - let API handlers handle auth
   // Skip auth check for public auth endpoints
   if (isApiRoute) {
     // Auth API routes are public
@@ -96,8 +97,6 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(signInUrl);
     }
 
-    // Additional role-based checks could be added here if needed
-    // For now, specific role checks are handled in API routes and components
     return response;
   }
 
