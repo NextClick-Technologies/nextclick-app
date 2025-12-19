@@ -9,7 +9,7 @@ import { NextResponse, type NextRequest } from "next/server";
  * 2. Protects routes based on authentication state
  * 3. Handles redirects for auth pages
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
     request,
   });
